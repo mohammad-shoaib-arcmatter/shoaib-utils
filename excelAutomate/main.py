@@ -1,5 +1,5 @@
 import os
-from write_excel import *
+from write_excel import write_excel
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':

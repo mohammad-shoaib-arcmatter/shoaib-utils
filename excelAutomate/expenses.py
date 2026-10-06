@@ -1,9 +1,3 @@
-import openpyxl as xl
-import json
-import os
-from datetime import datetime, timedelta
-import calendar
-
 def write_expense_details(sheet, rowNo, expenses, bankDet, dateDet):
 
     totExp = 0
@@ -16,17 +10,20 @@ def write_expense_details(sheet, rowNo, expenses, bankDet, dateDet):
         sheet.cell(rowNo, 3).value = expAmt
         sheet.cell(rowNo, 4).value = 0
         sheet.cell(rowNo, 5).value = 0
-        rowNo = rowNo + 1
+        rowNo += 1
 
-        totExp = totExp + expAmt
-        if bankDet.get(exp['expBank']) == None:
-            bankDet[exp['expBank']] = expAmt
+        totExp += expAmt
+        bankName = exp['expBank']
+        bankAmount = bankDet.get(bankName)
+        if bankAmount is None:
+            bankDet[bankName] = expAmt
         else:
-            bankDet[exp['expBank']] = bankDet.get(exp['expBank']) + expAmt
+            bankDet[bankName] = bankAmount + expAmt
 
-        if dateDet.get(expDate) == None:
+        dateAmount = dateDet.get(expDate)
+        if dateAmount is None:
             dateDet[expDate] = expAmt
         else:
-            dateDet[expDate] = dateDet.get(expDate) + expAmt
+            dateDet[expDate] = dateAmount + expAmt
 
     return rowNo, bankDet, dateDet, totExp

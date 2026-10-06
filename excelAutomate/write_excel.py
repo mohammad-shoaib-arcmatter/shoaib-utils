@@ -1,10 +1,11 @@
 import openpyxl as xl
 import json
-from investments import *
-from expenses import *
-from loans import *
-from custloans import *
 import shutil
+from common_functions import getCellNo, next_month
+from custloans import write_custloan_details
+from expenses import write_expense_details
+from investments import write_invest_details
+from loans import write_loan_details, write_loan_emi_details
 
 summHeaderCol = 2
 summAmtCol = summHeaderCol+1 
@@ -65,10 +66,8 @@ def open_sheet(filename):
     wb = xl.load_workbook(filename)
     sheet = wb['Debt']
 
-    #Delete the sheet
-    for row in range(1, sheet.max_row + 1):
-        for col in range(1, sheet.max_column + 1):
-            cell = sheet.cell(row, col)
+    for row in sheet.iter_rows():
+        for cell in row:
             cell.value = ''
 
     return wb,sheet
@@ -144,26 +143,25 @@ def write_datewise(sheet, rowNo, dateDet):
     sheet.cell(rowNo, 3).value = 'Amount'
     sheet.cell(rowNo, 4).value = 'Commulative'
 
-    sorted_dates=list(dateDet.keys())
+    sorted_dates = list(dateDet.keys())
     sorted_dates.sort()
-    rev_sorted_dates=sorted(sorted_dates, reverse=True)
     commDet = {}
-    for date in rev_sorted_dates:
+    for date in reversed(sorted_dates):
         for in_date in sorted_dates:
             if date <= in_date:
-                if commDet.get(date) == None:
+                if commDet.get(date) is None:
                     commDet[date] = dateDet[in_date]
                 else:
-                    commDet[date] = commDet.get(date) + dateDet[in_date]
+                    commDet[date] += dateDet[in_date]
 
-    rowNo+=1
+    rowNo += 1
     for date in sorted_dates:
         sheet.cell(rowNo, 2).value = date
         sheet.cell(rowNo, 3).value = dateDet[date]
         sheet.cell(rowNo, 4).value = commDet[date]
-        rowNo+=1
+        rowNo += 1
     
-    rowNo+=1
+    rowNo += 1
     return rowNo
 
 def write_excel(filename, fullDataFile):

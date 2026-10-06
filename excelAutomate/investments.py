@@ -1,9 +1,3 @@
-import openpyxl as xl
-import json
-import os
-from datetime import datetime, timedelta
-import calendar
-
 def write_invest_details(sheet, rowNo, investments, bankDet, dateDet):
 
     totInvest = 0
@@ -15,17 +9,20 @@ def write_invest_details(sheet, rowNo, investments, bankDet, dateDet):
         sheet.cell(rowNo, 3).value = investAmt
         sheet.cell(rowNo, 4).value = 0
         sheet.cell(rowNo, 5).value = 0
-        rowNo = rowNo + 1
+        rowNo += 1
 
-        totInvest = totInvest + investAmt
-        if bankDet.get(invest['investBank']) == None:
-            bankDet[invest['investBank']] = investAmt
+        totInvest += investAmt
+        bankName = invest['investBank']
+        bankAmount = bankDet.get(bankName)
+        if bankAmount is None:
+            bankDet[bankName] = investAmt
         else:
-            bankDet[invest['investBank']] = bankDet.get(invest['investBank']) + investAmt
+            bankDet[bankName] = bankAmount + investAmt
 
-        if dateDet.get(investDate) == None:
+        dateAmount = dateDet.get(investDate)
+        if dateAmount is None:
             dateDet[investDate] = investAmt
         else:
-            dateDet[investDate] = dateDet.get(investDate) + investAmt
+            dateDet[investDate] = dateAmount + investAmt
 
     return rowNo, bankDet, dateDet, totInvest

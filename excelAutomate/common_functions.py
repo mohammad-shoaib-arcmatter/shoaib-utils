@@ -11,5 +11,4 @@ def next_month(currDate):
     nextMonthDays = calendar.monthrange(tmpDate.year, tmpDate.month)[1]
 
     nextDate = currDate + timedelta(days=nextMonthDays)
-    nextDate = datetime.__format__(nextDate, '%d-%m-%Y')
-    return nextDate
+    return nextDate.strftime('%d-%m-%Y')
