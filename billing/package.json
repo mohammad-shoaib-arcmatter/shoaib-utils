@@ -1,11 +1,13 @@
 {
   "name": "billing-app",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "dist/main.js",
   "type": "commonjs",
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix frontend\" \"wait-on http://localhost:5173 && electron .\"",
-    "start": "electron ."
+    "dev": "npm run build:electron --prefix frontend && concurrently \"npm run dev --prefix frontend\" \"npm run watch:electron --prefix frontend\" \"wait-on http://localhost:5173 dist/main.js && electron .\"",
+    "build": "npm run build:electron --prefix frontend && npm run build --prefix frontend",
+    "build:electron": "npm run build:electron --prefix frontend",
+    "start": "npm run build:electron --prefix frontend && electron ."
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import type { FormEvent } from 'react';
+import type { CartItem, Customer, Invoice, Product } from '../../shared/types'
 
 export default function App() {
-  const [tab, setTab] = useState('billing');
-  const [products, setProducts] = useState([]);
-  const [customers, setCustomers] = useState([]);
-  const [invoices, setInvoices] = useState([]);
-  const [cart, setCart] = useState([]);
+  const [tab, setTab] = useState<AppTab>('billing');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
@@ -27,7 +29,7 @@ export default function App() {
   return (
     <div style={{ fontFamily: 'system-ui' }}>
       <div style={{ display: 'flex', gap: 10, padding: 12, background: '#111' }}>
-        {['billing','products','customers','invoices'].map(t => (
+        {(['billing','products','customers','invoices'] as const).map(t => (
           <button key={t} onClick={()=>{ setTab(t); loadAll(); }} style={{ padding:'8px 16px', background:tab===t?'white':'#333', color:tab===t?'black':'white', border:0, borderRadius:6, textTransform:'capitalize' }}>{t}</button>
         ))}
       </div>
@@ -41,7 +43,7 @@ export default function App() {
           </div>
 
           <div style={{ background:'#f9f9f9', padding:12, borderRadius:8, marginBottom:15 }}>
-            <form onSubmit={e=>{ e.preventDefault(); if(!billForm.name || !billForm.price) return; setCart([...cart, { name:billForm.name, price:+billForm.price, qty:+(billForm.qty||1), gst:+(billForm.gst||0), hsn:'9988' }]); setBillForm({ name:'', price:'', qty:'1', gst:'18' }); }} style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+            <form onSubmit={(e: FormEvent<HTMLFormElement>)=>{ e.preventDefault(); if(!billForm.name || !billForm.price) return; setCart([...cart, { name:billForm.name, price:+billForm.price, qty:+(billForm.qty||1), gst:+(billForm.gst||0), hsn:'9988' }]); setBillForm({ name:'', price:'', qty:'1', gst:'18' }); }} style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
               <input required list="prodMaster" placeholder="Product Name" value={billForm.name} onChange={e=>setBillForm({...billForm, name:e.target.value})} style={{ padding:8, flex:1, minWidth:150 }} />
               <datalist id="prodMaster">{products.map(p=><option key={p.id} value={p.name}>₹{p.price}</option>)}</datalist>
               <input required placeholder="Price ₹" type="number" value={billForm.price} onChange={e=>setBillForm({...billForm, price:e.target.value})} style={{ padding:8, width:100 }} />
@@ -71,7 +73,7 @@ export default function App() {
       {tab==='products' && (
         <div style={{ padding:20 }}>
           <h3>Shop Master - Maintain All Products</h3>
-          <form onSubmit={async e=>{
+          <form onSubmit={async (e: FormEvent<HTMLFormElement>)=>{
             e.preventDefault();
             await window.api.addProduct({ name:prodForm.name, hsn:prodForm.hsn||'9988', price:+prodForm.price, gst:+prodForm.gst, stock:+(prodForm.stock||0) });
             setProdForm({ name:'', hsn:'', price:'', gst:'18', stock:'' }); loadAll();
@@ -95,7 +97,7 @@ export default function App() {
       {tab==='customers' && (
         <div style={{ padding:20 }}>
           <h3>Customers - Phone</h3>
-          <form onSubmit={async e=>{
+          <form onSubmit={async (e: FormEvent<HTMLFormElement>)=>{
             e.preventDefault();
             if(!custForm.phone || !custForm.name) return alert('Phone and Name required');
             await window.api.addCustomer(custForm);
@@ -120,10 +122,12 @@ export default function App() {
           <h3>Invoices History</h3>
           <table style={{ width:'100%', borderCollapse:'collapse' }}>
             <thead><tr style={{ background:'#f5f5f5' }}><th style={{ border:'1px solid #ddd', padding:8 }}>ID</th><th style={{ border:'1px solid #ddd', padding:8 }}>Customer</th><th style={{ border:'1px solid #ddd', padding:8 }}>Phone</th><th style={{ border:'1px solid #ddd', padding:8 }}>Products Billed</th><th style={{ border:'1px solid #ddd', padding:8 }}>Total</th><th style={{ border:'1px solid #ddd', padding:8 }}>Date</th></tr></thead>
-            <tbody>{invoices.map(inv=>{ const items=JSON.parse(inv.items||'[]'); return <tr key={inv.id}><td style={{ border:'1px solid #ddd', padding:8 }}>{inv.id}</td><td style={{ border:'1px solid #ddd', padding:8 }}>{inv.customer}</td><td style={{ border:'1px solid #ddd', padding:8 }}>{inv.customer_phone}</td><td style={{ border:'1px solid #ddd', padding:8 }}>{items.map(i=>`${i.name} x${i.qty} @₹${i.price}`).join(', ')}</td><td style={{ border:'1px solid #ddd', padding:8 }}>₹{inv.total?.toFixed(2)}</td><td style={{ border:'1px solid #ddd', padding:8 }}>{new Date(inv.date).toLocaleString()}</td></tr>})}</tbody>
+            <tbody>{invoices.map(inv=>{ const items=JSON.parse(inv.items||'[]') as CartItem[]; return <tr key={inv.id}><td style={{ border:'1px solid #ddd', padding:8 }}>{inv.id}</td><td style={{ border:'1px solid #ddd', padding:8 }}>{inv.customer}</td><td style={{ border:'1px solid #ddd', padding:8 }}>{inv.customer_phone}</td><td style={{ border:'1px solid #ddd', padding:8 }}>{items.map(i=>`${i.name} x${i.qty} @₹${i.price}`).join(', ')}</td><td style={{ border:'1px solid #ddd', padding:8 }}>₹{inv.total?.toFixed(2)}</td><td style={{ border:'1px solid #ddd', padding:8 }}>{new Date(inv.date).toLocaleString()}</td></tr>})}</tbody>
           </table>
         </div>
       )}
     </div>
   );
 }
+
+type AppTab = 'billing' | 'products' | 'customers' | 'invoices';
