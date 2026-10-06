@@ -1,6 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import type { CartItem, Customer, Invoice, Product } from '../../shared/types'
+
+const initialBillForm = { name: '', price: '', qty: '1', gst: '18' }
+const initialProductForm = { name: '', hsn: '', price: '', gst: '18', stock: '' }
+const initialCustomerForm = { name: '', phone: '', gstin: '', address: '' }
+const tabs = ['billing', 'products', 'customers', 'invoices'] as const
+
+type LoadedTab =
+  | { tab: 'billing' | 'products'; products: Product[] }
+  | { tab: 'customers'; customers: Customer[] }
+  | { tab: 'invoices'; invoices: Invoice[] }
 
 export default function App() {
   const [tab, setTab] = useState<AppTab>('billing');
@@ -8,31 +18,78 @@ export default function App() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
-  
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
-  const [billForm, setBillForm] = useState({ name: '', price: '', qty: '1', gst: '18' });
-  const [prodForm, setProdForm] = useState({ name: '', hsn: '', price: '', gst: '18', stock: '' });
-  const [custForm, setCustForm] = useState({ name: '', phone: '', gstin: '', address: '' });
+  const [billForm, setBillForm] = useState(initialBillForm);
+  const [prodForm, setProdForm] = useState(initialProductForm);
+  const [custForm, setCustForm] = useState(initialCustomerForm);
 
-  useEffect(() => { loadAll(); }, []);
-  async function loadAll() {
-    if (!window.api) return;
-    setProducts(await window.api.getProducts());
-    setCustomers(await window.api.getCustomers());
-    setInvoices(await window.api.getInvoices());
+  const loadCurrentTab = useCallback(async () => {
+    if (tab === 'billing' || tab === 'products') {
+      return { tab, products: await window.api.getProducts() } as const;
+    } else if (tab === 'customers') {
+      return { tab, customers: await window.api.getCustomers() } as const;
+    }
+    return { tab, invoices: await window.api.getInvoices() } as const;
+  }, [tab]);
+
+  function applyLoadedTab(data: LoadedTab) {
+    if ('products' in data) {
+      setProducts(data.products);
+    } else if ('customers' in data) {
+      setCustomers(data.customers);
+    } else {
+      setInvoices(data.invoices);
+    }
   }
 
-  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const gstTotal = cart.reduce((s, i) => s + (i.price * i.qty * i.gst / 100), 0);
+  useEffect(() => {
+    let active = true;
+    void loadCurrentTab()
+      .then(data => {
+        if (active) applyLoadedTab(data);
+      })
+      .catch((cause: unknown) => {
+        if (active) setError(cause instanceof Error ? cause.message : String(cause));
+      });
+    return () => {
+      active = false;
+    };
+  }, [loadCurrentTab]);
+
+  const { total, gstTotal } = cart.reduce(
+    (amounts, item) => ({
+      total: amounts.total + item.price * item.qty,
+      gstTotal: amounts.gstTotal + item.price * item.qty * item.gst / 100,
+    }),
+    { total: 0, gstTotal: 0 },
+  );
+
+  async function runAction(action: () => Promise<void>, successMessage?: string) {
+    setError('');
+    setSuccess('');
+    try {
+      await action();
+      applyLoadedTab(await loadCurrentTab());
+      if (successMessage) setSuccess(successMessage);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause));
+    }
+  }
 
   return (
     <div style={{ fontFamily: 'system-ui' }}>
       <div style={{ display: 'flex', gap: 10, padding: 12, background: '#111' }}>
-        {(['billing','products','customers','invoices'] as const).map(t => (
-          <button key={t} onClick={()=>{ setTab(t); loadAll(); }} style={{ padding:'8px 16px', background:tab===t?'white':'#333', color:tab===t?'black':'white', border:0, borderRadius:6, textTransform:'capitalize' }}>{t}</button>
+        {tabs.map(t => (
+          <button key={t} onClick={()=>{ setError(''); setSuccess(''); setTab(t); }} style={{ padding:'8px 16px', background:tab===t?'white':'#333', color:tab===t?'black':'white', border:0, borderRadius:6, textTransform:'capitalize' }}>{t}</button>
         ))}
       </div>
+      {error && <p role="alert" style={{ color: '#b91c1c', padding: '8px 20px' }}>{error}</p>}
+      {success && <p role="status" style={{ color: '#15803d', padding: '8px 20px' }}>{success}</p>}
 
       {tab==='billing' && (
         <div style={{ padding:20 }}>
@@ -43,7 +100,7 @@ export default function App() {
           </div>
 
           <div style={{ background:'#f9f9f9', padding:12, borderRadius:8, marginBottom:15 }}>
-            <form onSubmit={(e: FormEvent<HTMLFormElement>)=>{ e.preventDefault(); if(!billForm.name || !billForm.price) return; setCart([...cart, { name:billForm.name, price:+billForm.price, qty:+(billForm.qty||1), gst:+(billForm.gst||0), hsn:'9988' }]); setBillForm({ name:'', price:'', qty:'1', gst:'18' }); }} style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+            <form onSubmit={(e: FormEvent<HTMLFormElement>)=>{ e.preventDefault(); if(!billForm.name || !billForm.price) return; setCart(current => [...current, { name:billForm.name, price:+billForm.price, qty:+(billForm.qty||1), gst:+(billForm.gst||0), hsn:'9988' }]); setBillForm(initialBillForm); }} style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
               <input required list="prodMaster" placeholder="Product Name" value={billForm.name} onChange={e=>setBillForm({...billForm, name:e.target.value})} style={{ padding:8, flex:1, minWidth:150 }} />
               <datalist id="prodMaster">{products.map(p=><option key={p.id} value={p.name}>₹{p.price}</option>)}</datalist>
               <input required placeholder="Price ₹" type="number" value={billForm.price} onChange={e=>setBillForm({...billForm, price:e.target.value})} style={{ padding:8, width:100 }} />
@@ -56,15 +113,30 @@ export default function App() {
 
           <table style={{ width:'100%', borderCollapse:'collapse' }}>
             <thead><tr style={{ background:'#f5f5f5' }}><th style={{ border:'1px solid #ddd', padding:8 }}>Product</th><th style={{ border:'1px solid #ddd', padding:8 }}>Price</th><th style={{ border:'1px solid #ddd', padding:8 }}>Qty</th><th style={{ border:'1px solid #ddd', padding:8 }}>Amount</th><th style={{ border:'1px solid #ddd', padding:8 }}></th></tr></thead>
-            <tbody>{cart.map((c,i)=><tr key={i}><td style={{ border:'1px solid #ddd', padding:8 }}>{c.name}</td><td style={{ border:'1px solid #ddd', padding:8 }}>₹{c.price}</td><td style={{ border:'1px solid #ddd', padding:8 }}>{c.qty}</td><td style={{ border:'1px solid #ddd', padding:8 }}>₹{(c.price*c.qty*(1+c.gst/100)).toFixed(2)}</td><td style={{ border:'1px solid #ddd', padding:8 }}><button onClick={()=>setCart(cart.filter((_,idx)=>idx!==i))}>Remove</button></td></tr>)}</tbody>
+            <tbody>{cart.map((c,i)=><tr key={`${c.name}-${i}`}><td style={{ border:'1px solid #ddd', padding:8 }}>{c.name}</td><td style={{ border:'1px solid #ddd', padding:8 }}>₹{c.price}</td><td style={{ border:'1px solid #ddd', padding:8 }}>{c.qty}</td><td style={{ border:'1px solid #ddd', padding:8 }}>₹{(c.price*c.qty*(1+c.gst/100)).toFixed(2)}</td><td style={{ border:'1px solid #ddd', padding:8 }}><button onClick={()=>setCart(current => current.filter((_,idx)=>idx!==i))}>Remove</button></td></tr>)}</tbody>
           </table>
           <div style={{ textAlign:'right', marginTop:15 }}><h2>Total: ₹{(total+gstTotal).toFixed(2)}</h2>
-            <button onClick={async()=>{
-              if(!customerPhone || !customerName) return alert('Enter Phone & Name');
-              if(cart.length===0) return alert('Add product');
-              await window.api.addCustomer({ phone: customerPhone, name: customerName, gstin:'', address:'' });
-              await window.api.createInvoice({ customer: customerName, customer_phone: customerPhone, items: cart, total: total+gstTotal, gst_total: gstTotal });
-              setCart([]); setCustomerName(''); setCustomerPhone(''); loadAll(); alert('Bill saved & Customer added!');
+            <button disabled={isSaving} onClick={() => {
+              if (!customerPhone || !customerName) {
+                setError('Enter Phone & Name');
+                return;
+              }
+              if (cart.length === 0) {
+                setError('Add product');
+                return;
+              }
+              void runAction(async () => {
+                setIsSaving(true);
+                try {
+                  await window.api.addCustomer({ phone: customerPhone, name: customerName, gstin:'', address:'' });
+                  await window.api.createInvoice({ customer: customerName, customer_phone: customerPhone, items: cart, total: total + gstTotal, gst_total: gstTotal });
+                  setCart([]);
+                  setCustomerName('');
+                  setCustomerPhone('');
+                } finally {
+                  setIsSaving(false);
+                }
+              }, 'Bill saved & Customer added!');
             }} style={{ padding:12, background:'black', color:'white', border:0, width:'100%' }}>Save Bill</button>
           </div>
         </div>
@@ -73,10 +145,12 @@ export default function App() {
       {tab==='products' && (
         <div style={{ padding:20 }}>
           <h3>Shop Master - Maintain All Products</h3>
-          <form onSubmit={async (e: FormEvent<HTMLFormElement>)=>{
+          <form onSubmit={(e: FormEvent<HTMLFormElement>)=>{
             e.preventDefault();
-            await window.api.addProduct({ name:prodForm.name, hsn:prodForm.hsn||'9988', price:+prodForm.price, gst:+prodForm.gst, stock:+(prodForm.stock||0) });
-            setProdForm({ name:'', hsn:'', price:'', gst:'18', stock:'' }); loadAll();
+            void runAction(async () => {
+              await window.api.addProduct({ name:prodForm.name, hsn:prodForm.hsn||'9988', price:+prodForm.price, gst:+prodForm.gst, stock:+(prodForm.stock||0) });
+              setProdForm(initialProductForm);
+            });
           }} style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:20, background:'#f9f9f9', padding:12, borderRadius:8 }}>
             <input required placeholder="Product Name *" value={prodForm.name} onChange={e=>setProdForm({...prodForm, name:e.target.value})} style={{ padding:8, minWidth:150 }} />
             <input placeholder="HSN" value={prodForm.hsn} onChange={e=>setProdForm({...prodForm, hsn:e.target.value})} style={{ padding:8, width:90 }} />
@@ -88,7 +162,7 @@ export default function App() {
 
           <table style={{ width:'100%', borderCollapse:'collapse' }}>
             <thead><tr style={{ background:'#f5f5f5' }}><th style={{ border:'1px solid #ddd', padding:8 }}>Name</th><th style={{ border:'1px solid #ddd', padding:8 }}>HSN</th><th style={{ border:'1px solid #ddd', padding:8 }}>Price</th><th style={{ border:'1px solid #ddd', padding:8 }}>GST</th><th style={{ border:'1px solid #ddd', padding:8 }}>Stock</th><th style={{ border:'1px solid #ddd', padding:8 }}>Action</th></tr></thead>
-            <tbody>{products.map(p=><tr key={p.id}><td style={{ border:'1px solid #ddd', padding:8 }}>{p.name}</td><td style={{ border:'1px solid #ddd', padding:8 }}>{p.hsn}</td><td style={{ border:'1px solid #ddd', padding:8 }}>₹{p.price}</td><td style={{ border:'1px solid #ddd', padding:8 }}>{p.gst}%</td><td style={{ border:'1px solid #ddd', padding:8 }}>{p.stock}</td><td style={{ border:'1px solid #ddd', padding:8 }}><button onClick={async()=>{ if(confirm('Delete?')){ await window.api.deleteProduct(p.id); loadAll(); }}}>Delete</button></td></tr>)}</tbody>
+            <tbody>{products.map(p=><tr key={p.id}><td style={{ border:'1px solid #ddd', padding:8 }}>{p.name}</td><td style={{ border:'1px solid #ddd', padding:8 }}>{p.hsn}</td><td style={{ border:'1px solid #ddd', padding:8 }}>₹{p.price}</td><td style={{ border:'1px solid #ddd', padding:8 }}>{p.gst}%</td><td style={{ border:'1px solid #ddd', padding:8 }}>{p.stock}</td><td style={{ border:'1px solid #ddd', padding:8 }}><button onClick={()=>{ if(confirm('Delete?')) void runAction(async () => { await window.api.deleteProduct(p.id); }); }}>Delete</button></td></tr>)}</tbody>
           </table>
           {products.length===0 && <p style={{ color:'#666' }}>No products in master yet. Add one above.</p>}
         </div>
@@ -97,12 +171,16 @@ export default function App() {
       {tab==='customers' && (
         <div style={{ padding:20 }}>
           <h3>Customers - Phone</h3>
-          <form onSubmit={async (e: FormEvent<HTMLFormElement>)=>{
+          <form onSubmit={(e: FormEvent<HTMLFormElement>)=>{
             e.preventDefault();
-            if(!custForm.phone || !custForm.name) return alert('Phone and Name required');
-            await window.api.addCustomer(custForm);
-            setCustForm({ name:'', phone:'', gstin:'', address:'' });
-            loadAll(); alert('Customer saved');
+            if(!custForm.phone || !custForm.name) {
+              setError('Phone and Name required');
+              return;
+            }
+            void runAction(async () => {
+              await window.api.addCustomer(custForm);
+              setCustForm(initialCustomerForm);
+            }, 'Customer saved');
           }} style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:20, background:'#f9f9f9', padding:12 }}>
             <input required placeholder="Phone *" value={custForm.phone} onChange={e=>setCustForm({...custForm, phone:e.target.value})} style={{ padding:8 }} />
             <input required placeholder="Name *" value={custForm.name} onChange={e=>setCustForm({...custForm, name:e.target.value})} style={{ padding:8 }} />

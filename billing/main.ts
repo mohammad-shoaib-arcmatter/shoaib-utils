@@ -14,8 +14,7 @@ import {
   searchCustomers,
 } from './database'
 
- 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   initDB()
   const win = new BrowserWindow({
     width: 1200,
@@ -26,7 +25,11 @@ app.whenReady().then(() => {
       nodeIntegration: false,
     },
   })
-  void win.loadURL('http://localhost:5173')
+  if (app.commandLine.hasSwitch('dev')) {
+    await win.loadURL('http://localhost:5173')
+  } else {
+    await win.loadFile(join(__dirname, '../frontend/dist/index.html'))
+  }
 })
 
 ipcMain.handle('get-products', () => getProducts())
