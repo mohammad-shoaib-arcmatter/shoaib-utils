@@ -134,30 +134,70 @@
 
 ## 1.5 Input and Output
 
-- Output:
-  System.out.println(); // with newline
-  System.out.print(); // without
-  System.err.println("error"); // for error stream
-  System.out.printf("Name %s, age %d, sal %.2f", name, age, sal);
+- **Output:** `print` stays on the current line; `println` appends the platform line separator. `printf` uses format specifiers and does not add a newline automatically.
+  ```java
+  String name = "Ava";
+  int age = 28;
+  double salary = 72500.5;
 
-- Input:
-  // Method 1: Scanner - convenient for interactive input
+  System.out.print("Hello ");
+  System.out.println(name);
+  System.out.printf("Name: %s, age: %d, salary: %.2f%n", name, age, salary);
+  System.err.println("Error messages go to the error stream.");
+  ```
+
+  Common format specifiers include `%s` (string), `%d` (integer), `%f` (floating-point), and `%%` (literal percent sign). Precision such as `%.2f` sets the number of digits after the decimal point; `%n` emits a platform-independent newline.
+
+- **Input with `Scanner`:** convenient for small, interactive programs. `next()` reads one token; `nextLine()` reads the rest of the current line, including spaces.
+  ```java
   import java.util.Scanner;
+
   Scanner sc = new Scanner(System.in);
-  int a = sc.nextInt(); // leaves \n
-  sc.nextLine(); // consume leftover
-  String name = sc.nextLine(); // full line
-  String word = sc.next(); // single word
-  // Avoid closing a Scanner wrapping System.in if the rest of the app still needs stdin.
+  System.out.print("Age: ");
+  int age = sc.nextInt();
+  sc.nextLine(); // consume the rest of the line after nextInt()
+  System.out.print("Name: ");
+  String name = sc.nextLine();
+  ```
 
-  // Method 2: BufferedReader - fast, for large input
+  `nextInt()` and other token-reading methods leave the line separator in the input. If `nextLine()` follows one of them, consume the remainder first when you intend to read a new line. Do not close a `Scanner` wrapping `System.in` while other code still needs standard input; closing it also closes the underlying stream.
+
+- **Buffered input:** `BufferedReader` is a good choice for larger input. It reads lines as strings, so convert values explicitly. `StringTokenizer` can split a line into whitespace-separated tokens.
+  ```java
+  import java.io.BufferedReader;
+  import java.io.InputStreamReader;
+  import java.util.StringTokenizer;
+
   BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-  String line = br.readLine();
-  int num = Integer.parseInt(line);
+  String line = br.readLine(); // null when the input stream reaches EOF
+  int value = Integer.parseInt(line.trim());
 
-  // Method 3: System.console - for password
-  Console c = System.console();
-  char[] pwd = c == null ? null : c.readPassword(); // console may be unavailable in an IDE or redirected process
+  StringTokenizer tokens = new StringTokenizer(br.readLine());
+  int first = Integer.parseInt(tokens.nextToken());
+  String second = tokens.nextToken();
+  ```
+
+  `Integer.parseInt` and similar parsing methods throw `NumberFormatException` for invalid input. Handle that exception when input is not guaranteed to be valid. As with `Scanner`, avoid closing a reader over `System.in` if the stream must remain available.
+
+- **Password input:** `Console.readPassword()` avoids displaying typed characters, but `System.console()` may return `null` in an IDE, test runner, or redirected process.
+  ```java
+  import java.io.Console;
+  import java.util.Arrays;
+
+  Console console = System.console();
+  if (console == null) {
+      throw new IllegalStateException("No interactive console is available.");
+  }
+  char[] password = console.readPassword("Password: ");
+  if (password == null) {
+      throw new IllegalStateException("No password was entered.");
+  }
+  try {
+      // Use the password without converting it to a String.
+  } finally {
+      Arrays.fill(password, '\0');
+  }
+  ```
 
 
 ## 1.6 Compilation, Execution, and Classpath
@@ -223,11 +263,47 @@ static void rename(StringBuilder name) {
 
 ## 1.9 Arrays
 
-- Arrays are fixed-size objects with zero-based indexes.
-- Array elements receive defaults; a local array reference does not.
-- Arrays are covariant, so `Number[] values = new Integer[2]` compiles but can throw `ArrayStoreException`.
-- Common utilities include `Arrays.copyOf`, `sort`, `binarySearch`, `equals`, and `deepEquals`.
-- For resizable sequences, prefer `ArrayList`.
+- An array is a fixed-length object whose elements all have the same component type. Its length is available through the `length` field, and valid indexes run from `0` to `length - 1`.
+- Declare an array reference with `type[]`; create the array with `new` or an initializer. The reference itself can be reassigned, but the array's length cannot change.
+  ```java
+  int[] scores = new int[3];       // elements default to 0
+  scores[0] = 95;
+  int[] ages = { 18, 21, 30 };     // declare and initialize
+  String[] names = new String[2];  // elements default to null
+
+  System.out.println(ages.length); // 3
+  System.out.println(ages[0]);     // 18
+  ```
+
+- Array elements receive default values (`0`, `false`, or `null`, depending on the component type); a local array reference does not and must be assigned before use. Accessing an invalid index throws `ArrayIndexOutOfBoundsException`.
+- Use an indexed loop when you need the position or want to update elements; use a for-each loop when you only need to visit each element.
+  ```java
+  for (int i = 0; i < scores.length; i++) {
+    scores[i] += 5;
+  }
+  for (int score : scores) {
+    System.out.println(score);
+  }
+  ```
+
+- A multidimensional array is an array of arrays. Rows can have different lengths, or even be `null`.
+  ```java
+  int[][] grid = new int[2][3];  // two rows, three columns each
+  int[][] triangle = { { 1 }, { 2, 3 }, { 4, 5, 6 } }; // jagged
+  ```
+
+- Arrays are reference types. Assigning an array variable copies its reference, not its elements; changes through either reference affect the same array. Use `Arrays.copyOf` or `clone()` for a shallow copy. For nested arrays, a shallow copy still shares the inner arrays.
+- Arrays are covariant, so `Number[] values = new Integer[2]` compiles, but storing a non-`Integer` value through `values` throws `ArrayStoreException` at runtime. Prefer invariant generic collections when this runtime restriction is undesirable.
+- `Arrays.equals` compares one-dimensional contents; use `Arrays.deepEquals` for nested arrays. `Arrays.sort` sorts in place. `Arrays.binarySearch` requires the array to already be sorted; otherwise its result is not meaningful.
+  ```java
+  int[] values = { 4, 1, 3 };
+  int[] copy = java.util.Arrays.copyOf(values, values.length);
+  java.util.Arrays.sort(copy);
+  int index = java.util.Arrays.binarySearch(copy, 3); // index 1
+  boolean sameContents = java.util.Arrays.equals(values, copy); // false
+  ```
+
+- For a resizable sequence, prefer `ArrayList`; for bulk operations and array utilities, see `java.util.Arrays`.
 
 ## 1.10 Literals and Compile-Time Constants
 
@@ -301,116 +377,155 @@ java -jar app.jar
 
 # 2. Object-Oriented Programming
 
+Object-oriented programming organizes code around objects that combine state and behavior. The core ideas are encapsulation, abstraction, inheritance, and polymorphism. Use them to model clear responsibilities and contracts; a class is not automatically better just because it has more getters, setters, or inheritance.
+
 ## 2.1 Classes, Objects, and Constructors
 
-- A class declares a type; creating an instance gives that type object identity and state.
-  public class Employee {
-    String name; // instance variable
-    static String company = "Stitch"; // static - shared by all
-  }
-- An assignment copies a reference, not the object:
-  Employee e1 = new Employee(); // new creates object
-  e1.name = "Ali";
-  Employee e2 = e1; // both references designate the same object
-- A constructor initializes a new instance. It has the class name and no return type.
-  public class Employee {
-    String name;
-    // The compiler supplies a no-argument constructor only if no constructor is declared.
-    Employee() { this("Unknown"); }
+- A class declares a reference type, its fields, constructors, and methods. An object is an instance with identity and state. Instance members belong to each object; static members belong to the class.
+  ```java
+  class Employee {
+    private final String name;
+    static String company = "Stitch";
 
-    // Parameterized
-    Employee(String name) { this.name = java.util.Objects.requireNonNull(name); }
+    Employee(String name) {
+      this.name = java.util.Objects.requireNonNull(name);
+    }
+  }
+  ```
+- Assigning an object variable copies the reference, not the object. Both variables below refer to the same `Employee`.
+  ```java
+  Employee first = new Employee("Ali");
+  Employee second = first;
+  ```
+- A constructor initializes a new instance. It has the class name and no return type. If no constructor is declared, the compiler provides a no-argument constructor; declaring any constructor suppresses that default.
+  ```java
+  class Employee {
+    private final String name;
+
+    Employee() {
+      this("Unknown"); // constructor delegation must be first
+    }
+
+    Employee(String name) {
+      this.name = java.util.Objects.requireNonNull(name);
+    }
 
     // Copy constructors are a convention, not a Java-generated feature.
-    Employee(Employee other) { this(other.name); }
+    Employee(Employee other) {
+      this(java.util.Objects.requireNonNull(other).name);
+    }
   }
+  ```
 - `this(...)` delegates to another constructor in the same class and must be the first constructor statement. Constructor chaining centralizes validation and initialization.
 
 ## 2.2 Encapsulation and Accessors
 
-- Encapsulation: Hide data using private, expose via methods. For data security + validation.
-  public class BankAccount {
-    private double balance; // cannot access directly from outside
+- Encapsulation hides representation and exposes operations that preserve an object's invariants. It is not simply making fields private and generating a getter and setter for every field.
+  ```java
+  class BankAccount {
+    private java.math.BigDecimal balance = java.math.BigDecimal.ZERO;
 
-    public double getBalance() { return balance; } // getter
+    public java.math.BigDecimal balance() {
+      return balance;
+    }
 
-    public void setBalance(double bal) {
-      if (bal < 0) throw new IllegalArgumentException("balance must be non-negative");
-      this.balance = bal;
+    public void deposit(java.math.BigDecimal amount) {
+      if (amount == null || amount.signum() <= 0) {
+        throw new IllegalArgumentException("amount must be positive");
+      }
+      balance = balance.add(amount);
     }
   }
-- Encapsulation protects invariants; a setter that accepts every value can still expose invalid state. For financial calculations, prefer `BigDecimal` with a documented scale and rounding policy over `double`.
+  ```
+- Prefer domain operations such as `deposit` and `withdraw` over unrestricted setters that let callers violate valid-state rules. For financial calculations, use `BigDecimal` with a documented scale and rounding policy instead of `double`.
 - Abstraction presents a useful contract while hiding implementation details; encapsulation controls access to state and behavior.
 
 ## 2.3 Inheritance
 
-- One class gets properties of another. For code reuse. IS-A relationship.
-  class Parent { String surname = "Khan"; }
-  class Child extends Parent { String name = "Ali"; }
-  // Child now has surname + name
-- super keyword:
-    - super() - calls parent constructor, must be first line in child constructor
-    - super.var - parent variable
-    - super.method() - parent method
-  class Child extends Parent {
-    Child() {
-      super(); // calls Parent()
-      System.out.println(super.surname);
+- Inheritance forms an IS-A relationship: a subclass inherits accessible members and can specialize its superclass. Model substitutable types, not just opportunities to reuse code.
+  ```java
+  class Vehicle {
+    void start() {
+      System.out.println("Starting");
     }
   }
+
+  class ElectricCar extends Vehicle {
+    @Override
+    void start() {
+      System.out.println("Starting electric motor");
+    }
+  }
+  ```
+- `super(...)` invokes a superclass constructor and, when written explicitly, must be the first constructor statement. If omitted, Java inserts `super()`; compilation fails if the superclass has no accessible no-argument constructor. `super.field` and `super.method()` refer to inherited members.
 - Common class hierarchies are single, multilevel, and hierarchical. A class can extend only one class but can implement multiple interfaces.
 - Every class without an explicit superclass extends `Object`; interfaces do not extend `Object`.
 
 ## 2.4 Polymorphism
 
-- Overloading: methods share a name but have different parameter signatures; overload resolution uses compile-time argument types and applicable conversions. Return type alone does not distinguish overloads.
+- **Overloading** gives methods the same name with different parameter lists. The compiler selects an overload using compile-time argument types and applicable conversions; return type alone cannot distinguish overloads.
+  ```java
   class Calculator {
-    int add(int a, int b) { return a+b; }
-    int add(int a, int b, int c) { return a+b+c; } // diff count
-    double add(double a, double b) { return a+b; } // diff type
+    int add(int a, int b) { return a + b; }
+    int add(int a, int b, int c) { return a + b + c; }
+    double add(double a, double b) { return a + b; }
   }
-  // Rules: Return type alone not enough to overload, must change params
-- Overriding: a subtype supplies an implementation of an inherited instance method. The runtime receiver type selects the implementation; fields and static methods are not dynamically overridden.
-  class Bank { double getRate() { return 5.0; } }
-  class SBI extends Bank {
+  ```
+- **Overriding** lets a subtype provide an implementation of an inherited instance method. The runtime object's type selects the implementation.
+  ```java
+  class Bank {
+    double getRate() { return 5.0; }
+  }
+
+  class SavingsBank extends Bank {
     @Override
-    double getRate() { return 7.5; } // overrides
+    double getRate() { return 7.5; }
   }
-  Bank b = new SBI(); // Parent ref, Child object
-  b.getRate(); // 7.5 - Child's method runs - Runtime Polymorphism
+
+  Bank account = new SavingsBank();
+  System.out.println(account.getRate()); // 7.5
+  ```
 - Rules for overriding: the method must be inherited and have a subsignature; private methods are not inherited, static methods are hidden, and final methods cannot be overridden. An override cannot reduce visibility or broaden checked exceptions.
 
 ## 2.5 Abstraction: Abstract Classes and Interfaces
 
-- Show WHAT to do, hide HOW.
-- Abstract Class (0-100% abstraction):
+- Abstraction defines the behavior clients may rely on while hiding implementation choices. Abstract classes are useful for a related family that shares state or implementation; interfaces define contracts or capabilities that unrelated classes can implement.
+  ```java
   abstract class Payment {
-    abstract void pay(); // no body - child must implement
-    void receipt() { System.out.println("Receipt printed"); } // can have concrete method
-    Payment() { } // can have constructor
-  }
-  // Payment p = new Payment(); // ERROR - cannot create object
-  class UPI extends Payment {
-    void pay() { System.out.println("Pay via UPI"); }
-  }
-- Interface (100% abstraction - till Java 7, now can have default/static from Java 8):
-  interface PaymentGateway {
-    int VERSION = 1; // public static final by default
-    void pay(); // public abstract by default
-    default void log() { System.out.println("Logging"); } // Java 8
-  }
-  class Razorpay implements PaymentGateway {
-    public void pay() { System.out.println("Pay"); }
-  }
-- Interview Difference Table:
-| Abstract Class | Interface |
-| --- | --- |
-| extends | implements |
-| Can have constructors and instance state | No constructors or per-instance state; fields are constants |
-| Single inheritance | Multiple interfaces can be implemented |
-| Use for shared base state/implementation | Use to define capabilities and decoupled contracts |
+    abstract void pay();
 
-Interfaces may define `default` and `static` methods (Java 8+) and private helper methods (Java 9+). An implementing class must still provide public implementations of abstract interface methods.
+    void printReceipt() {
+      System.out.println("Receipt printed");
+    }
+  }
+
+  interface Refundable {
+    void refund();
+  }
+
+  class CardPayment extends Payment implements Refundable {
+    @Override
+    void pay() {
+      System.out.println("Pay by card");
+    }
+
+    @Override
+    public void refund() {
+      System.out.println("Refund to card");
+    }
+  }
+  ```
+- An abstract class cannot be instantiated directly, but it can have constructors, instance state, and concrete methods. An interface cannot be instantiated and has no per-instance state; its fields are implicitly `public static final` constants and its abstract methods are implicitly `public`.
+- Interfaces may also define `default` and `static` methods (Java 8+) and private helper methods (Java 9+). A class implementing an interface must provide public implementations of its abstract methods.
+
+| Abstract class | Interface |
+| --- | --- |
+| A class extends one superclass | A class can implement multiple interfaces |
+| Can have constructors and instance state | No constructors or per-instance state |
+| Can provide shared state and implementation | Defines a contract; can also provide default and static methods |
+| Useful for a closely related type hierarchy | Useful for capabilities and decoupled contracts |
+
+Use the narrowest useful abstraction: consumers should depend on the operations they need rather than a specific implementation.
 
 ## 2.6 Access Modifiers
 
@@ -428,11 +543,6 @@ public class A {
   protected int c = 3; // package + child outside pkg
   public int d = 4; // anywhere
 }
-
-### Interview Notes
-
-- Outside the package, a subclass can access a protected instance member through `this`, or through a reference whose compile-time type is that subclass (or its subtype); it cannot freely access the member through an arbitrary parent-typed reference.
-- Encapsulation uses private + public getters/setters.
 
 ## 2.7 Composition, Association, and Aggregation
 
