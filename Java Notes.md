@@ -1,4 +1,31 @@
+# Java Notes
+
+ A practical reference for Core Java, modern language features, JVM internals, testing, build tools, and production best practices.
+
+## Contents
+
  1. Fundamentals
+ 2. Object-Oriented Programming
+ 3. Keywords and Essentials
+ 4. Memory and Strings
+ 5. Exception Handling
+ 6. Collections Framework
+ 7. Generics
+ 8. Multithreading and Concurrency
+ 9. Java 8+ Features
+ 10. JVM Internals
+ 11. Advanced Core Java
+ 12. SOLID Principles and Design Patterns
+ 13. Maven and Gradle
+ 14. Testing with JUnit and Mockito
+ 15. Java Platform Module System
+ 16. Modern Java Features
+ 17. Production Java Best Practices
+ 18. Security Essentials
+ 19. Performance, Monitoring, and Troubleshooting
+ 20. Quick Revision Checklist
+
+## 1. Fundamentals
 JVM - Java Virtual Machine
 - The engine that actually runs your code
 - Reads .class bytecode and converts it to machine code for your OS
@@ -127,7 +154,7 @@ boolean 	 1 bit 	 true/false 	false
   char[] pwd = c.readPassword();
 
 
-2. OOP
+## 2. Object-Oriented Programming
 - Class, Object, Constructor
 - Encapsulation + getters/setters
 - Inheritance (extends, super)
@@ -135,7 +162,7 @@ boolean 	 1 bit 	 true/false 	false
 - Abstraction - abstract class vs interface
 - Access Modifiers - private, default, protected, public
 
-Here is OOP - this is 70% of your interview:
+OOP is a major area in Java interviews:
 
 1. Class, Object, Constructor
 
@@ -260,11 +287,11 @@ public class A {
   protected int c = 3; // package + child outside pkg
   public int d = 4; // anywhere
 }
-For Stitch interview remember: 
+Interview notes:
 - Why protected needed? To allow child outside package to access parent.
 - Encapsulation uses private + public getters/setters.
 
-3. Keywords & Essentials
+## 3. Keywords and Essentials
 - this, super, final, static
 - Packages, import
 - Wrapper Classes, Autoboxing
@@ -385,11 +412,9 @@ Integer.MAX_VALUE; // constants
 - Autoboxing vs Unboxing: Compiler does automatically.
 - Caching: Integer caches -128 to 127. Integer a=100, b=100 -> a==b true, but a=200,b=200 -> a==b false because new objects. Use .equals() always.
 
-This is asked in Stitch - == vs .equals() for Integer.
+Interview note: use `.equals()` rather than `==` to compare wrapper values.
 
-Want next - Strings (most asked) + Exception Handling?
-
-4. Memory & String
+## 4. Memory and Strings
 - Heap vs Stack, String Pool
 - String, StringBuilder, StringBuffer (immutable vs mutable)
 - equals() vs ==
@@ -488,9 +513,7 @@ public int hashCode() { return name.hashCode(); }
 
 - Bonus: equals() contract - reflexive, symmetric, transitive, consistent.
 
-Want next - Exception Handling + Collections?
-
-5. Exception Handling
+## 5. Exception Handling
 - Checked vs Unchecked Exception
 - try-catch-finally, throw, throws
 - Custom Exception
@@ -611,9 +634,7 @@ public class Main {
     3.  Difference Error vs Exception? Error cannot be recovered, Exception can.
     4.  Why checked exception not good for microservices? Forces handling everywhere - so Spring uses unchecked.
 
-Next - Collections - want that?
-
-6. Collections Framework
+## 6. Collections Framework
 - List: ArrayList vs LinkedList vs Vector
 - Set: HashSet vs LinkedHashSet vs TreeSet
 - Map: HashMap vs LinkedHashMap vs TreeMap vs ConcurrentHashMap
@@ -761,10 +782,7 @@ Interview Must-Know:
 3. When to use which Map/List - they give scenario.
 4. How to make ArrayList thread safe? Collections.synchronizedList(list) or CopyOnWriteArrayList
 
-Want next - Multithreading + Java 8 features (Stream)?
-
-7. Generics
-adsasasd
+## 7. Generics
 7. Generics - Detailed
 
 Generics = type safety at compile time. Write code once, work for any type. Added in Java 5.
@@ -885,14 +903,12 @@ List<Integer> intList = new ArrayList<>();
 // But arrays are covariant
 Integer[] intArr = new Integer[10];
 Number[] numArr = intArr; // OK in arrays - but can cause ArrayStoreException at runtime
-Quick summary for Stitch:
+Quick summary:
 - Always use generics - type safe, no casting
 - Use extends when you need to read numbers, super when you need to add
 - All generic info erased at runtime
 
-Next - Java 8 Features (Lambda, Stream, Optional) - that is 100% asked in Guindy?
-
-8. Multithreading & Concurrency
+## 8. Multithreading and Concurrency
 - Thread, Runnable, Thread lifecycle
 - synchronized, volatile
 - ExecutorService, Future, CompletableFuture
@@ -1090,9 +1106,7 @@ Interview Must for Stitch Guindy:
 3.  wait() vs sleep()? wait releases lock, sleep doesn't.
 4.  How CompletableFuture works internally? ForkJoinPool.
 
-Want next - Java 8 Streams?
-
-9. Java 8+
+## 9. Java 8+ Features
 - Functional Interface, Lambda, Method Reference
 - Stream API - filter, map, flatMap, reduce, collect
 - Optional
@@ -1100,7 +1114,7 @@ Want next - Java 8 Streams?
 - Date/Time API (java.time)
 - Records, Sealed Classes (Java 17+), Pattern Matching
 
-9. Java 8+ - Most asked in Stitch Chennai - You must code this
+9. Java 8+ - Important practical and interview topic
 
 A. Functional Interface, Lambda, Method Reference
 
@@ -1307,21 +1321,19 @@ String json = """
     "id": 1
   }
   """;
-Stitch interview quick code they ask:
+Common interview exercises:
 // Find duplicate numbers using stream
 list.stream().collect(groupingBy(Function.identity(), counting()))
     .entrySet().stream().filter(e->e.getValue()>1).map(Map.Entry::getKey).collect(toList())
 
 // 2nd highest salary
 employees.stream().map(e->e.salary).sorted(Comparator.reverseOrder()).skip(1).findFirst()
-Want final topic - JVM internals + SOLID?
-
-10. JVM Internals
+## 10. JVM Internals
 - ClassLoader, Garbage Collection, Mark & Sweep
 - Memory Areas - Young/Old Gen, Metaspace
 - equals() & hashCode() contract
 
-10. JVM Internals - Deep Topic - Stitch asks this for Senior
+10. JVM Internals - Deep Topic
 
 A. JVM Architecture - Full
 Java Code (.java) -> javac -> Bytecode (.class) -> JVM -> OS -> Hardware
@@ -1439,16 +1451,14 @@ public int hashCode(){
 }
 - Ideal hashCode: Use same fields, distribute well, use Objects.hash() or 31 * result + field.hashCode() - 31 is prime and fast with shift.
 
-Interview killer Qs:
+Interview questions:
 1.  Why String Pool possible? Because String immutable + hashCode cached.
 2.  What is GC Root? Stack refs, static, JNI.
 3.  Can you call GC? System.gc() hint, not guarantee.
 4.  OutOfMemory vs StackOverflow?
 5.  What happens if hashCode not overridden?
 
-This completes Core Java. You want me to create 1 PDF of all 10 topics for revision before interview?
-
-11. Advanced
+## 11. Advanced Core Java
 - Serialization, Cloning
 - Reflection, Annotations
 - IO vs NIO, File handling
@@ -1608,3 +1618,684 @@ try{
   con.commit(); 
 } catch(Exception e){ con.rollback(); }
 
+## 12. SOLID Principles and Design Patterns
+
+SOLID is a set of design guidelines that makes object-oriented code easier to change, test, and maintain. These are principles, not strict rules; apply them when they reduce coupling and clarify responsibilities.
+
+### A. Single Responsibility Principle (SRP)
+
+A class should have one reason to change. Keep business rules, persistence, formatting, and transport logic separate.
+
+```java
+class InvoiceCalculator {
+  BigDecimal total(Invoice invoice) {
+    return invoice.items().stream()
+        .map(Item::price)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+}
+
+class InvoiceRepository {
+  void save(Invoice invoice) {
+    // persistence logic
+  }
+}
+```
+
+Do not create a single `InvoiceManager` that calculates totals, writes files, sends email, and updates the database.
+
+### B. Open/Closed Principle (OCP)
+
+Software entities should be open for extension but closed for modification. Prefer adding a new implementation over repeatedly changing a large `if/else` or `switch`.
+
+```java
+interface DiscountPolicy {
+  BigDecimal apply(BigDecimal amount);
+}
+
+class RegularDiscount implements DiscountPolicy {
+  public BigDecimal apply(BigDecimal amount) {
+    return amount;
+  }
+}
+
+class PremiumDiscount implements DiscountPolicy {
+  public BigDecimal apply(BigDecimal amount) {
+    return amount.multiply(new BigDecimal("0.90"));
+  }
+}
+```
+
+### C. Liskov Substitution Principle (LSP)
+
+A subtype must be usable wherever its parent type is expected without breaking behavior. An override must preserve the parent's contract, including accepted inputs, outputs, and exceptions.
+
+Bad example: a `ReadOnlyFile` extending `File` but throwing `UnsupportedOperationException` from a required `write()` method. Better: use separate `Readable` and `Writable` interfaces.
+
+### D. Interface Segregation Principle (ISP)
+
+Clients should not depend on methods they do not use. Prefer small capability-based interfaces.
+
+```java
+interface Printable { void print(); }
+interface Scannable { void scan(); }
+interface Faxable { void fax(); }
+```
+
+A basic printer can implement only `Printable`; it does not need fake `scan()` or `fax()` methods.
+
+### E. Dependency Inversion Principle (DIP)
+
+High-level business logic should depend on abstractions, not concrete infrastructure.
+
+```java
+interface PaymentGateway {
+  PaymentResult charge(Money amount);
+}
+
+class CheckoutService {
+  private final PaymentGateway gateway;
+
+  CheckoutService(PaymentGateway gateway) {
+    this.gateway = gateway;
+  }
+}
+```
+
+Constructor injection makes dependencies explicit and simplifies testing.
+
+### F. Common Design Patterns
+
+- **Strategy:** Select interchangeable behavior at runtime, such as payment or discount policies.
+- **Factory Method:** Centralize object creation when construction varies by type.
+- **Builder:** Construct complex objects with readable optional parameters.
+- **Adapter:** Make an incompatible external API implement an application interface.
+- **Decorator:** Add behavior by wrapping an object instead of subclassing it.
+- **Observer:** Notify subscribers when state changes; avoid hidden or uncontrolled event chains.
+- **Template Method:** Define an algorithm skeleton and let subclasses customize selected steps.
+- **Singleton:** One instance per class loader, not necessarily one per process or distributed system. Prefer dependency injection; global mutable state harms testability.
+
+Example of a thread-safe singleton using an enum:
+
+```java
+enum ApplicationRegistry {
+  INSTANCE;
+
+  private final Map<String, String> values = new ConcurrentHashMap<>();
+
+  void put(String key, String value) {
+    values.put(key, value);
+  }
+}
+```
+
+## 13. Maven and Gradle
+
+Build tools compile source, run tests, resolve dependencies, package artifacts, and execute plugins consistently in local and CI environments.
+
+### A. Standard Project Layout
+
+```text
+project/
+  pom.xml or build.gradle
+  src/
+    main/
+      java/
+      resources/
+    test/
+      java/
+      resources/
+```
+
+### B. Maven
+
+Maven uses `pom.xml` and a lifecycle:
+
+- `validate`: check project structure.
+- `compile`: compile production code.
+- `test`: run unit tests.
+- `package`: create JAR/WAR.
+- `verify`: run integration checks.
+- `install`: place artifact in the local repository.
+- `deploy`: publish artifact to a remote repository.
+- `clean`: remove generated build output.
+
+Common commands:
+
+```text
+mvn clean verify
+mvn test
+mvn -DskipTests package
+mvn dependency:tree
+```
+
+Dependency scopes:
+
+- `compile`: available everywhere; default scope.
+- `provided`: required to compile but supplied by the runtime, such as a servlet container.
+- `runtime`: not required to compile but required at runtime, such as a JDBC driver.
+- `test`: only for test compilation and execution.
+
+Use `<dependencyManagement>` to control versions shared by child modules. It declares versions but does not add dependencies by itself.
+
+### C. Gradle
+
+Gradle uses Groovy or Kotlin build scripts and a task graph.
+
+```groovy
+plugins {
+  id 'java'
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  testImplementation platform('org.junit:junit-bom:5.11.0')
+  testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+  useJUnitPlatform()
+}
+```
+
+Common commands:
+
+```text
+gradlew clean build
+gradlew test
+gradlew dependencies
+gradlew tasks
+```
+
+Always use the Maven Wrapper (`mvnw`) or Gradle Wrapper (`gradlew`) in a project so developers and CI use the intended tool version.
+
+### D. Dependency Guidance
+
+- Pin or centrally manage dependency and plugin versions.
+- Inspect transitive dependencies before exclusions.
+- Keep lockfiles or dependency verification metadata when the build tool supports them.
+- Never place credentials directly in build files.
+- Run vulnerability scanning in CI and update dependencies deliberately.
+- Produce reproducible builds: the same source and inputs should create equivalent output.
+
+## 14. Testing with JUnit and Mockito
+
+### A. Testing Pyramid
+
+- **Unit tests:** Fast and isolated; test one unit of behavior.
+- **Integration tests:** Verify database, network, filesystem, framework, or multiple components together.
+- **End-to-end tests:** Exercise the deployed system through its public interface; fewer because they are slower and more fragile.
+
+Good tests follow Arrange-Act-Assert and describe behavior rather than implementation.
+
+### B. JUnit 5
+
+```java
+class CalculatorTest {
+  private Calculator calculator;
+
+  @BeforeEach
+  void setUp() {
+    calculator = new Calculator();
+  }
+
+  @Test
+  @DisplayName("adds two positive numbers")
+  void addsPositiveNumbers() {
+    int result = calculator.add(2, 3);
+
+    assertEquals(5, result);
+  }
+
+  @ParameterizedTest
+  @CsvSource({"2, 3, 5", "-1, 1, 0", "0, 0, 0"})
+  void addsValues(int left, int right, int expected) {
+    assertEquals(expected, calculator.add(left, right));
+  }
+}
+```
+
+Useful assertions:
+
+```java
+assertEquals(expected, actual);
+assertTrue(condition);
+assertNull(value);
+assertAll(
+    () -> assertEquals("Ali", employee.name()),
+    () -> assertEquals(10, employee.id())
+);
+IllegalArgumentException error =
+    assertThrows(IllegalArgumentException.class, () -> service.find(-1));
+assertTimeout(Duration.ofMillis(100), () -> service.calculate());
+```
+
+Test lifecycle:
+
+- `@BeforeEach` / `@AfterEach`: run around every test.
+- `@BeforeAll` / `@AfterAll`: run once per class; normally static.
+- `@Nested`: organize related scenarios.
+- `@Disabled`: temporarily skip a test; include a reason.
+
+### C. Mockito
+
+Mock external collaborators, not simple value objects or the class under test.
+
+```java
+@ExtendWith(MockitoExtension.class)
+class OrderServiceTest {
+  @Mock PaymentGateway gateway;
+  @Mock OrderRepository repository;
+  @InjectMocks OrderService service;
+
+  @Test
+  void savesOrderAfterSuccessfulPayment() {
+    Order order = new Order(100);
+    when(gateway.charge(order.total())).thenReturn(PaymentResult.success());
+
+    service.place(order);
+
+    verify(repository).save(order);
+    verifyNoMoreInteractions(repository);
+  }
+}
+```
+
+Key methods:
+
+- `when(...).thenReturn(...)`: stub a result.
+- `when(...).thenThrow(...)`: stub an error.
+- `verify(...)`: check an interaction.
+- `ArgumentCaptor<T>`: inspect an argument sent to a collaborator.
+- `doThrow(...)`: useful for stubbing void methods.
+
+Avoid over-mocking, verifying every private detail, sleeping in tests, shared mutable fixtures, and tests that depend on execution order.
+
+### D. Test Quality
+
+- Test normal cases, boundaries, invalid input, and failure paths.
+- Keep tests deterministic: control clocks, randomness, threads, and external services.
+- Inject `Clock` instead of calling `LocalDateTime.now()` directly when time affects behavior.
+- Use temporary directories for file tests.
+- Prefer realistic integration tests for SQL queries and serialization contracts.
+- Treat coverage as a signal, not the goal; assertions must verify meaningful behavior.
+
+## 15. Java Platform Module System
+
+JPMS was introduced in Java 9. A module explicitly declares what it requires and which packages it exposes.
+
+```text
+src/
+  com.example.payment/
+    module-info.java
+    com/example/payment/PaymentService.java
+```
+
+```java
+module com.example.payment {
+  requires java.sql;
+  requires transitive com.example.model;
+
+  exports com.example.payment.api;
+  opens com.example.payment.internal to com.fasterxml.jackson.databind;
+
+  uses com.example.payment.api.PaymentProvider;
+  provides com.example.payment.api.PaymentProvider
+      with com.example.payment.internal.CardPaymentProvider;
+}
+```
+
+Important directives:
+
+- `requires`: reads another module.
+- `requires transitive`: consumers also read that dependency.
+- `exports`: makes a package accessible to other modules.
+- `opens`: allows deep reflection, often for frameworks.
+- `uses` and `provides ... with`: declare service loading.
+
+The classpath is permissive and unnamed; the module path provides stronger encapsulation and reliable dependency declarations. A package should belong to only one named module; split packages cause problems.
+
+## 16. Modern Java Features
+
+Use the project's configured Java version before adopting a feature. Long-term-support releases commonly used in production include Java 8, 11, 17, 21, and 25.
+
+### A. `var` for Local Variables (Java 10)
+
+```java
+var names = new ArrayList<String>(); // inferred as ArrayList<String>
+var total = calculateTotal();        // inferred from return type
+```
+
+`var` is not dynamic typing. The compiler still assigns one static type. It works only for local variables with an initializer, enhanced-for variables, and lambda parameters. Avoid it when the inferred type is unclear.
+
+### B. Helpful NullPointerExceptions (Java 14)
+
+The JVM can identify which part of a chained expression was null. This improves diagnostics but does not replace input validation or null-safe design.
+
+### C. Records (Final in Java 16)
+
+Records model transparent, shallowly immutable data:
+
+```java
+record User(int id, String name) {
+  User {
+    if (id <= 0) throw new IllegalArgumentException("id must be positive");
+    Objects.requireNonNull(name, "name");
+  }
+}
+```
+
+Record components are final references, but referenced mutable objects are still mutable. Make defensive copies when required:
+
+```java
+record Team(List<String> members) {
+  Team {
+    members = List.copyOf(members);
+  }
+}
+```
+
+### D. Sealed Types (Final in Java 17)
+
+```java
+sealed interface Result permits Success, Failure {}
+record Success(String value) implements Result {}
+record Failure(String message) implements Result {}
+```
+
+Permitted implementations must be `final`, `sealed`, or `non-sealed`. Sealed hierarchies work well with exhaustive pattern matching.
+
+### E. Pattern Matching for `switch` (Final in Java 21)
+
+```java
+static String describe(Object value) {
+  return switch (value) {
+    case null -> "null";
+    case Integer i when i > 0 -> "positive integer";
+    case Integer i -> "integer: " + i;
+    case String s -> "text: " + s;
+    default -> "other";
+  };
+}
+```
+
+Case order matters when one pattern dominates another. Exhaustive switches over enums and sealed hierarchies reduce missing-case bugs.
+
+### F. Virtual Threads (Final in Java 21)
+
+Virtual threads are lightweight JVM-managed threads suited to high-throughput tasks that spend much of their time blocked on I/O.
+
+```java
+try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+  Future<String> user = executor.submit(() -> loadUser());
+  Future<String> orders = executor.submit(() -> loadOrders());
+  System.out.println(user.get() + orders.get());
+}
+```
+
+Guidance:
+
+- Write straightforward blocking code; do not pool virtual threads to limit concurrency.
+- Limit access to scarce resources with semaphores or connection pools.
+- They do not make CPU-bound work faster; CPU work is still limited by available cores.
+- Avoid long blocking operations while holding `synchronized` monitors, especially on older JDK 21 implementations where pinning can reduce scalability.
+- Measure before and after migration.
+
+### G. Sequenced Collections (Java 21)
+
+`SequencedCollection`, `SequencedSet`, and `SequencedMap` provide a uniform API for ordered collections:
+
+```java
+SequencedCollection<String> names = new ArrayList<>();
+names.addFirst("A");
+names.addLast("B");
+String first = names.getFirst();
+SequencedCollection<String> reversed = names.reversed();
+```
+
+### H. Switch Expressions and Text Blocks
+
+```java
+String label = switch (status) {
+  case NEW -> "New";
+  case ACTIVE -> "Active";
+  case CLOSED -> "Closed";
+};
+
+String json = """
+    {
+      "name": "Ali",
+      "active": true
+    }
+    """;
+```
+
+Switch expressions must produce a value for every possible path. Use `yield` from a multi-statement case block.
+
+## 17. Production Java Best Practices
+
+### A. API and Object Design
+
+- Validate constructor and method inputs at boundaries.
+- Prefer immutable objects for values shared across threads.
+- Use records for data carriers when their semantics fit.
+- Prefer composition over inheritance unless there is a genuine substitutable IS-A relationship.
+- Return empty collections rather than `null`.
+- Use `Optional` primarily as a return type, not for every field or parameter.
+- Avoid exposing mutable internal collections; return `List.copyOf(...)` or an unmodifiable view as appropriate.
+- Program to interfaces when multiple implementations or test doubles are expected.
+
+### B. Resource Management
+
+Use try-with-resources for every `AutoCloseable`:
+
+```java
+try (InputStream input = Files.newInputStream(path);
+     BufferedInputStream buffered = new BufferedInputStream(input)) {
+  return buffered.readAllBytes();
+}
+```
+
+Resources close in reverse declaration order. If both the body and `close()` fail, the close error becomes a suppressed exception accessible through `getSuppressed()`.
+
+### C. Exception Design
+
+- Catch exceptions only where you can recover, add useful context, or translate them at an abstraction boundary.
+- Preserve the cause: `throw new OrderException("Cannot load order " + id, cause);`
+- Never catch `Throwable` for normal application handling.
+- Do not use exceptions for expected control flow.
+- Log an exception once at the boundary that handles it; avoid duplicate logs at every layer.
+- Never ignore interrupted status:
+
+```java
+try {
+  queue.take();
+} catch (InterruptedException e) {
+  Thread.currentThread().interrupt();
+  return;
+}
+```
+
+### D. Money, Time, and Equality
+
+- Use `BigDecimal` for decimal money calculations, not `double`.
+- Construct decimals from strings: `new BigDecimal("0.10")`, not `new BigDecimal(0.10)`.
+- Specify rounding explicitly when division may be non-terminating.
+- Store machine timestamps as `Instant`; convert to a user time zone at the boundary.
+- Use `LocalDate` for date-only values such as birthdays.
+- Keep fields used by `equals()` and `hashCode()` stable while an object is a `HashMap` key or `HashSet` member.
+
+### E. Logging
+
+- Use a logging facade and parameterized messages: `log.info("Created order {}", orderId);`
+- Choose levels consistently: `ERROR`, `WARN`, `INFO`, `DEBUG`, `TRACE`.
+- Include correlation/request IDs for distributed flows.
+- Do not log passwords, tokens, session IDs, full payment data, or sensitive personal information.
+- Avoid expensive string construction when debug logging is disabled.
+
+### F. Code Quality
+
+- Keep methods focused and names intention-revealing.
+- Remove dead code instead of commenting it out; version control keeps history.
+- Use static analysis, formatting, tests, and compiler warnings in CI.
+- Treat unchecked warnings as issues to understand, not noise to suppress broadly.
+- Benchmark performance-sensitive alternatives instead of relying on intuition.
+
+## 18. Security Essentials
+
+### A. Input and Output
+
+- Validate input by type, length, range, format, and business rules.
+- Prefer allowlists over blocklists.
+- Encode output for its destination: HTML, JavaScript, URL, SQL, shell, or log contexts need different handling.
+- Do not build SQL with string concatenation. Use `PreparedStatement`.
+- Avoid executing OS commands with untrusted input. If unavoidable, pass fixed arguments without invoking a shell.
+
+### B. Secrets and Cryptography
+
+- Keep secrets outside source control in a secret manager or protected environment configuration.
+- Never invent cryptographic algorithms.
+- Use authenticated encryption such as AES-GCM when application-level encryption is required.
+- Use `SecureRandom` for security-sensitive randomness.
+- Store passwords using a dedicated slow password-hashing algorithm such as Argon2id, bcrypt, scrypt, or PBKDF2 with a unique salt.
+- Clear sensitive character arrays when practical; immutable `String` values cannot be cleared.
+
+```java
+SecureRandom random = new SecureRandom();
+byte[] token = new byte[32];
+random.nextBytes(token);
+String encoded = Base64.getUrlEncoder().withoutPadding().encodeToString(token);
+```
+
+### C. Deserialization and Reflection
+
+Native Java deserialization of untrusted bytes is dangerous because gadget chains can execute code. Prefer constrained formats such as JSON with explicit target types. If legacy serialization is unavoidable, use JDK object input filters and a strict allowlist.
+
+Reflection can bypass normal access controls and type checks. Restrict reflected classes and members; do not derive class names or method names directly from untrusted input.
+
+### D. Files and Paths
+
+Prevent path traversal by resolving against an expected root and verifying the normalized result:
+
+```java
+Path root = Path.of("/data/uploads").toAbsolutePath().normalize();
+Path target = root.resolve(userFileName).normalize();
+if (!target.startsWith(root)) {
+  throw new SecurityException("Invalid path");
+}
+```
+
+Also limit upload size, verify content rather than trusting extensions, generate server-side file names, and apply least-privilege file permissions.
+
+### E. Dependency and Runtime Security
+
+- Use supported JDK releases and apply security updates.
+- Scan direct and transitive dependencies.
+- Remove unused dependencies and features.
+- Run the process as a non-administrator with minimum filesystem and network access.
+- Use TLS certificate validation; never install a trust-all manager in production.
+- Set connection, read, request, and transaction timeouts.
+
+## 19. Performance, Monitoring, and Troubleshooting
+
+### A. Measure First
+
+Optimize only after measuring a representative workload. Wall-clock timing around a loop is unreliable for microbenchmarks because the JVM warms up, compiles hot code, and may eliminate unused work. Use JMH for microbenchmarks.
+
+Important measures:
+
+- Throughput: operations completed per unit time.
+- Latency: duration of one operation; inspect percentiles such as p50, p95, and p99.
+- Error rate: failed operations divided by total operations.
+- Saturation: CPU, memory, thread, connection-pool, and queue utilization.
+
+### B. JVM Tools
+
+- `jcmd <pid> VM.flags`: show JVM flags.
+- `jcmd <pid> GC.heap_info`: summarize heap configuration.
+- `jcmd <pid> Thread.print`: capture a thread dump.
+- `jstack <pid>`: inspect thread states and deadlocks.
+- `jmap -histo <pid>`: display a heap object histogram.
+- `jstat -gc <pid> 1000`: sample garbage-collection statistics.
+- Java Flight Recorder (JFR): low-overhead recording of CPU, allocation, locks, I/O, and GC events.
+- Java Mission Control (JMC): analyze JFR recordings.
+
+Prefer `jcmd` on modern JDKs when it provides the needed operation.
+
+### C. Common Failure Patterns
+
+**High CPU**
+
+1. Capture multiple thread dumps several seconds apart.
+2. Find threads repeatedly in `RUNNABLE`.
+3. Inspect hot stack traces.
+4. Confirm with JFR or a profiler.
+
+**Memory leak or rising heap**
+
+1. Check whether usage returns to a stable level after GC.
+2. Inspect object histograms over time.
+3. Capture a heap dump near failure with `-XX:+HeapDumpOnOutOfMemoryError`.
+4. Analyze retained size and GC-root paths.
+5. Fix the retaining reference, cache policy, listener, `ThreadLocal`, or unbounded collection.
+
+**Deadlock**
+
+Thread dumps identify Java monitor deadlocks and show which threads own and wait for locks. Enforce a consistent lock order and reduce nested locking.
+
+**Slow requests**
+
+Check downstream latency, timeouts, pool saturation, lock contention, GC pauses, database query plans, and excessive allocation. Average latency alone can hide severe tail latency.
+
+### D. GC Guidance
+
+- Set memory limits appropriate to the container or host.
+- Avoid choosing a collector or tuning dozens of flags before collecting evidence.
+- G1 is a balanced default for many server applications.
+- ZGC and Shenandoah target very low pause times for large heaps; verify availability and behavior on the chosen JDK.
+- Allocation rate and live-set size often matter more than the number of objects created.
+- A larger heap can reduce collection frequency but may increase memory footprint and some pause costs.
+
+### E. Thread-Dump States
+
+- `RUNNABLE`: executing or ready to execute; may also be inside native I/O.
+- `BLOCKED`: waiting to enter a synchronized monitor.
+- `WAITING`: waiting indefinitely for another action.
+- `TIMED_WAITING`: waiting with a deadline, such as `sleep()` or timed `get()`.
+- `TERMINATED`: completed.
+
+One thread dump is a snapshot; compare several to distinguish persistent contention from temporary activity.
+
+## 20. Quick Revision Checklist
+
+Before an interview or code review, be able to explain:
+
+1. JDK vs JVM and how source becomes bytecode and machine code.
+2. Primitive vs reference types, widening vs narrowing, and wrapper caching.
+3. Encapsulation, inheritance, composition, overriding, and overloading.
+4. `==`, `equals()`, and the `hashCode()` contract.
+5. String immutability and when to use `StringBuilder`.
+6. Checked vs unchecked exceptions and try-with-resources.
+7. `ArrayList`, `HashSet`, `HashMap`, `TreeMap`, queues, and concurrent collections.
+8. Generic invariance, wildcards, PECS, and type erasure.
+9. The Java Memory Model basics: visibility, atomicity, ordering, `volatile`, and `synchronized`.
+10. Executors, futures, `CompletableFuture`, virtual threads, race conditions, and deadlocks.
+11. Stream laziness, intermediate vs terminal operations, collectors, and side-effect-free pipelines.
+12. `Optional`, `java.time`, records, sealed classes, and pattern-matching switches.
+13. Heap, thread stacks, metaspace, class loading, JIT compilation, and garbage collection.
+14. JDBC transactions, prepared statements, connection pooling, and resource closure.
+15. SOLID trade-offs and when common design patterns are useful.
+16. Unit vs integration tests, JUnit lifecycle, and responsible mocking.
+17. Maven/Gradle lifecycles, dependency scopes, wrappers, and reproducible builds.
+18. Input validation, secret handling, secure randomness, path traversal, and deserialization risks.
+19. Logging, metrics, thread dumps, heap dumps, JFR, and evidence-based performance tuning.
+20. The Java version required by each language or library feature used in a project.
