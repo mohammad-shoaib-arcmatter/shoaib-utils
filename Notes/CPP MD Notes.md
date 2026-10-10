@@ -35,87 +35,58 @@
 Preprocessor directives are commands that are processed before the actual compilation of the code. They are used to instruct the compiler to perform specific actions, such as including header files, defining macros, or conditional compilation.
 
 ## 1.1. Types of Preprocessor Directives
-
 1. **#include**: Includes a header file into the current file.
-
 2. **#define**: Defines a macro, which can be a constant or a function-like macro.
-
 3. **#undef**: Undefines a previously defined macro.
-
 4. **#ifdef, #ifndef, #if, #else, #elif, #endif**: Used for conditional compilation, allowing code to be included or excluded based on certain conditions.
-
 5. **#pragma**: Provides implementation-specific directives, which can vary between compilers.
 
 ## 1.2. #include Directive
-
 The #include directive is used to include header files into the current file. There are two forms:
-
 1. **#include <filename>**: Searches for the file in the standard include directories.
-
 2. **#include "filename"**: Searches for the file in the current directory and then in the standard include directories.
 
 ## 1.3. #define Directive
-
 The #define directive is used to define macros. There are two types:
-
 1. **Object-like macros**: Define a constant or a value.
-
 Example: `#define PI 3.14`
 
 2. **Function-like macros**: Define a macro that takes arguments.
-
 Example: `#define SQUARE(x) ((x) * (x))`
 
 ## 1.4. Conditional Compilation Directives
-
 These directives allow code to be included or excluded based on certain conditions.
-
 1. **#ifdef**: Checks if a macro is defined.
-
 Example: `#ifdef DEBUG`
 
 2. **#ifndef**: Checks if a macro is not defined.
-
 Example: `#ifndef RELEASE`
 
 3. **#if**: Evaluates a constant expression.
-
 Example: `#if VERSION > 2`
 
 4. **#else**: Specifies an alternative block of code.
-
 Example: `#else /* code */`
 
 5. **#elif**: Specifies an alternative condition.
-
 Example: `#elif VERSION == 2`
 
 6. **#endif**: Ends the conditional compilation block.
 
 ## 1.5. #pragma Directive
-
 The #pragma directive is a preprocessor directive that provides implementation-specific instructions to the compiler. It allows developers to specify compiler-specific options, control compiler behavior, and optimize code generation.
-
 The #pragma directive is used to:
 
 1. **Control compiler warnings and errors**: Specify which warnings or errors to enable or disable.
-
 2. **Optimize code generation**: Instruct the compiler to optimize code for performance, size, or other criteria.
-
 3. **Specify compiler options**: Set compiler options, such as floating-point precision or alignment.
-
 4. **Control linkage and visibility**: Specify linkage and visibility attributes for functions and variables.
 
 ## 1.6. Common #pragma Directives
-
 1. **#pragma once**: Ensures a header file is included only once, preventing multiple inclusions and reducing compilation time.
-
 2. **#pragma warning**: Controls warning messages, allowing developers to enable or disable specific warnings.
-
 3. **#pragma optimize**: Specifies optimization options, such as optimization level or optimization techniques.
-
 4. **#pragma pack**: Specifies the alignment of structure members, which can affect memory layout and performance.
-
 5. **#pragma comment**: Inserts a comment into the object file or executable, which can be used for various purposes, such as specifying linker options.
 
 Examples
@@ -168,27 +139,27 @@ The macro name should be unique to the header. `#pragma once` is widely supporte
 
 ```cpp
 enum Color {
-RED,
-GREEN,
-BLUE
+    RED,
+    GREEN,
+    BLUE
 };
 ```
 
 Enum values are implicitly assigned an integer value starting from 0. You can also explicitly assign values to enum members:
 ```cpp
 enum Color {
-RED = 1,
-GREEN = 2,
-BLUE = 4
+    RED = 1,
+    GREEN = 2,
+    BLUE = 4
 };
 ```
 
 You can change the underlying data type
 ```cpp
 enum Color: unsigned char {
-RED,
-GREEN,
-BLUE
+    RED,
+    GREEN,
+    BLUE
 };
 ```
 
@@ -197,18 +168,18 @@ BLUE
 ```cpp
 Color myColor = GREEN;
 switch (myColor) {
-case RED:
-std::cout << "The color is red" << std::endl;
-break;
-case GREEN:
-std::cout << "The color is green" << std::endl;
-break;
-case BLUE:
-std::cout << "The color is blue" << std::endl;
-break;
-default:
-std::cout << "Invalid color" << std::endl;
-break;
+    case RED:
+        std::cout << "The color is red" << std::endl;
+        break;
+    case GREEN:
+        std::cout << "The color is green" << std::endl;
+        break;
+    case BLUE:
+        std::cout << "The color is blue" << std::endl;
+        break;
+    default:
+        std::cout << "Invalid color" << std::endl;
+        break;
 }
 ```
 
@@ -216,9 +187,9 @@ break;
 
 ```cpp
 enum class Color {
-RED,
-GREEN,
-BLUE
+    RED,
+    GREEN,
+    BLUE
 };
 Color myColor = Color::GREEN;
 ```
@@ -245,7 +216,7 @@ Use `static_cast<int>(status)` when an explicit conversion is needed.
 
 ```cpp
 using HugeInt = unsigned long long int;
-HugeInt huge_num {18’446’744’073’111};
+HugeInt huge_num {18'446'744'073'111};
 ```
 
 ## 3.2. typedef
@@ -283,39 +254,30 @@ Lambda functions are also known as **lambda expressions or closures**.
 
 ```cpp
 [capture](parameters) -> return_type {
-// lambda body
+    // lambda body
 }
 ```
 
 Where:
-
 - [**capture**]: specifies how variables from the surrounding scope are captured by the lambda function.
-
 - (**parameters**): specifies the input parameters of the lambda function.
-
 - **-> return_type**: specifies the return type of the lambda function.
-
 - **{ lambda body }**: specifies the code that is executed when the lambda function is called.
 
 ## 4.2. Capture
 
 The capture clause specifies how variables from the surrounding scope are captured by the lambda function. There are several ways to capture variables:
-
 - [x]: capture variable x by value.
-
 - [&x]: capture variable x by reference.
-
 - [this]: capture the this pointer.
-
 - [=]: capture all variables in the surrounding scope by value.
-
 - [&]: capture all variables in the surrounding scope by reference.
 
 ## 4.3. Example
 
 ```cpp
 auto add = [](int x, int y) {
-return x + y;
+    return x + y;
 };
 int result = add(2, 3);
 std::cout << "Result: " << result << std::endl;
@@ -340,7 +302,7 @@ This lambda owns its copy of `threshold`; changing the original later does not c
 ```cpp
 template <typename T>
 T maximum (T a, T b) {
-return (a>b) ? a : b;
+    return (a>b) ? a : b;
 }
 maximum (a, b);
 maximum<double> (a, b);
@@ -351,7 +313,7 @@ maximum<double> (a, b);
 ```cpp
 template <>
 const char * maximum<const char*>(const char *a, const char *b) {
-return strcmp(a, b);
+    return strcmp(a, b);
 }
 ```
 
@@ -377,20 +339,20 @@ Both arguments must deduce the same `T` here. An explicit conversion or a differ
 ```cpp
 class Cylinder {
 public:
-double base_radius {1.0};
-double height {1.0};
+    double base_radius {1.0};
+    double height {1.0};
 public:
-double volume() {
-return PI * base_radius * base_radius * height;
-}
+    double volume() {
+        return PI * base_radius * base_radius * height;
+    }
 };
 int main()
 {
-Cylinder cylinder1;
-cylinder1.base_radius = 3.0;
-cylinder1.height = 2.0;
-cout << cylinder1.volume() << endl;
-return 0;
+    Cylinder cylinder1;
+    cylinder1.base_radius = 3.0;
+    cylinder1.height = 2.0;
+    cout << cylinder1.volume() << endl;
+    return 0;
 }
 ```
 
@@ -399,33 +361,29 @@ Members of class are **private by default**.
 ## 6.1. Constructors
 
 Special method that is called when an instance of a class is created
-
 No return type
-
 Same name as the class
-
 Can have parameters. Can also have an empty parameter list
-
 Usually used to initialize member variables of a class
 ```cpp
 class Cylinder {
 public:
-double base_radius {1.0};
-double height {1.0};
+    double base_radius {1.0};
+    double height {1.0};
 public:
-Cylinder ()
-{
-base_radius = 2.0;
-height = 2.0;
-}
-Cylinder (double radius_param, double height_param)
-{
-base_radius = radius_param;
-height = height_param;
-}
-double volume() {
-return PI * base_radius * base_radius * height;
-}
+    Cylinder ()
+    {
+        base_radius = 2.0;
+        height = 2.0;
+    }
+    Cylinder (double radius_param, double height_param)
+    {
+        base_radius = radius_param;
+        height = height_param;
+    }
+    double volume() {
+        return PI * base_radius * base_radius * height;
+    }
 };
 ```
 
@@ -434,18 +392,18 @@ return PI * base_radius * base_radius * height;
 ```cpp
 class Cylinder {
 public:
-double base_radius {1.0};
-double height {1.0};
+    double base_radius {1.0};
+    double height {1.0};
 public:
-Cylinder () = default;
-Cylinder (double radius_param, double height_param)
-{
-base_radius = radius_param;
-height = height_param;
-}
-double volume() {
-return PI * base_radius * base_radius * height;
-}
+    Cylinder () = default;
+    Cylinder (double radius_param, double height_param)
+    {
+        base_radius = radius_param;
+        height = height_param;
+    }
+    double volume() {
+        return PI * base_radius * base_radius * height;
+    }
 };
 ```
 
@@ -454,17 +412,17 @@ return PI * base_radius * base_radius * height;
 ```cpp
 class Cylinder {
 public:
-double height {1.0};
+    double height {1.0};
 public:
-double get_height ()
-{
-return height;
-}
-void set_height(double h)
-{
-height = h;
-}
-…
+    double get_height ()
+    {
+        return height;
+    }
+    void set_height(double h)
+    {
+        height = h;
+    }
+    ...
 };
 ```
 
@@ -473,42 +431,38 @@ height = h;
 ```cpp
 class Dog {
 public:
-Dog() {
-}
-Dog(string name) {
-this->name = name;
-}
-void print_info(){
-std::cout << “Name : “ << name << std:endl;
-}
-// setters and getters
+    Dog() {
+    }
+    Dog(string name) {
+        this->name = name;
+    }
+    void print_info(){
+        std::cout << "Name : " << name << std:endl;
+    }
+    // setters and getters
 private:
-string name;
+    string name;
 };
-const Dog dog1(“Flatcher”);
-```
+const Dog dog1("fetcher");
 
-dog1.set_name(“Milou”); //Error
-
+dog1.set_name("tommy"); //Error
 dog1.print_info(); //Error
+string name = dog1.get_name() //Error
 
-string name = dog1.get_name()’ //Error
-
-To resolve this error
-```cpp
+//To resolve this error
 class Dog {
 public:
-Dog() {
-}
-Dog(string name) {
-this->name = name;
-}
-void print_info() const {
-std::cout << “Name : “ << name << std:endl;
-}
-// setters and getters
+    Dog() {
+    }
+    Dog(string name) {
+        this->name = name;
+    }
+    void print_info() const {
+        std::cout << "Name : " << name << std:endl;
+    }
+    // setters and getters
 private:
-string name;
+    string name;
 };
 ```
 
@@ -517,7 +471,7 @@ string name;
 A mutable class variable is a member variable of a class that can be modified even if the object is declared as const. Mutable variables are typically used to implement caching, lazy loading, or other optimization techniques.
 ```cpp
 class Dog {
-mutable int count {0};
+    mutable int count {0};
 }
 ```
 
@@ -525,13 +479,13 @@ mutable int count {0};
 
 ```cpp
 struct Point {
-double x;
-double y;
+    double x;
+    double y;
 }
 int main()
 {
-Point point1  { 4.2,3.1};
-auto [a,b] = point1;
+    Point point1  { 4.2,3.1};
+    auto [a,b] = point1;
 }
 ```
 
@@ -541,50 +495,41 @@ auto [a,b] = point1;
 class Cylinder
 {
 private:
-double radius;
-double height;
+    double radius;
+    double height;
 public:
-Cylinder() = default;
-Cylinder(double radius_param, double height_param = 10);
-…
+    Cylinder() = default;
+    Cylinder(double radius_param, double height_param = 10);
+    ...
 };
 int main()
 {
-Cylinder cy(5);
-…
+    Cylinder cy(5);
+    ...
 }
 ```
 
 ## 6.8. Initializer list
 
-Cylinder:: Cylinder(double radius_param, double height_param)
-
-: radius(radius_param),
 ```cpp
+Cylinder:: Cylinder(double radius_param, double height_param)
+: radius(radius_param),
 height(height_param)
 {
-// Empty body
+    // Empty body
 }
 ```
 
-Member wise copy
-
+### Member wise copy
 Two steps
-
 Object creation
-
 Member variable assignment
-
 Potential unnecessary copies of data
+Order of member variables doesn't matter
 
-Order of member variables doesn’t matter
-
-Initializer list
-
+### Initializer list
 Initializing happens at real object creation
-
 Unnecessary copies of data avoided
-
 Order of member variables matters
 
 ## 6.9. Explicit Constructors
@@ -593,10 +538,10 @@ Order of member variables matters
 class Square
 {
 public:
-explicit Square(double side_param);
-~Square();
+    explicit Square(double side_param);
+    ~Square();
 private:
-double side;
+    double side;
 };
 ```
 
@@ -608,25 +553,21 @@ Square constructor will not be converted implicitly (like double to Square()).
 class Square
 {
 public:
-explicit Square(double side_param);
-Square(double side_param, string color_param, int shading_param);
-~Square();
+    explicit Square(double side_param);
+    Square(double side_param, string color_param, int shading_param);
+    ~Square();
 private:
-double side;
-string color;
-int shading;
+    double side;
+    string color;
+    int shading;
 };
-```
 
 Square::Square(double side_param):
-```cpp
-Square(side_param, “red”, 3) {
+    Square(side_param, "red", 3) {
 }
-```
 
 Square::Square(double side_param, string color_param, int shading_param):
-```cpp
-side(side_param), color(color_param), shading(shading_param) {
+    side(side_param), color(color_param), shading(shading_param) {
 }
 ```
 
@@ -638,33 +579,29 @@ No further initializations before/after delegation call.
 class Person
 {
 private:
-string last_name;
-string first_name;
-int *age;
+    string last_name;
+    string first_name;
+    int *age;
 public:
-Person() = default;
-Person(string last_name_param, string first_name_param, int age_param);
-Person(string last_name_param, string first_name_param);
-Person(string last_name_param);
+    Person() = default;
+    Person(string last_name_param, string first_name_param, int age_param);
+    Person(string last_name_param, string first_name_param);
+    Person(string last_name_param);
 };
-```
 
 Person::Person(const Person& source_person):
-```cpp
-last_name(source_person.get_last_name()), first_name(source_person.get_first_name()), age(new int(*(source_person.get_age())) {
+    last_name(source_person.get_last_name()), first_name(source_person.get_first_name()), age(new int(*(source_person.get_age())) {
 }
 ```
 
-Shallow copy – same memory for both the classes variable
-
-Deep copy – their own memory
+Shallow copy - same memory for both the classes variable
+Deep copy - their own memory
 
 ## 6.12. Delegating copy constructor
 
-Person::Person(const Person& source_person):
-
-Person(source_person.get_last_name(), source_person.get_first_name(),
 ```cpp
+Person::Person(const Person& source_person):
+Person(source_person.get_last_name(), source_person.get_first_name(),
 *(source_person.get_age()) {
 }
 ```
@@ -675,21 +612,18 @@ Person(source_person.get_last_name(), source_person.get_first_name(),
 class Point
 {
 private:
-double *x{};
-double *y{};
+    double *x{};
+    double *y{};
 public:
-Point(double x_param, double y_param);
-~Point();
+    Point(double x_param, double y_param);
+    ~Point();
 };
-```
 
 Point::Point(Point &&source_point):
-
 x(source_point.get_x()),
-```cpp
 y(source_point.get_y())
 {
-source_point.invalidate(); //x=nullptr;y=nullptr;
+    source_point.invalidate(); //x=nullptr;y=nullptr;
 }
 Point p3(std::move(Point(40.7,50.3));
 ```
@@ -707,26 +641,26 @@ Point(Point &&source_point) = delete;
 
 ```cpp
 struct Point {
-double x;
-double y;
+    double x;
+    double y;
 };
 int main(int argc, char **argv)
 {
-Point point1{12.5, 45.3}; // it will work
-std:cout << point1.x << “ “ << point1.y << std:endl;
-return 0;
+    Point point1{12.5, 45.3}; // it will work
+    std:cout << point1.x << " " << point1.y << std:endl;
+    return 0;
 }
 class Point
 {
 public:
-Point(std::initializer_list<double> list)
-{
-x = *(list.begin());
-y = *(list.begin()+1);
-}
+    Point(std::initializer_list<double> list)
+    {
+        x = *(list.begin());
+        y = *(list.begin()+1);
+    }
 private:
-double x;
-double y;
+    double x;
+    double y;
 };
 ```
 
@@ -741,16 +675,16 @@ int scores[] {1,2,3,4,5};
 
 ```cpp
 struct Component {
-double x;
-double y;
-double z;
+    double x;
+    double y;
+    double z;
 };
 int main()
 {
-Component c1{.x=10, .y=20, .z=30};
-Component c1{.x=10, .z=30};
-Component c1{.y=20, .z=30};
-Component c1{.x=10, .z=20, .y=30}; // Compiler ERROR. Should be in order.
+    Component c1{.x=10, .y=20, .z=30};
+    Component c1{.x=10, .z=30};
+    Component c1{.y=20, .z=30};
+    Component c1{.x=10, .z=20, .y=30}; // Compiler ERROR. Should be in order.
 }
 ```
 
@@ -766,14 +700,14 @@ It can access the private variable members.
 ```cpp
 class Dog {
 public:
-friend void debug_dog_info(const Dof &dog);
+    friend void debug_dog_info(const Dof &dog);
 private:
-std::string dog_name;
-int dog_age;
+    std::string dog_name;
+    int dog_age;
 };
 void debug_dog_info(const Dog &dog) {
-std::cout<< “Dog name: “ << dog.dog_name
-<< “Age: “ << dog.dog_age << std::endl;
+    std::cout<< "Dog name: " << dog.dog_name
+    << "Age: " << dog.dog_age << std::endl;
 }
 ```
 
@@ -783,46 +717,44 @@ std::cout<< “Dog name: “ << dog.dog_name
 class Dog
 {
 public:
-Dog(string dog_name, int dog_age);
-friend class Cat;
+    Dog(string dog_name, int dog_age);
+    friend class Cat;
 private:
-string dog_name;
-int dog_age;
+    string dog_name;
+    int dog_age;
 };
 class Cat
 {
 public:
-Cat(string cat_name);
-void show_info_about_dog(const Dog &dog) const {
-cout << “Dog name: “ << dog.dog_name << std:endl;
-}
+    Cat(string cat_name);
+    void show_info_about_dog(const Dog &dog) const {
+        cout << "Dog name: " << dog.dog_name << std:endl;
+    }
 private:
-string cat_name;
+    string cat_name;
 };
 ```
 
 ## 6.21. Static Members
 
 Regular member variables are associated with objects. They belong to class objects.
-
 Static member variables are not tied to any object of the class. They live in the context of objects blueprints. They are created even before a single class object has been created.
 ```cpp
 class Point
 {
 public:
-int get_point_count() const {
-return m_point_count;
-}
+    int get_point_count() const {
+        return m_point_count;
+    }
 private:
-double m_x;
-double x_y;
+    double m_x;
+    double x_y;
 public:
-static int m_point_count;
+    static int m_point_count;
 };
 ```
 
 Not allowed to initialize in header file.
-
 It can be initialized in cpp file.
 ```cpp
 int Point::m_point_count = 0;
@@ -835,14 +767,14 @@ An inline static member variable is a static member variable that can be defined
 class Point
 {
 public:
-int get_point_count() const {
-return m_point_count;
-}
+    int get_point_count() const {
+        return m_point_count;
+    }
 private:
-double m_x;
-double x_y;
+    double m_x;
+    double x_y;
 public:
-inline static int m_point_count {0};
+    inline static int m_point_count {0};
 };
 ```
 
@@ -850,7 +782,7 @@ inline static int m_point_count {0};
 
 ```cpp
 {
-static inline const double PI {3.14};
+    static inline const double PI {3.14};
 }
 ```
 
@@ -859,9 +791,7 @@ static inline const double PI {3.14};
 ## 6.25. Static Method
 
 It is tied to class blueprint.
-
 It has access to static member variables.
-
 It does not have access to non-static member variables.
 
 ## 6.26. Practical guidance
@@ -888,13 +818,11 @@ private:
 ## 7.1. Unary
 
 member: ReturnType operator X()
-
 non-member: ReturnType operator X(Type operand)
 
 ## 7.2. Binary
 
 member: ReturnType operator X(Type right_operand)
-
 non-member: ReturnType operator X(Type left_operand, Type right_operand)
 
 ## 7.3. Addition Operator as Member
@@ -903,17 +831,17 @@ non-member: ReturnType operator X(Type left_operand, Type right_operand)
 class Point
 {
 public:
-Point() = default;
-Point(double x, double y): m_x(x), m_y(y) {
-}
-~Point() = default;
-Point operator + (const Point &right) const
-{
-return Point(m_x+right.m_x, m_y+right.m_y);
-}
+    Point() = default;
+    Point(double x, double y): m_x(x), m_y(y) {
+    }
+    ~Point() = default;
+    Point operator + (const Point &right) const
+    {
+        return Point(m_x+right.m_x, m_y+right.m_y);
+    }
 private:
-double m_x{};
-double m_y{};
+    double m_x{};
+    double m_y{};
 };
 ```
 
@@ -922,19 +850,19 @@ double m_y{};
 ```cpp
 class Point
 {
-friend Point operator + (const Point &left, const Point &right);
+    friend Point operator + (const Point &left, const Point &right);
 public:
-Point() = default;
-Point(double x, double y): m_x(x), m_y(y) {
-}
-~Point() = default;
+    Point() = default;
+    Point(double x, double y): m_x(x), m_y(y) {
+    }
+    ~Point() = default;
 private:
-double m_x{};
-double m_y{};
+    double m_x{};
+    double m_y{};
 };
 inline Point operator + (const Point &left, const Point &right)
 {
-return Point(left.m_x+right.m_x, left.m_y+right.m_y);
+    return Point(left.m_x+right.m_x, left.m_y+right.m_y);
 }
 ```
 
@@ -944,8 +872,8 @@ It should be member function only
 ```cpp
 double operator[](int index)
 {
-asset((index == 0) || (index ==1));
-return (index==0)?m_x:m_y;
+    asset((index == 0) || (index ==1));
+    return (index==0)?m_x:m_y;
 }
 ```
 
@@ -954,8 +882,8 @@ return (index==0)?m_x:m_y;
 ```cpp
 double & operator[](int index)
 {
-asset((index == 0) || (index ==1));
-return (index==0)?m_x:m_y;
+    asset((index == 0) || (index ==1));
+    return (index==0)?m_x:m_y;
 }
 ```
 
@@ -963,13 +891,13 @@ return (index==0)?m_x:m_y;
 
 ```cpp
 class Point {
-friend std::ostream& operator << (std::ostream &os, const Point &point);
-…
+    friend std::ostream& operator << (std::ostream &os, const Point &point);
+    ...
 };
 inline std::ostream& operator << (std::ostream &os, const Point &point)
 {
-os << point.m_x << “” << point.m_y << std::endl;
-return os;
+    os << point.m_x << "" << point.m_y << std::endl;
+    return os;
 }
 ```
 
@@ -977,18 +905,18 @@ return os;
 
 ```cpp
 class Point {
-friend std::istream& operator >> (std::istream &is, const Point &point);
-…
+    friend std::istream& operator >> (std::istream &is, const Point &point);
+    ...
 };
 inline std::istream& operator >> (std::istream &is, const Point &point)
 {
-double x;
-double y;
-std::cout <<”Enter the values: “ << std::endl;
-is >> x >> y;
-point.m_x = x;
-point.m_y = y;
-return is;
+    double x;
+    double y;
+    std::cout <<"Enter the values: " << std::endl;
+    is >> x >> y;
+    point.m_x = x;
+    point.m_y = y;
+    return is;
 }
 ```
 
@@ -998,12 +926,12 @@ return is;
 class Point
 {
 public:
-friend Point operator –(const Point &left, const Point &right);
-…
+    friend Point operator -(const Point &left, const Point &right);
+    ...
 };
-inline Point operator –(const Point &left, const Point &right)
+inline Point operator -(const Point &left, const Point &right)
 {
-return Point(left.m_x-right.m_x, left.m_y-right.m_y);
+    return Point(left.m_x-right.m_x, left.m_y-right.m_y);
 }
 ```
 
@@ -1013,18 +941,18 @@ return Point(left.m_x-right.m_x, left.m_y-right.m_y);
 class Number
 {
 public:
-Number() = default;
-Number(int value);
-explicit operator double() const
-{
-return static_cast<double>(m_int);
-}
-explicit operator Point() const
-{
-return Point(static_cast<double>(m_int), static_cast<double>(m_int));
-}
+    Number() = default;
+    Number(int value);
+    explicit operator double() const
+    {
+        return static_cast<double>(m_int);
+    }
+    explicit operator Point() const
+    {
+        return Point(static_cast<double>(m_int), static_cast<double>(m_int));
+    }
 private:
-int m_int{};
+    int m_int{};
 };
 //Type conversion can only be done as member function.
 ```
@@ -1034,13 +962,13 @@ int m_int{};
 ```cpp
 class Point
 {
-…
-void operator ++()
-{
-++m_x;
-++m_y;
-}
-…
+    ...
+    void operator ++()
+    {
+        ++m_x;
+        ++m_y;
+    }
+    ...
 };
 ```
 
@@ -1049,14 +977,14 @@ void operator ++()
 ```cpp
 class Point
 {
-…
-Point operator ++(int)
-{
-Point local_point(*this);
-++(*this);
-return local_point;
-}
-…
+    ...
+    Point operator ++(int)
+    {
+        Point local_point(*this);
+        ++(*this);
+        return local_point;
+    }
+    ...
 };
 ```
 
@@ -1065,17 +993,17 @@ return local_point;
 ```cpp
 class Point
 {
-…
-Point& operator =(const Point &right_operand)
-{
-if(this != &right_operand)
-{
-m_x = right_operand.m_x;
-m_y = right_operand.m_y;
-}
-return *this;
-}
-…
+    ...
+    Point& operator =(const Point &right_operand)
+    {
+        if(this != &right_operand)
+        {
+            m_x = right_operand.m_x;
+            m_y = right_operand.m_y;
+        }
+        return *this;
+    }
+    ...
 };
 ```
 
@@ -1084,16 +1012,16 @@ return *this;
 ```cpp
 class Point
 {
-…
-Point& operator =(const Point &right_operand)
-{
-delete m_data;
-m_data = new int(right_operand.m_data);
-m_x = right_operand.m_x;
-m_y = right_operand.m_y;
-return *this;
-}
-…
+    ...
+    Point& operator =(const Point &right_operand)
+    {
+        delete m_data;
+        m_data = new int(right_operand.m_data);
+        m_x = right_operand.m_x;
+        m_y = right_operand.m_y;
+        return *this;
+    }
+    ...
 };
 ```
 
@@ -1122,24 +1050,24 @@ Encapsulation is a fundamental concept in object-oriented programming (OOP) that
 ```cpp
 class BankAccount {
 private:
-double balance;
+    double balance;
 public:
-BankAccount(double initialBalance) {
-balance = initialBalance;
-}
-void deposit(double amount of money) {
-balance += amount;
-}
-void withdraw(double amount) {
-if (amount <= balance) {
-balance -= amount;
-} else {
-std::cout << "Insufficient balance" << std::endl;
-}
-}
-double getBalance() {
-return balance;
-}
+    BankAccount(double initialBalance) {
+        balance = initialBalance;
+    }
+    void deposit(double amount of money) {
+        balance += amount;
+    }
+    void withdraw(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+        } else {
+            std::cout << "Insufficient balance" << std::endl;
+        }
+    }
+    double getBalance() {
+        return balance;
+    }
 };
 ```
 
@@ -1168,38 +1096,38 @@ Abstraction is a fundamental concept in object-oriented programming (OOP) that e
 ```cpp
 class Shape {
 public:
-virtual void draw() = 0;
-virtual double area() = 0;
+    virtual void draw() = 0;
+    virtual double area() = 0;
 };
 class Circle : public Shape {
 private:
-double radius;
+    double radius;
 public:
-Circle(double radius) {
-this->radius = radius;
-}
-void draw() override {
-std::cout << "Drawing a circle" << std::endl;
-}
-double area() override {
-return 3.14 * radius * radius;
-}
+    Circle(double radius) {
+        this->radius = radius;
+    }
+    void draw() override {
+        std::cout << "Drawing a circle" << std::endl;
+    }
+    double area() override {
+        return 3.14 * radius * radius;
+    }
 };
 class Rectangle : public Shape {
 private:
-double width;
-double height;
+    double width;
+    double height;
 public:
-Rectangle(double width, double height) {
-this->width = width;
-this->height = height;
-}
-void draw() override {
-std::cout << "Drawing a rectangle" << std::endl;
-}
-double area() override {
-return width * height;
-}
+    Rectangle(double width, double height) {
+        this->width = width;
+        this->height = height;
+    }
+    void draw() override {
+        std::cout << "Drawing a rectangle" << std::endl;
+    }
+    double area() override {
+        return width * height;
+    }
 };
 ```
 
@@ -1225,43 +1153,39 @@ Callers can work with `Shape` without knowing the concrete shape type or how its
 ```cpp
 class Person
 {
-friend std::ostream& operator <<(std::ostream &os, const Person &person);
+    friend std::ostream& operator <<(std::ostream &os, const Person &person);
 public:
-Person();
-Person(std::string first_name_param, std::string last_name_param);
-~Person();
+    Person();
+    Person(std::string first_name_param, std::string last_name_param);
+    ~Person();
 private:
-std::string first_name{“Mysterious”};
-std::string last_name{“Person”};
+    std::string first_name{"Mysterious"};
+    std::string last_name{"Person"};
 };
 class Player: public Person
 {
-friend std::ostream & operator <<(std::ostream &os, const Player &player);
+    friend std::ostream & operator <<(std::ostream &os, const Player &player);
 public:
-Player() = default;
-Player(std::string game_param);
-~Person();
+    Player() = default;
+    Player(std::string game_param);
+    ~Person();
 private:
-std::string m_game{“None”};
+    std::string m_game{"None"};
 };
 ```
 
 ## 10.1. Constructors with Inheritance
-
-Engineer::Engineer(const std::string &fullname, int age, const std::string address, int contract_count)
-
-:Person(fullname, age, address), contract_count(contract_count)
 ```cpp
+Engineer::Engineer(const std::string &fullname, int age, const std::string address, int contract_count)
+    :Person(fullname, age, address), contract_count(contract_count)
 {
 }
 ```
 
 ## 10.2. Copy Constructors with Inheritance
-
-Engineer::Engineer(const Engineer &source)
-
-:Person(source), contract_count(source.contract_count)
 ```cpp
+Engineer::Engineer(const Engineer &source)
+:Person(source), contract_count(source.contract_count)
 {
 }
 ```
@@ -1293,72 +1217,67 @@ Managing derived objects in memory though base pointers or references and gettin
 class Shape
 {
 public:
-Shape() = default;
-Shape(const std::string &desc);
-~Shape();
-virtual void draw() const
-{
-std::cout << “Shape::draw() called. Drawing “ << m_desc << std::endl;
-}
+    Shape() = default;
+    Shape(const std::string &desc);
+    ~Shape();
+    virtual void draw() const
+    {
+        std::cout << "Shape::draw() called. Drawing " << m_desc << std::endl;
+    }
 protected:
-std::string m_desc{“”};
+    std::string m_desc{""};
 };
 class Oval: public Shape
 {
 public:
-Oval() = default;
-Oval(double x_radius, double y_radius, const std::string &desc);
-~Oval();
-virtual void draw() const
-{
-std::cout << “Oval::draw() called. Drawing “ << m_desc
-<< “with m_x radius “ << m_x_radius
-<< “with m_y radius “ << m_y_radius << std::endl;
-}
+    Oval() = default;
+    Oval(double x_radius, double y_radius, const std::string &desc);
+    ~Oval();
+    virtual void draw() const
+    {
+        std::cout << "Oval::draw() called. Drawing " << m_desc
+        << "with m_x radius " << m_x_radius
+        << "with m_y radius " << m_y_radius << std::endl;
+    }
 private:
-double m_x_radius{0.0};
-double m_y_radius{0.0};
+    double m_x_radius{0.0};
+    double m_y_radius{0.0};
 };
 class Circle: public Oval
 {
 public:
-Circle() = default;
-Circle(double radius, const std::string &desc);
-~Circle();
-virtual void draw() const
-{
-std::cout << “Circle::draw() called. Drawing “ << m_desc
-<< “with radius “ << get_x_rad() << std::endl;
-}
+    Circle() = default;
+    Circle(double radius, const std::string &desc);
+    ~Circle();
+    virtual void draw() const
+    {
+        std::cout << "Circle::draw() called. Drawing " << m_desc
+        << "with radius " << get_x_rad() << std::endl;
+    }
 };
-Shape shape(“Shape”);
-Oval oval(2.0, 3.5, “Oval”);
-Circle circle(3.3, “Circle”);
+Shape shape("Shape");
+Oval oval(2.0, 3.5, "Oval");
+Circle circle(3.3, "Circle");
 Shape *shape_ptr = &shape;
-```
 
 shape_ptr->draw();	// Shape::draw()
-```cpp
 shape_ptr = &oval;
-```
 
 shape_ptr->draw();	// Oval::draw()
-```cpp
 shape_ptr = &circle;
-```
 
 shape_ptr->draw();	// Circle::draw()
-
-If the draw() function is not marked virtual, then all the three calls will be to Shape::draw().
+// If the draw() function is not marked virtual, then all the three calls will be to Shape::draw().
+```
 
 ## 11.1. Override
 
 ```cpp
 class Oval: public Shape
 {
-…
-virtual void draw() const override { … }
-…
+    ...
+    virtual void draw() const override { ... }
+    ...
 };
 ```
 
@@ -1369,24 +1288,22 @@ Override is to tell the compiler that we are not declaring new function, but ove
 ```cpp
 class Dog : public Animal
 {
-…
-void run() const override final { … }
-…
+    ...
+    void run() const override final { ... }
+    ...
 };
 ```
 
-It can’t be overridden further in derived class
+It can't be overridden further in derived class
 ```cpp
 class Cat final: public Feline
 {
-…
+    ...
 };
 ```
 
-Cat can’t be derived further
-
+Cat can't be derived further
 Restrict how you override methods in derived classes.
-
 Restrict how you can derive from a base class.
 
 ## 11.3. Virtual Destructors
@@ -1395,30 +1312,30 @@ Restrict how you can derive from a base class.
 class Animal
 {
 public:
-Animal() = default;
-Animal(const std::string &desc);
-~Animal();
-virtual void breathe() const
-{
-std::cout << “Animal::breathe” << std::endl;
-}
+    Animal() = default;
+    Animal(const std::string &desc);
+    ~Animal();
+    virtual void breathe() const
+    {
+        std::cout << "Animal::breathe" << std::endl;
+    }
 protected:
-std::string m_desc;
+    std::string m_desc;
 };
 class Feline: public Animal
 {
 public:
-Feline() = default;
-Feline(const std::string &fur_style, const std::string &desc);
-~Feline();
-virtual void breathe() const
-{
-std::cout << “Feline::breathe” << std::endl;
-}
+    Feline() = default;
+    Feline(const std::string &fur_style, const std::string &desc);
+    ~Feline();
+    virtual void breathe() const
+    {
+        std::cout << "Feline::breathe" << std::endl;
+    }
 private:
-std::string m_fur_style;
+    std::string m_fur_style;
 };
-Animal *animal = new Feline(“ABC”, “ABC”);
+Animal *animal = new Feline("ABC", "ABC");
 delete animal;
 // Only Animal destructor is called. BAD
 ```
@@ -1430,15 +1347,15 @@ Make destructor as virtual
 class Feline: public Animal
 {
 public:
-Feline() = default;
-Feline(const std::string &fur_style, const std::string &desc);
-virtual ~Feline();
-virtual void breathe() const
-{
-std::cout << “Feline::breathe” << std::endl;
-}
+    Feline() = default;
+    Feline(const std::string &fur_style, const std::string &desc);
+    virtual ~Feline();
+    virtual void breathe() const
+    {
+        std::cout << "Feline::breathe" << std::endl;
+    }
 private:
-std::string m_fur_style;
+    std::string m_fur_style;
 };
 ```
 
@@ -1463,30 +1380,30 @@ int a {10};
 int b {0};
 try
 {
-Item item;
-if (b==0)
-throw 0;
-a++;
-b++;
-std::cout << “Code that executes when things are fine” << std::endl;
+    Item item;
+    if (b==0)
+    throw 0;
+    a++;
+    b++;
+    std::cout << "Code that executes when things are fine" << std::endl;
 }
 catch (int ex)
 {
-std::cout << “Something went wrong. Exception thrown: “ << ex << std::endl;
+    std::cout << "Something went wrong. Exception thrown: " << ex << std::endl;
 }
-std::cout << “END.” << std::endl;
-catch(…) -> catch everything
+std::cout << "END." << std::endl;
+catch(...) -> catch everything
 ```
 
 ## 12.1. Standard Exception
 
 ```cpp
 try {
-…
+    ...
 }
 catch (std::exception &ex)
 {
-std::cout << “Something is wrong “ << ex.what() << std::endl;
+    std::cout << "Something is wrong " << ex.what() << std::endl;
 }
 ```
 
@@ -1509,19 +1426,18 @@ try {
 # 13. Functors
 
 Class objects that can be called like ordinary functions.
-
 We set them up by overloading the () operator for our class
 ```cpp
 class Encrypt
 {
 public:
-char operator() (const char &param)
-{
-return static_cast<char>(param+3);
-}
+    char operator() (const char &param)
+    {
+        return static_cast<char>(param+3);
+    }
 };
 Encrypt encrypt_functor;
-std::cout << encrypt_functor(‘A’) << std::endl;
+std::cout << encrypt_functor('A') << std::endl;
 ```
 
 Lambda functions are implemented internally as functors.
@@ -1550,19 +1466,19 @@ template <typename T>
 class BoxContainer
 {
 public:
-BoxContainer<T>(int capacity = 5);
-BoxContainer<T>(const BoxContainer<T> &source);
-~BoxContainer<T>();
-void add (const T &item);
-bool remove_item (const T& item);
-void operator +=(const BoxContainer<T> &operand);
-void operator = (const BoxContainer<T> &source);
+    BoxContainer<T>(int capacity = 5);
+    BoxContainer<T>(const BoxContainer<T> &source);
+    ~BoxContainer<T>();
+    void add (const T &item);
+    bool remove_item (const T& item);
+    void operator +=(const BoxContainer<T> &operand);
+    void operator = (const BoxContainer<T> &source);
 private:
-void expand(int new_capacity);
+    void expand(int new_capacity);
 private:
-T *m_items;
-int m_capacity;
-int m_size;
+    T *m_items;
+    int m_capacity;
+    int m_size;
 };
 template <typename T>
 ```
@@ -1570,9 +1486,9 @@ template <typename T>
 BoxContainer<T>::BoxContainer(int capacity)
 ```cpp
 {
-m_items = new t[capacity];
-m_capacity = capacity;
-m_size = 0;
+    m_items = new t[capacity];
+    m_capacity = capacity;
+    m_size = 0;
 }
 ```
 
@@ -1583,19 +1499,19 @@ template <typename T, int maximum>
 class BoxContainer
 {
 public:
-BoxContainer<T, maximum>(int capacity = 5);
-BoxContainer<T, maximum>(const BoxContainer<T, maximum> &source);
-~BoxContainer<T, maximum>();
-void add (const T &item);
-bool remove_item (const T& item);
-void operator +=(const BoxContainer<T, maximum> &operand);
-void operator = (const BoxContainer<T, maximum> &source);
+    BoxContainer<T, maximum>(int capacity = 5);
+    BoxContainer<T, maximum>(const BoxContainer<T, maximum> &source);
+    ~BoxContainer<T, maximum>();
+    void add (const T &item);
+    bool remove_item (const T& item);
+    void operator +=(const BoxContainer<T, maximum> &operand);
+    void operator = (const BoxContainer<T, maximum> &source);
 private:
-void expand(int new_capacity);
+    void expand(int new_capacity);
 private:
-T *m_items;
-int m_capacity;
-int m_size;
+    T *m_items;
+    int m_capacity;
+    int m_size;
 };
 BoxContainer<int, 10> int_box1;
 ```
@@ -1607,19 +1523,16 @@ template <typename T, T threshold>
 class Point
 {
 public:
-Point(T x, T y);
-~Point() = default;
+    Point(T x, T y);
+    ~Point() = default;
 private:
-T m_x;
-T m_y;
+    T m_x;
+    T m_y;
 };
 template<typename T, T threshold>
-```
 
 Point<T, threshold>::Point(T x, T y)
-
 : m_x(x), m_y(y)
-```cpp
 {
 }
 ```
@@ -1630,7 +1543,7 @@ Point<T, threshold>::Point(T x, T y)
 template <typename T = int, int maximum = 10>
 class BoxContainer
 {
-…
+    // code
 };
 BoxContainer int_box;
 BoxContainer<double> int_box2;
@@ -1642,13 +1555,13 @@ BoxContainer<char, 5> int_box3;
 ```cpp
 #include <iostream>
 #include <string>
-#include “boxcontainer.h”
+#include "boxcontainer.h"
 template class BoxContainer<double,10>;
 template class BoxContainer<std::string, 5>;
 int main(int argc, char **argv)
 {
-std::cout << “Hello World” << std::endl;
-return 0;
+    std::cout << "Hello World" << std::endl;
+    return 0;
 }
 ```
 
@@ -1659,33 +1572,32 @@ template <typename T>
 class Adder
 {
 public:
-Adder()
-{
-}
-T add (T x, T y);
+    Adder()
+    {
+    }
+    T add (T x, T y);
 };
 template <typename T>
-```
+
 
 T Adder<T>::add(T a, T b)
-```cpp
 {
-return a+b;
+    return a+b;
 }
 //Template Specialization
 template <>
 class Add<char *>
 {
 public:
-Adder()
-{
-}
-char *add(char *a, char *b);
+    Adder()
+    {
+    }
+    char *add(char *a, char *b);
 };
 //template<> 	<= this is not needed if defined outside of class
 char *Adder<char *>::add(char *a, char *b)
 {
-return strcat(a,b);
+    return strcat(a,b);
 }
 ```
 
@@ -1695,7 +1607,7 @@ return strcat(a,b);
 template <> inline
 const char *BoxContainer<const char*>::get_max()
 {
-// logic
+    // logic
 }
 ```
 
@@ -1720,9 +1632,7 @@ private:
 # 15. Lvalues and Rvalues
 
 Lvalues are things you can grab an address for and use at a later time.
-
 Rvalues are transient or temporary in nature, they only exist for a short time, and are quickly destroyed by the system when no longer needed.
-
 Lvalues
 ```cpp
 int x{5};
@@ -1731,28 +1641,27 @@ int z{20};
 ```
 
 Rvalues
-
+```cpp
 z=(x+y); // (x+y) is Rvalues
-
-std::cout << &(x+y); // ERROR Can’t grab address
-
+std::cout << &(x+y); // ERROR Can't grab address
+```
 ## 15.1. Rvalue Reference
 
 When an rvalue reference is bound to an rvalue, the life of the rvalue is extended, and we can manipulate it through the rvalue reference.
 ```cpp
 double add(double x, double y)
 {
-return a+b;
+    return a+b;
 }
 int main(int argc, char **argv)
 {
-int x{5};
-int y{10};
-int &&outcome = x+y; //Extends the lifetime of the temporary result
-double &&result = add(10.1, 20.2)l
-std::cout << “result: “ << result << std::endl;
-std::cout <<”outcome: “ << outcome << std::endl;
-return 0;
+    int x{5};
+    int y{10};
+    int &&outcome = x+y; //Extends the lifetime of the temporary result
+    double &&result = add(10.1, 20.2)l
+    std::cout << "result: " << result << std::endl;
+    std::cout <<"outcome: " << outcome << std::endl;
+    return 0;
 }
 ```
 
@@ -1760,17 +1669,16 @@ return 0;
 
 ```cpp
 template <typename T>
-```
+
 
 BoxContainer<T>::BoxContainer(BoxContainer &&source)
-```cpp
 {
-if (this == &source)
-return;
-m_items = source.m_items;
-m_size = source.m_size;
-m_capacity = source.m_capacity;
-source.invalidate();
+    if (this == &source)
+    return;
+    m_items = source.m_items;
+    m_size = source.m_size;
+    m_capacity = source.m_capacity;
+    source.invalidate();
 }
 ```
 
@@ -1780,12 +1688,12 @@ source.invalidate();
 template <typename T>
 void BoxContainer<T>::operator=(BoxContainer &&source)
 {
-if (this == &source)
-return;
-m_items = source.m_items;
-m_size = source.m_size;
-m_capacity = source.m_capacity;
-source.invalidate();
+    if (this == &source)
+    return;
+    m_items = source.m_items;
+    m_size = source.m_size;
+    m_capacity = source.m_capacity;
+    source.invalidate();
 }
 ```
 
@@ -1818,9 +1726,7 @@ Smart pointers are a type of abstract data type in C++ that provide automatic me
 ## 16.1. Types of Smart Pointers:
 
 **Unique Pointer (unique_ptr)**: Owns and manages a single object.
-
 **Shared Pointer (shared_ptr)**: Shares ownership of an object with other shared pointers.
-
 **Weak Pointer (weak_ptr)**: Observes an object owned by a shared pointer.
 ```cpp
 #include <memory>
@@ -1829,51 +1735,41 @@ Smart pointers are a type of abstract data type in C++ that provide automatic me
 ## 16.2. Unique Pointer
 
 At any given moment there can only be one pointer managing the memory.
-
 Memory is automatically released when the pointer goes out of scope.
 ```cpp
-Dog *p_dog_3 = new Dog(“Dog3”);
+Dog *p_dog_3 = new Dog("Dog3");
 std::unique_ptr<Dog> up_dog_4 {p_dog_3};
-std::unique_ptr<Dog> up_dog_5 {new Dog(“Dog5”)};
+std::unique_ptr<Dog> up_dog_5 {new Dog("Dog5")};
 std::unique_ptr<int> up_int {new int(200)};
 std::unique_ptr<Dog> up_dog_6 {nullptr};
 up_dog_5->print_dog();
 *up_int = 500;
-std::cout << “Integer is “ << *up_int << std::endl;
-std::cout << “Address is “ << up_int.get() << std::endl;
+std::cout << "Integer is " << *up_int << std::endl;
+std::cout << "Address is " << up_int.get() << std::endl;
 ```
 
 ## 16.3. make_unique
 
 ```cpp
-std::unique_ptr<Dog> up_dog_7 = std::make_unique<Dog>(“Dog7”);
+std::unique_ptr<Dog> up_dog_7 = std::make_unique<Dog>("Dog7");
 std::unique_ptr<int> up_int_3 = std::make_unique<int>(30);
-```
 
 std::unique_ptr<Dog> up_dog_9 = up_dog_7; //Error, copy is not allowed
-
 std::unique_ptr<Dog> up_dog_9 = std::move(up_dog_7); //Valid, move is allowed
-
 up_dog_9.reset(); //releases memory and sets the pointer to nullptr
+```
 
 ## 16.4. Shared Pointer
-
+```cpp
 ref_count1	ptr_1	-> data
-
 ref_count2	ptr_2	-> data
-
 ref_count3	ptr_3	-> data
-```cpp
 std::shared_ptr<int> int_ptr_1 {new int (20)};
-```
 
-std::cout << “Use count: “ << int_ptr_1.use_count() << std::endl; //1
-```cpp
+std::cout << "Use count: " << int_ptr_1.use_count() << std::endl; //1
 std::shared_ptr<int> int_ptr_2 = int_ptr_1;
-```
 
-std::cout << “Use count: “ << int_ptr_2.use_count() << std::endl; //2
-```cpp
+std::cout << "Use count: " << int_ptr_2.use_count() << std::endl; //2
 std::shared_ptr<int> int_ptr_3 = std::make_shared<int>(55);
 ```
 
@@ -1888,7 +1784,7 @@ Shared to unique is not allowed
 
 ## 16.6. Weak Pointer
 
-Non owning pointers that don’t implement the -> or * operator. You can’t use them directly to ready or modify data.
+Non owning pointers that don't implement the -> or * operator. You can't use them directly to ready or modify data.
 ```cpp
 std::shared_ptr<int> shared_ptr_1 = std::make_shared<int>(200);
 std::weak_ptr<int> weak_ptr_1 (shared_ptr_1);
@@ -1902,19 +1798,19 @@ std::shared_ptr<int> weak_turned_shared = weak_ptr_1.lock();
 class Person
 {
 public:
-Person() = default;
-~Person();
-Person(std::string name);
-void set_friend(std::shared_ptr<Person> p {
-m_friend = p;
-}
+    Person() = default;
+    ~Person();
+    Person(std::string name);
+    void set_friend(std::shared_ptr<Person> p {
+        m_friend = p;
+    }
 private:
-std::shared_ptr<Person> m_friend;
-std::string name {“Unnamed”};
+    std::shared_ptr<Person> m_friend;
+    std::string name {"Unnamed"};
 };
 //Circular dependencies
-std::shared_ptr<Person> person_a = std::make_shared<Person>(“Alison”);
-std::shared_ptr<Person> person_b = std::make_shared<Person>(“Beth”);
+std::shared_ptr<Person> person_a = std::make_shared<Person>("Alison");
+std::shared_ptr<Person> person_b = std::make_shared<Person>("Beth");
 person_a->set_friend(person_b);
 person_b->set_friend(person_a);
 ```
@@ -1925,15 +1821,15 @@ Solution is to use weak_ptr;
 class Person
 {
 public:
-Person() = default;
-~Person();
-Person(std::string name);
-void set_friend(std::shared_ptr<Person> p {
-m_friend = p;
-}
+    Person() = default;
+    ~Person();
+    Person(std::string name);
+    void set_friend(std::shared_ptr<Person> p {
+        m_friend = p;
+    }
 private:
-std::weak_ptr<Person> m_friend;
-std::string name {“Unnamed”};
+    std::weak_ptr<Person> m_friend;
+    std::string name {"Unnamed"};
 };
 ```
 
@@ -1954,20 +1850,20 @@ std::unique_ptr<Item> owner = std::move(item);
 
 ```cpp
 namespace No_weight {
-double add(double x, double y)
-{
-return x+y;
-}
+    double add(double x, double y)
+    {
+        return x+y;
+    }
 }
 namespace Weight {
-double add(double x, double y)
-{
-return x+y - 1;
-}
+    double add(double x, double y)
+    {
+        return x+y - 1;
+    }
 }
 int main()
 {
-double result = Weight::add(4,2);
+    double result = Weight::add(4,2);
 }
 ```
 
@@ -1976,22 +1872,22 @@ double result = Weight::add(4,2);
 ```cpp
 double add(double a, double b)
 {
-return a+b;
+    return a+b;
 }
 namespace MyNamespace {
-double add(double x, double y)
-{
-return x+y - 1;
-}
-void do_something
-{
-double result = ::add(5,6); //Global add function, not namespace’s function
-}
+    double add(double x, double y)
+    {
+        return x+y - 1;
+    }
+    void do_something
+    {
+        double result = ::add(5,6); //Global add function, not namespace's function
+    }
 }
 int main()
 {
-MyNamespace::do_something();
-return 0;
+    MyNamespace::do_something();
+    return 0;
 }
 using namespace std; //Not recommended
 using std::cout;
@@ -2002,16 +1898,16 @@ using std::endl;
 
 ```cpp
 namespace {
-double add(double x, double y)
-{
-return x+y;
-}
+    double add(double x, double y)
+    {
+        return x+y;
+    }
 }
 int main()
 {
-double result = add(4,5);
-std::cout << “result: “ << result << std::endl;
-return 0;
+    double result = add(4,5);
+    std::cout << "result: " << result << std::endl;
+    return 0;
 }
 ```
 
@@ -2019,18 +1915,18 @@ return 0;
 
 ```cpp
 namespace Level1 {
-namespace Level2 {
-namespace Level3 {
-const double weight = 33.33;
-}
-}
+    namespace Level2 {
+        namespace Level3 {
+            const double weight = 33.33;
+        }
+    }
 }
 int main()
 {
-std::cout << Level1::Level2::Level3::weight << std::endl;
-namespace Data = Level1::Level2::Level3;
-std::cout << Data::weight << std::endl;
-return 0;
+    std::cout << Level1::Level2::Level3::weight << std::endl;
+    namespace Data = Level1::Level2::Level3;
+    std::cout << Data::weight << std::endl;
+    return 0;
 }
 ```
 
@@ -2052,10 +1948,10 @@ geometry::Point origin{0.0, 0.0};
 # 18. Typeid
 
 ```cpp
-std::cout << “Type of int: “ << typeid(int).name() << std::endl;
+std::cout << "Type of int: " << typeid(int).name() << std::endl;
 if (typeid(22) == typeid(int))
 {
-std::cout << “22 is an int” << std::endl;
+    std::cout << "22 is an int" << std::endl;
 }
 ```
 
@@ -2065,19 +1961,18 @@ std::cout << “22 is an int” << std::endl;
 class Shape
 {
 protected:
-Shape() = default;
-Shape(const std::string &desc);
+    Shape() = default;
+    Shape(const std::string &desc);
 public:
-virtual ~Shape() = default;
-//Pure virtual function
-virtual double perimeter() const = 0;
+    virtual ~Shape() = default;
+    //Pure virtual function
+    virtual double perimeter() const = 0;
 private:
-std::string m_desc;
+    std::string m_desc;
 };
 ```
 
 Class with at least one pure virtual function is called Abstract class. Object cannot be created of Abstract class.
-
 Derived class should implement the pure virtual function.
 
 ## 18.2. Practical guidance
@@ -2104,7 +1999,7 @@ constexpr is a way to tell the compiler that a function or variable can be evalu
 constexpr functions are functions that can be evaluated at compile-time. Here's an example:
 ```cpp
 constexpr int add(int a, int b) {
-return a + b;
+    return a + b;
 }
 ```
 
@@ -2164,7 +2059,7 @@ decltype(x) y = 10;
 ```cpp
 template <typename T>
 auto add(T x, T y) -> decltype(x + y) {
-return x + y;
+    return x + y;
 }
 ```
 
@@ -2196,82 +2091,57 @@ Type traits are a feature in C++ that allows you to query and manipulate the pro
 ## 21.1. Primary Type Categories
 
 The C++ Standard Library provides several primary type categories that can be used to query the properties of types. These include:
-
 **is_void**: checks if a type is void
-
 **is_integral**: checks if a type is an integer type
-
 **is_floating_point**: checks if a type is a floating-point type
-
 **is_array**: checks if a type is an array type
-
 **is_pointer**: checks if a type is a pointer type
-
 **is_reference**: checks if a type is a reference type
-
 **is_member_object_pointer**: checks if a type is a pointer to a member object
-
 **is_member_function_pointer**: checks if a type is a pointer to a member function
-
 **is_enum**: checks if a type is an enum type
-
 **is_union**: checks if a type is a union type
-
 **is_class**: checks if a type is a class type
-
 **is_function**: checks if a type is a function type
 
 ## 21.2. Type Properties
 
 In addition to primary type categories, the C++ Standard Library also provides several type properties that can be used to query the properties of types. These include:
-
 **is_const**: checks if a type is const-qualified
-
 **is_volatile**: checks if a type is volatile-qualified
-
 **is_trivial**: checks if a type is trivial
-
 **is_trivially_copyable**: checks if a type is trivially copyable
-
 **is_standard_layout**: checks if a type is standard-layout
 
 ## 21.3. Type Relationships
 
 The C++ Standard Library also provides several type relationships that can be used to query the relationships between types. These include:
-
 **is_same**: checks if two types are the same
-
 **is_base_of**: checks if one type is a base of another type
-
 **is_convertible**: checks if one type can be converted to another type
 
 ## 21.4. Type Modifications
 
 The C++ Standard Library also provides several type modifications that can be used to modify the properties of types. These include:
-
 **remove_const**: removes const qualification from a type
-
 **remove_volatile**: removes volatile qualification from a type
-
 **remove_reference**: removes reference qualification from a type
-
 **add_pointer**: adds a pointer to a type
-
 **add_reference**: adds a reference to a type
 ```cpp
 #include <type_traits>
 #include <iostream>
 int main() {
-// Check if int is an integer type
-std::cout << std::is_integral<int>::value << std::endl;  // Output: 1
-// Check if double is a floating-point type
-std::cout << std::is_floating_point<double>::value << std::endl;  // Output: 1
-// Check if int* is a pointer type
-std::cout << std::is_pointer<int*>::value << std::endl;  // Output: 1
-// Remove const qualification from const int
-using T = std::remove_const<const int>::type;
-std::cout << std::is_same<T, int>::value << std::endl;  // Output: 1
-return 0;
+    // Check if int is an integer type
+    std::cout << std::is_integral<int>::value << std::endl;  // Output: 1
+    // Check if double is a floating-point type
+    std::cout << std::is_floating_point<double>::value << std::endl;  // Output: 1
+    // Check if int* is a pointer type
+    std::cout << std::is_pointer<int*>::value << std::endl;  // Output: 1
+    // Remove const qualification from const int
+    using T = std::remove_const<const int>::type;
+    std::cout << std::is_same<T, int>::value << std::endl;  // Output: 1
+    return 0;
 }
 ```
 
@@ -2296,12 +2166,12 @@ Conditonal compilation made easier and more flexible
 template <typename T>
 void func( T t)
 {
-if constexpr (std::is_integral_v<T>)
-func_int(t);
-else if constexpr(std::is_floating_point_v<T>)
-func_float(t);
-else
-cout << “Wrong type”;
+    if constexpr (std::is_integral_v<T>)
+    func_int(t);
+    else if constexpr(std::is_floating_point_v<T>)
+    func_float(t);
+    else
+    cout << "Wrong type";
 }
 ```
 
@@ -2333,41 +2203,29 @@ Concepts are a way to define constraints on template parameters, making it easie
 ```cpp
 template <typename T>
 concept Addable = requires(T a, T b) {
-{ a + b } -> T;
+    { a + b } -> T;
 };
 ```
 
 ## 23.2. Built-in concepts
 
 same_as
-
 derived_from
-
 convertible_to
-
 common_reference_with
-
 common_with
-
 integral
-
 signed_integral
-
 unsigned_integral
-
 floating_point
-
 A mechanism to place constraints on your template type parameters
 ```cpp
 template<typename T>
-```
 
 requires std::integral<T>
-
 T add (T a, T b)
-```cpp
 {
-return a+b;
+    return a+b;
 }
 ```
 
@@ -2375,12 +2233,10 @@ return a+b;
 
 ```cpp
 template<std::integral T>
-```
 
 T add (T a, T b)
-```cpp
 {
-return a+b;
+    return a+b;
 }
 ```
 
@@ -2389,7 +2245,7 @@ return a+b;
 ```cpp
 auto T add (std::integral auto a, std::integral auto b)
 {
-return a+b;
+    return a+b;
 }
 ```
 
@@ -2397,12 +2253,10 @@ return a+b;
 
 ```cpp
 template<typename T>
-```
 
 T add (T a, T b) requires std::integral<T>
-```cpp
 {
-return a+b;
+    return a+b;
 }
 ```
 
@@ -2413,17 +2267,15 @@ template <typename T>
 concept MyIntegral = std::is_integral_v<T>;
 template <typename T>
 concept Multipliable = requires (T a, T b) {
-a * b; // Value is not calculated only checking if this statement is valid
+    a * b; // Value is not calculated only checking if this statement is valid
 };
 template <typename T>
-```
 
 concept Incrementable = requires (T a)
-```cpp
 {
-a+=1;
-++a;
-a++;
+    a+=1;
+    ++a;
+    a++;
 };
 ```
 
@@ -2436,7 +2288,7 @@ It is used to specify the requirements that a type must meet in order to satisfy
 ```cpp
 template <typename T>
 concept ConceptName = requires (/* parameter list */) {
-/* requirement list */
+    /* requirement list */
 };
 ```
 
@@ -2448,7 +2300,7 @@ The parameter list specifies the types and values that are used to define the re
 ```cpp
 template <typename T>
 concept Addable = requires (T a, T b) {
-/* requirement list */
+    /* requirement list */
 };
 ```
 
@@ -2460,32 +2312,25 @@ The requirement list specifies the actual requirements that must be met. For exa
 ```cpp
 template <typename T>
 concept Addable = requires (T a, T b) {
-{ a + b } -> T;
+    { a + b } -> T;
 };
 ```
 
 In this example, the requirement list includes a single requirement that a + b must be valid and return a value of type T.
-
 The require clause can take in four kinds of requirements:
-
 Simple requirements
-
 Nested requirements
-
 Compound requirements
-
 Type requirements
 
 ## 23.11. Simple requirements
 
 ```cpp
 template <typename T>
-```
 
 concept TinyType = requires (T t)
-```cpp
 {
-sizeof(T) <= 4; // Only checks syntax
+    sizeof(T) <= 4; // Only checks syntax
 };
 ```
 
@@ -2493,13 +2338,11 @@ sizeof(T) <= 4; // Only checks syntax
 
 ```cpp
 template <typename T>
-```
 
 concept TinyType = requires (T t)
-```cpp
 {
-sizeof(T) <= 4; // Only checks syntax
-requires sizeof(T) <= 4;  //checks if the expression is true
+    sizeof(T) <= 4; // Only checks syntax
+    requires sizeof(T) <= 4;  //checks if the expression is true
 };
 ```
 
@@ -2507,13 +2350,11 @@ requires sizeof(T) <= 4;  //checks if the expression is true
 
 ```cpp
 template <typename T>
-```
 
 concept Addable = requires (T a, T b)
-```cpp
 {
-{ a+b } -> std::convertible_to<int>;
-// checks if a+b is valid syntax, and the result is convertible to int
+    { a+b } -> std::convertible_to<int>;
+    // checks if a+b is valid syntax, and the result is convertible to int
 };
 ```
 
@@ -2540,129 +2381,93 @@ This function accepts integral types and excludes floating-point types at compil
 
 ## 24.1. Common header files
 
-iostream
-
+### iostream
 Provides definitions for formatted input and output from/to streams.
 
-fstream
-
+### fstream
 Provides definitions for formatted input and output from/to file streams.
 
-iomanip
-
+### iomanip
 Provides definitions for manipulators used to format stream I/O.
 
-Commonly used stream classes
-
+#### Commonly used stream classes
 ios
-
 ifstream
-
 ofstream
 
-fstream – ifstream + ofstream
-
-stringstream – istringstream + ostringstream
+fstream = ifstream + ofstream
+stringstream = istringstream + ostringstream
 
 ## 24.2. Global stream objects
 
 cin
-
 cout
-
 cerr
-
 clog
 
 ## 24.3. File Opening and Closing Modes
 
 **ios::in - **Open file for input operations. The file pointer is positioned at the beginning of the file.
-
 **ios::out -** Open file for output operations. The file pointer is positioned at the beginning of the file. If the file already exists, its contents will be truncated.
-
 **ios::app -** Open file for appending output operations. The file pointer is positioned at the end of the file.
-
 **ios::ate - **Open file and move the file pointer to the end of the file.
-
 **ios::trunc - **Truncate the file to zero length if it already exists.
-
 **ios::binary - **Open file in binary mode. In binary mode, data is read and written in binary format, without any translations.
-
 **ios::text - **Open file in text mode (default). In text mode, data is read and written in text format, with translations for newline characters and other special characters.
 
 ## 24.4. Common stream manipulators
 
 Boolean
-
 boolalpha, noboolalpha
-
 Integer
-
 dec, hex, oct, showbase, noshowbase, showpos, noshowpos, uppercase, nouppercase
-
 Floating point
-
 fixed, scientific, setprecision, showpoint, noshowpoint, showpos, noshowpos
-
 Field width, justification and fill
-
 setw, left, right, internal, setfill
-
 Others
-
 endl, flush, skipws, noskipws, ws
 
-## 24.5. Stream Manipulators – Boolean
+## 24.5. Stream Manipulators - Boolean
 
 Default when displaying Boolean values is 1 or 0.
 ```cpp
 std::cout << (10 == 10) << std::endl;
 ```
-
 1
+
 ```cpp
 std::cout << std::boolalpha;
 std::cout << (10 == 10) << std::endl;
 ```
-
 true
+
 ```cpp
 std::count << (10 == 20) << std::endl;
 ```
-
 false
 
-## 24.6. Stream Manipulators – integers
+## 24.6. Stream Manipulators - integers
 
-dec – base10
+dec - base10
+noshowbase - prefix used to show hexadecimal or octal
+nouppercase - when displaying a prefix and hex values it will be lower case
+noshowpos - no '+' is displayed for positive numbers
 
-noshowbase – prefix used to show hexadecimal or octal
+## 24.7. Stream Manipulators - floating point
 
-nouppercase – when displaying a prefix and hex values it will be lower case
+setprecision - number of digits displayed(default 6)
+fixed - not fixed to a specific number of digits after the decimal point
+noshowpoint - trailing zeroes are not displayed
+nouppercase - when displaying in scientific notation
+noshowpos - no '+' is displayed for positive numbers
 
-noshowpos – no ‘+’ is displayed for positive numbers
+## 24.8. Stream Manipulators - align and fill
 
-## 24.7. Stream Manipulators – floating point
-
-setprecision – number of digits displayed(default 6)
-
-fixed – not fixed to a specific number of digits after the decimal point
-
-noshowpoint – trailing zeroes are not displayed
-
-nouppercase – when displaying in scientific notation
-
-noshowpos – no ‘+’ is displayed for positive numbers
-
-## 24.8. Stream Manipulators – align and fill
-
-setw – width not set by default
-
-left – when no field width
-
-right – when using field width
-
-fill – not set by default – blank space is used
+setw - width not set by default
+left - when no field width
+right - when using field width
+fill - not set by default - blank space is used
 
 ## 24.9. Reading from file
 
@@ -2671,29 +2476,29 @@ fill – not set by default – blank space is used
 #include <fstream>
 int main()
 {
-std::ifstream in_file(“input.txt”);
-std::string line;
-if(!in_file)
-{
-std::cerr << “Problem opening file” << std::endl;
-return 1;
-}
-while(!in_file.eof())
-{
-in_file >> line;
-std::cout << line << std::endl;
-}
-in_file.close();
-return 0;
+    std::ifstream in_file("input.txt");
+    std::string line;
+    if(!in_file)
+    {
+        std::cerr << "Problem opening file" << std::endl;
+        return 1;
+    }
+    while(!in_file.eof())
+    {
+        in_file >> line;
+        std::cout << line << std::endl;
+    }
+    in_file.close();
+    return 0;
 }
 while(std::getline(in_file, line))
 {
-std::cout << line << std::endl;
+    std::cout << line << std::endl;
 }
 char c{};
 while(in_file.get(ch))
 {
-std::cout << c;
+    std::cout << c;
 }
 std::cout << std::endl;
 ```
@@ -2706,24 +2511,24 @@ std::cout << std::endl;
 #include <string>
 int main()
 {
-std::ofstream out_file(“output.txt”);
-if(!out_file)
-{
-std::cerr << “Error creating file” << std::endl;
-return 1;
-}
-std::string line;
-std::cout << “Enter something to write to the file: “ << std::endl;
-getline(std::cin, line);
-out_file << line << std::endl;
-out_file.close();
-return 0;
+    std::ofstream out_file("output.txt");
+    if(!out_file)
+    {
+        std::cerr << "Error creating file" << std::endl;
+        return 1;
+    }
+    std::string line;
+    std::cout << "Enter something to write to the file: " << std::endl;
+    getline(std::cin, line);
+    out_file << line << std::endl;
+    out_file.close();
+    return 0;
 }
 ```
 
 By default, trunc mode.
 ```cpp
-std::ofstream out_file(“output.txt”, std::ios::app);
+std::ofstream out_file("output.txt", std::ios::app);
 char c {};
 std::cin >> c;
 out_file.put( c);
@@ -2736,15 +2541,15 @@ out_file.put( c);
 int num {};
 double total {};
 std::string name {};
-std::string info {“Moe 100 1234.5”};
+std::string info {"Moe 100 1234.5"};
 std::istringstream iss{info};
 iss >> name >> num >> total;
 #include <sstream>
 int num {100};
 double total {1234.5};
-std::string name {“Moe”};
+std::string name {"Moe"};
 std::ostringstream oss {};
-oss << name << “ “ << num << “ “ << total;
+oss << name << " " << num << " " << total;
 std::cout << oss.str() << std::endl;
 ```
 
@@ -2774,47 +2579,32 @@ Containers are classified into four main categories: sequence containers, associ
 ## 25.1. Sequence Containers
 
 Sequence containers are containers that store elements in a linear sequence, where each element has a specific position. Examples of sequence containers include:
-
 1. **vector**
-
 2. **deque**
-
 3. **list**
-
 4. **array**
 
 ## 25.2. Associative Containers
 
 Associative containers are containers that store elements as key-value pairs, where each element is associated with a unique key. The elements are ordered based on the key. Examples of associative containers include:
-
 1. **set**
-
 2. **multiset**
-
 3. **map**
-
 4. **multimap**
 
 ## 25.3. Unordered Associative Containers
 
 Unordered associative containers are containers that store elements as key-value pairs, where each element is associated with a unique key. The elements are not ordered, and the container uses a hash function to store and retrieve elements. Examples of unordered associative containers include:
-
 1. **unordered_set**
-
 2. **unordered_multiset**
-
 3. **unordered_map**
-
 4. **unordered_multimap**
 
 ## 25.4. Container Adapters
 
 Container adapters are classes that provide a different interface to an underlying container. They do not store elements themselves but instead modify the behavior of an existing container. Examples of container adapters include:
-
 1. **stack**
-
 2. **queue**
-
 3. **priority_queue**
 
 ## 25.5. Key differences
@@ -2832,21 +2622,15 @@ encapsulates dynamic size arrays
 #include <vector>
 std::vector<int> ints2 = {1,2,3,4,5};
 std::vector<int> ints3 {11,12,13,14,15};
-```
 
 std::vector<int> ints4(20, 50); //20 items, each value 50
-
 vec_str[2]
-
 vec_str.at(2)
-
 vec_str.front()
-
 vec_str.back()
-
 ints2.push_back(100)
-
 ints2.pop_back()
+```
 
 ## 25.7. std::array
 
@@ -2854,17 +2638,13 @@ ints2.pop_back()
 #include <array>
 std::array<int,3> int_array1;
 std::array<int,3> int_array2{1,2};
-```
 
 int_array2[0]
-
 int_array2.at(2)
-
 int_array2.front()
-
 int_array2.back()
-
 int_array2.data()
+```
 
 ## 25.8. Iterators
 
@@ -2876,152 +2656,110 @@ std::vector<int>::iterator it = ints1.begin();
 or
 ```cpp
 auto it = ints1.begin();
-```
 
 it++;		//next element
-
 ints1.end() 	//null, after the last element
-
 it+3		//current+3 position
+```
 
 ## 25.9. Reverse iterators
 
 reverse_iterator
-
 rbegin
-
 rend
 
 ## 25.10. Constant iterators
 
 Cannot change the underlying data
-
 const_iterator
-
 cbegin
-
 end
 
 ## 25.11. Constant Reverse iterators
 
 const_reverse_iterator
-
 crbegin
-
 crend
 
 ## 25.12. std::deque
 
 Double Ended Queue
-
 Very fast insertions and removals from both ends of the container
 ```cpp
 std::deque<int> numbers = {1,2,3,4,5};
-```
+
 
 numbers[3]
-
 numbers.at(3)
-
 numbers.front()
-
 numbers.back()
-
 numbers.clear()
-```cpp
+
 auto it = numbers.begin()+2
-```
 
 numbers.insert(it, 300)
-
 numbers.emplace(it,45)
-
 numbers.erase(numbers.begin()+4)
-```cpp
 numbers.erase(numbers.begin()+1, numbers.begin()+4);
-```
 
 numbers.emplace_back(5)
-
 numbers.push_back(5)
-
 numbers.push_front()
-
 numbers.pop_front()
-
 numbers.pop_back()
+```
 
 ## 25.13. std::forward_list
 
 Very fast insertions and removals in the middle of the container.
-
 It is implemented as a single linked list in memory.
-
 It does not provide the random access operators like [].
 ```cpp
 std::forward_list<int> numbers = {100,2,3,4,5};
-```
 
 numbers.front()
-
 number.clear()
-```cpp
+
 auto it = numbers.begin();
-```
 
 numbers.insert_after(it, 333)
-
 numbers.emplace_after(it, 333)
-
 numbers.unique()
-
 numbers.erase_after(it)
+```
 
 ## 25.14. std::list
 
 Very fast insertions and removals in the middle of the container
-
 It is implemented as a double linked list in memory
 ```cpp
 std::list<int> numbers = {100,2,3,4,5};
-```
 
 numbers.clear()
-
 number.max_size()
-
 number.empty()
-
 number.size()
-```cpp
 auto it = numbers.begin();
-```
 
 numbers.insert (it, 333)
-
 numbers.erase(it)
-
 numbers.push_back(5)
-
 numbers.push_front(4)
-
 numbers.pop_front()
-
 numbers.pop_back()
-
 numbers.unique()
+```
 
 ## 25.15. std::pair
 
 std::pair is used to stores two data components as a single entity.
-
 It provides facilities to manipulate the components through the **first** and **second** data members.
 ```cpp
-std::pair<int, std::string> pair1 {0, “Book Shelf”};
-auto pair2 = std::make_pair(1, “Table”);
-std::cout << pair1.first << “ “ << pair1.second << std::endl;
+std::pair<int, std::string> pair1 {0, "Book Shelf"};
+auto pair2 = std::make_pair(1, "Table");
+std::cout << pair1.first << " " << pair1.second << std::endl;
 auto [idx, name] = pair1;
-std::cout << idx << “ “ << name << std::endl;
+std::cout << idx << " " << name << std::endl;
 ```
 
 ## 25.16. std::set
@@ -3030,45 +2768,40 @@ Store element in sorted order
 ```cpp
 #include <set>
 std::set<int> numbers {11,16,2,9,12,6};
-```
 
 numbers.clear()
-
 numbers.insert(20)
-
 numbers.emplace(42)
-```cpp
+
 auto it_erase = std::find(numbers.begin(), numbers.end(), 13);
 if (it_erase != numbers.end())
-std::cout << “Found” << std::endl;
+std::cout << "Found" << std::endl;
 else
-std::cout << “Not Found” << std::endl;
-```
+std::cout << "Not Found" << std::endl;
 
 numbers.erase(it_erase)
+```
 
 ## 25.17. std::map
 
 Key-value pair
-
 stores elements ordered by key in increasing order
-
-Doesn’t store duplicate keys
+Doesn't store duplicate keys
 ```cpp
 std::map<int, int> numbers {{1,11}, {2,22}, {3,33}};
 auto it = numbers.begin();
 while (it != numbers.end())
 {
-std::cout << “Key: “ << it->first
-<< “Value:” << it->second << std::endl;
-it++;
+    std::cout << "Key: " << it->first
+    << "Value:" << it->second << std::endl;
+    it++;
 }
 numbers.clear();
 numbers.insert({4,44});
 auto it_erase = numbers.find(3);
-```
 
 numbers.erase(it_erase)
+```
 
 ## 25.18. std::multiset & std::multimap
 
@@ -3091,12 +2824,12 @@ numbers.push(20);
 numbers.push(30);
 while(!numbers.empty())
 {
-std::cout << numbers.top() << std::endl;
-numbers.pop();
+    std::cout << numbers.top() << std::endl;
+    numbers.pop();
 }
-```
 
 numbers.size()
+```
 
 The underlying container is deque, but it can be changed by giving as second parameter.
 ```cpp
@@ -3119,7 +2852,6 @@ size()
 ## 25.22. std::priority_queue
 
 sorted based on the higher priority
-
 Default is descending order
 
 ## 25.23. Practical guidance
@@ -3141,27 +2873,16 @@ values.push_back(42);
 # 26. STL Algorithms
 
 Following are some of the STL algorithms:
-
 all_of
-
 any_of
-
 none_of
-
 for_each
-
 max_element
-
 min_element
-
 find
-
 copy
-
 copy_if
-
 sort
-
 transform
 
 ## 26.1. all_of
@@ -3170,11 +2891,11 @@ transform
 std::vector<int> collection {2,6,8,40,64,70};
 if(std::all_of(std::begin(collection),std::end(collection), [](int i) {return (i%2==0);}))
 {
-std::cout << “All numbers are even” << std::endl;
+    std::cout << "All numbers are even" << std::endl;
 }
 else
 {
-std::cout << “Not all numbers are even” << std::endl;
+    std::cout << "Not all numbers are even" << std::endl;
 }
 ```
 
@@ -3184,11 +2905,11 @@ std::cout << “Not all numbers are even” << std::endl;
 std::vector<int> collection {2,6,8,40,64,70};
 if(std::any_of(std::begin(collection),std::end(collection), [](int i) {return (i%2==0);}))
 {
-std::cout << “At least one number is even” << std::endl;
+    std::cout << "At least one number is even" << std::endl;
 }
 else
 {
-std::cout << “None of the numbers is even” << std::endl;
+    std::cout << "None of the numbers is even" << std::endl;
 }
 ```
 
@@ -3198,11 +2919,11 @@ std::cout << “None of the numbers is even” << std::endl;
 std::vector<int> collection {2,6,8,40,64,70};
 if(std::none_of(std::begin(collection),std::end(collection), [](int i) {return (i%2==0);}))
 {
-std::cout << “None of the numbers is even” << std::endl;
+    std::cout << "None of the numbers is even" << std::endl;
 }
 else
 {
-std::cout << “At least one number is even” << std::endl;
+    std::cout << "At least one number is even" << std::endl;
 }
 ```
 
@@ -3211,7 +2932,7 @@ std::cout << “At least one number is even” << std::endl;
 ```cpp
 void print(const int &n)
 {
-std::cout << “ “ << n;
+    std::cout << " " << n;
 }
 std::for_each(std::begin(collection), std::end(collection), print);
 ```
@@ -3235,16 +2956,16 @@ int n = 4;
 auto result = std::find(std::begin(collection), std::end(collection), n);
 if (result != std::end(collection))
 {
-std::cout << “Element found” << std::endl;
+    std::cout << "Element found" << std::endl;
 }
 auto odd = [](int n)
 {
-return (n%2 != 0);
+    return (n%2 != 0);
 }
 auto odd_n_position = std::find_if(std::begin(collection), std::end(collection), odd);
 if (odd_n_position != std::end(collection))
 {
-std::cout << “Collection contains at least one odd number: “ << *odd_n_position << std::endl;
+    std::cout << "Collection contains at least one odd number: " << *odd_n_position << std::endl;
 }
 ```
 
@@ -3295,23 +3016,16 @@ std::ranges::sort(values);
 Concurrency refers to the ability of a program to perform multiple tasks or operations simultaneously, sharing the same resources. Concurrency can be achieved through various techniques, including:
 
 1. **Multithreading**: Creating multiple threads within a single process, each executing a separate portion of the code.
-
 2. **Multiprocessing**: Creating multiple processes, each executing a separate program or task.
-
 3. **Asynchronous programm**ing: Using callbacks, futures, or other mechanisms to perform tasks asynchronously.
 
 ## 27.2. Multithreading
 
 Multithreading is a specific type of concurrency where multiple threads are created within a single process. Each thread shares the same memory space and resources, but executes a separate portion of the code.
-
 C++ provides a built-in multithreading library, <thread>, which allows developers to create and manage threads. Key features include:
-
 **std::thread**: A class representing a thread.
-
 **std::mutex**: A class representing a mutex (mutual exclusion) lock.
-
 **std::lock_guard**: A class that provides a convenient way to lock and unlock a mutex.
-
 **std::async**: A function that allows developers to execute a function asynchronously.
 ```cpp
 #include <thread>
@@ -3320,18 +3034,18 @@ C++ provides a built-in multithreading library, <thread>, which allows developer
 std::mutex mtx;
 int counter = 0;
 void incrementCounter() {
-for (int i = 0; i < 100000; i++) {
-std::lock_guard<std::mutex> lock(mtx);
-counter++;
-}
+    for (int i = 0; i < 100000; i++) {
+        std::lock_guard<std::mutex> lock(mtx);
+        counter++;
+    }
 }
 int main() {
-std::thread t1(incrementCounter);
-std::thread t2(incrementCounter);
-t1.join();
-t2.join();
-std::cout << "Counter: " << counter << std::endl;
-return 0;
+    std::thread t1(incrementCounter);
+    std::thread t2(incrementCounter);
+    t1.join();
+    t2.join();
+    std::cout << "Counter: " << counter << std::endl;
+    return 0;
 }
 ```
 
@@ -3342,11 +3056,11 @@ To create a thread, you can use the std::thread class. The std::thread construct
 #include <thread>
 #include <iostream>
 void threadFunction() {
-std::cout << "Hello from thread!" << std::endl;
+    std::cout << "Hello from thread!" << std::endl;
 }
 int main() {
-std::thread t(threadFunction);
-// ...
+    std::thread t(threadFunction);
+    // ...
 }
 ```
 
@@ -3357,13 +3071,13 @@ When a thread is created, it runs concurrently with the main thread. To ensure t
 #include <thread>
 #include <iostream>
 void threadFunction() {
-std::cout << "Hello from thread!" << std::endl;
+    std::cout << "Hello from thread!" << std::endl;
 }
 int main() {
-std::thread t(threadFunction);
-t.join(); // Wait for thread t to finish
-std::cout << "Thread finished" << std::endl;
-return 0;
+    std::thread t(threadFunction);
+    t.join(); // Wait for thread t to finish
+    std::cout << "Thread finished" << std::endl;
+    return 0;
 }
 ```
 
@@ -3374,13 +3088,13 @@ If you don't want to wait for a thread to finish its execution, you can detach i
 #include <thread>
 #include <iostream>
 void threadFunction() {
-std::cout << "Hello from thread!" << std::endl;
+    std::cout << "Hello from thread!" << std::endl;
 }
 int main() {
-std::thread t(threadFunction);
-t.detach(); // Detach thread t
-std::cout << "Main thread continues" << std::endl;
-return 0;
+    std::thread t(threadFunction);
+    t.detach(); // Detach thread t
+    std::cout << "Main thread continues" << std::endl;
+    return 0;
 }
 ```
 
@@ -3389,9 +3103,7 @@ return 0;
 A thread can be in one of the following states:
 
 1. **Default-constructed**: A thread object that has not been associated with a thread of execution.
-
 2. **Joinable**: A thread object that has been associated with a thread of execution and has not yet been joined or detached.
-
 3. **Non-joinable**: A thread object that has been joined, detached, or has not been associated with a thread of execution.
 
 Example
@@ -3399,15 +3111,15 @@ Example
 #include <thread>
 #include <iostream>
 void threadFunction(int id) {
-std::cout << "Hello from thread " << id << std::endl;
+    std::cout << "Hello from thread " << id << std::endl;
 }
 int main() {
-std::thread t1(threadFunction, 1);
-std::thread t2(threadFunction, 2);
-t1.join();
-t2.detach();
-std::cout << "Main thread continues" << std::endl;
-return 0;
+    std::thread t1(threadFunction, 1);
+    std::thread t2(threadFunction, 2);
+    t1.join();
+    t2.detach();
+    std::cout << "Main thread continues" << std::endl;
+    return 0;
 }
 ```
 
@@ -3425,12 +3137,12 @@ unlock
 std::mutex task_mutex;
 void task(const std::string& str)
 {
-for(int i = 0; i < 5; i++)
-{
-task_mutex.lock();
-std::cout << str[0] << str[1] << str[2] << std::endl;
-task_mutex.unlock();
-}
+    for(int i = 0; i < 5; i++)
+    {
+        task_mutex.lock();
+        std::cout << str[0] << str[1] << str[2] << std::endl;
+        task_mutex.unlock();
+    }
 }
 ```
 
@@ -3440,24 +3152,20 @@ task_mutex.unlock();
 std::lock_guard
 void task()
 {
-task_mutex.lock();
-throw std::exception();
-task_mutex.unlock();
+    task_mutex.lock();
+    throw std::exception();
+    task_mutex.unlock();
 }
 catch (std::exception& e)
 {
-…
+    ...
 }
 ```
 
 When the exception is thrown
-
 The destructors are called for all objects in scope
-
 The program flow jumps into the catch handler
-
 The unlock call is never executed
-
 The mutex remains locked
 ```cpp
 std::lock_guard<std::mutex> lck_guard(task_mutex);
@@ -3468,11 +3176,11 @@ in C++17,
 std::lock_guard lck_guard(task_mutex);
 void task(const std::string& str)
 {
-for(int i = 0; i < 5; i++)
-{
-std::lock_guard<std::mutex> lck_guard(task_mutex);
-std::cout << str[0] << str[1] << str[2] << std::endl;
-}
+    for(int i = 0; i < 5; i++)
+    {
+        std::lock_guard<std::mutex> lck_guard(task_mutex);
+        std::cout << str[0] << str[1] << str[2] << std::endl;
+    }
 }
 ```
 
@@ -3485,32 +3193,24 @@ std::unique_lock
 ```
 
 The same basic features as std::lock_guard
-
 Mutex data member
-
 Constructor locks the mutex
-
 Destructor unlocks it
-
 It also has an unlock() member function
-
 We can call this after the critical section
-
 Avoids blocking other threads while we execute non-critical code
-
 If we do not call unlock(), the destructor will unlock the mutex
-
 The lock is always released
 ```cpp
 void task(const std::string& str)
 {
-for(int i = 0; i < 5; i++)
-{
-std::unique_lock<std::mutex> uniq_lck(task_mutex);
-std::cout << str[0] << str[1] << str[2] << std::endl;
-uniq_lck.unlock();
-std::this_thread::sleep_for(50ms);
-}
+    for(int i = 0; i < 5; i++)
+    {
+        std::unique_lock<std::mutex> uniq_lck(task_mutex);
+        std::cout << str[0] << str[1] << str[2] << std::endl;
+        uniq_lck.unlock();
+        std::this_thread::sleep_for(50ms);
+    }
 }
 ```
 
@@ -3520,38 +3220,31 @@ std::this_thread::sleep_for(50ms);
 std::try_to_lock
 ```
 
-Calls the mutex’s try_lock() member function
-
+Calls the mutex's try_lock() member function
 The owns_lock() member function checks if the mutex is locked
 ```cpp
 std::defer_lock
 ```
 
 Does not lock the mutex
-
 Can lock it later by calling the lock() member function
-
 Or by passing the std::unique_lock object to std::lock()
 ```cpp
 std::adopt_lock
 ```
 
 Takes a mutex that is already locked
-
 Avoids locking the mutex twice
-
 std::unique_lock object can not be copied
 
 ## 27.11. std::recursive_mutex
 
 It allows the same thread to lock it multiple times without deadlocking.
-
 It is useful for recursive functions or complex locking scenarios.
 
 ## 27.12. std::timed_mutex
 
 It allows threads to wait for a specified duration to acquire the lock.
-
 It is useful for avoiding indefinite blocking.
 
 ## 27.13. std::recursive_time_mutex
@@ -3565,11 +3258,8 @@ It combines the features of std::recursive_mutex and std::timed_mutex.
 ```
 
 It can be locked in two different ways
-
 Exclusive lock
-
 No other thread may acquire a lock
-
 No other thread can enter a critical section
 ```cpp
 std::lock_guard<std::shared_mutex>
@@ -3577,9 +3267,7 @@ std::unique_lock<std::shared_mutex>
 ```
 
 Shared lock
-
 Other threads may acquire a shared lock
-
 They can execute critical sections concurrently
 ```cpp
 std::shared_lock<std::shared_mutex>
@@ -3594,7 +3282,6 @@ try_lock()
 ```
 
 unlock
-
 Shared locking
 ```cpp
 lock_shared()
@@ -3611,15 +3298,10 @@ std::scoped_lock s_lck(mutex1, mutex2);
 ## 27.17. Livelock
 
 A program cannot make progress
-
 In deadlock, the threads are inactive
-
 In livelock, the threads are active
-
 A livelock can result from badly done deadlock avoidance
-
 A thread cannot get a lock
-
 Instead of blocking indefinitely, it backs off and tries again
 
 ## 27.18. Thread Synchronization
@@ -3633,7 +3315,6 @@ wait()
 ```
 
 Takes an argument of type std::unique_lock
-
 It unlocks its argument and blocks the thread until a notification is received
 ```cpp
 wait_for() and wait_until()
@@ -3645,7 +3326,6 @@ notify_one()
 ```
 
 Wake up one of the waiting threads
-
 The scheduler decides which thread is woken up
 ```cpp
 notify_all()
@@ -3667,101 +3347,78 @@ std::mutex mut;
 std::conditional_variable cond_var;
 void reader()
 {
-std::cout << “Reader thread locking mutex” << std::endl;
-std::unique_lock<std::mutex> uniq_lck(mut);
-std::cout << “Reader thread locked the mutex” << std::endl;
-std::cout << “Reader thread sleeping…” << std::endl;
-cond_var.wait(uniq_lck);
-std::cout << “Reader thread wakes up” << std::endl;
-std::cout << “Data is ” << sdata << std::endl;
+    std::cout << "Reader thread locking mutex" << std::endl;
+    std::unique_lock<std::mutex> uniq_lck(mut);
+    std::cout << "Reader thread locked the mutex" << std::endl;
+    std::cout << "Reader thread sleeping..." << std::endl;
+    cond_var.wait(uniq_lck);
+    std::cout << "Reader thread wakes up" << std::endl;
+    std::cout << "Data is " << sdata << std::endl;
 }
 void writer()
 {
-std::cout << “Writer thread locking mutex” << std::endl;
-std::lock_guard<std::mutex> lck_guard(mut);
-std::cout << “Writer thread has locked the mutex” << std::endl;
-std::this_thread::sleep_for(2s);
-std::cout << “Writer thread modifying data” << std::endl;
-sdata = “Populated”;
-std::cout << “Writer thread sends the notification” << std::endl;
-cond_var.notify_one();
+    std::cout << "Writer thread locking mutex" << std::endl;
+    std::lock_guard<std::mutex> lck_guard(mut);
+    std::cout << "Writer thread has locked the mutex" << std::endl;
+    std::this_thread::sleep_for(2s);
+    std::cout << "Writer thread modifying data" << std::endl;
+    sdata = "Populated";
+    std::cout << "Writer thread sends the notification" << std::endl;
+    cond_var.notify_one();
 }
 int main()
 {
-sdata = “Empty”;
-std::cout << “Data is ” << sdata << std::endl;
-std::thread read(reader);
-std::thread write(writer);
-write.join();
-read.join();
+    sdata = "Empty";
+    std::cout << "Data is " << sdata << std::endl;
+    std::thread read(reader);
+    std::thread write(writer);
+    write.join();
+    read.join();
 }
 ```
 
 std::conditional_variable only works with std::mutex
-
 Does not work with std::timed_mutex
-
 There is also std::condition_variable_any
-
 Works with any mutex-like object
-
 Including our own types
-
 May have more overhead than std::conditional_variable
 
 ## 27.20. Lost Wakeup
 
 In previous example there is a problem
-
 wait() will block until the conditional variable is notified
-
 If the writer calls notify() before the reader calls wait()
-
 The conditional variable is notified when there are no threads waiting
-
 The reader will never be woken up
-
 The reader could be blocked forever
-
-This is known as “Lost wakeup”.
+This is known as "Lost wakeup".
 
 ## 27.21. Spurious Wakeup
 
-The reader will be “spuriously” woken up
-
+The reader will be "spuriously" woken up
 The reader thread has called wait()
-
 The writer thread has not called notify()
-
 The condition variable wakes the reader up anyway
-
 This is due to the way that std::conditional_variable is implemented
-
 Avoiding spurious wakeups adds too much overhead
 
 ## 27.22. Conditional Variable with Predicate
 
 wait() takes an optional second argument
-
 A predicate
-
 Typically, the predicate checks a shared bool
-
 The bool is initialized to false
-
 It is set to true when the writer sends the notification
-
 The reader thread will call this predicate
-
 It will only call wait() if the predicate returns false
-
 Also available with with_for() and wait_until()
 ```cpp
 bool condition = false;
 void reader()
 {
-std::unique_lock<std::mutex> uniq_lck(mut);
-cond_var.wait(uniq_lck, [] {return condition;});
+    std::unique_lock<std::mutex> uniq_lck(mut);
+    cond_var.wait(uniq_lck, [] {return condition;});
 }
 ```
 
@@ -3769,13 +3426,13 @@ It is similar to
 ```cpp
 while(!condition)
 {
-cond_var.wait();
+    cond_var.wait();
 }
 void writer()
 {
-std::lock_guard<std::mutex> lck_guard(mut);
-sdata = “Populated”;
-condition = true;
+    std::lock_guard<std::mutex> lck_guard(mut);
+    sdata = "Populated";
+    condition = true;
 }
 cond_var.notify_one();
 ```
@@ -3783,48 +3440,29 @@ cond_var.notify_one();
 ## 27.23. std::future and std::promise
 
 Classes for transferring data between threads
-
-Together, these set up a “shared state” between threads
-
+Together, these set up a "shared state" between threads
 The shared state can transfer data from one thread to another
-
 No shared data variables
-
 No explicit locking
 
 ## 27.24. Producer-Consumer Model
 
 Futures are promises use a producer-consumer model
-
 Reader/Writer area an example of this model
-
-A “Producer” thread will generate a result
-
-A “Consumer” thread waits for the result
-
+A "Producer" thread will generate a result
+A "Consumer" thread waits for the result
 The Producer thread generates the result
-
 The Producer thread stores the result in the shared state
-
 The Consumer thread reads the result from the shared state
-
 std::promise is associated with the producer.
-
 std::future object is associated with the consumer.
-
 The consumer calls a member function of the future object.
-
 The future blocks until the result becomes available
-
 Future and Promises also with exceptions
-
 The promise stores the exception in the shared state
-
 This exception will be rethrown in the consumer thread
-
-By the future’s blocking function
-
-The producer thread “throws” the exception to the consumer
+By the future's blocking function
+The producer thread "throws" the exception to the consumer
 
 ## 27.25. std::future
 
@@ -3833,19 +3471,12 @@ The producer thread “throws” the exception to the consumer
 ```
 
 get() member function
-
 Obtains the result when ready
-
 Blocks until the operation is complete
-
 Fetches the result and returns it
-
 wait() and friends
-
 Block but do not return a result
-
 wait() blocks until the operation is complete
-
 wait_for() and wait_until() block with a timeout
 
 ## 27.26. std::promise
@@ -3855,13 +3486,9 @@ wait_for() and wait_until() block with a timeout
 ```
 
 Constructor
-
 Creates an associated std::future object
-
 Sets up the shared state with it
-
 get_future() member function
-
 Returns the associated future
 ```cpp
 std::promise<int> prom;
@@ -3870,11 +3497,8 @@ set_value()
 ```
 
 Sets the result to its argument
-
 set_exception
-
 Indicates that an exception has occurred
-
 This can be stored in the shared state
 ```cpp
 #include <future>
@@ -3883,27 +3507,27 @@ This can be stored in the shared state
 #include <chrono>
 void produce(std::promise<int> &px)
 {
-using namespace std::literals;
-int x = 42;
-std::this_thread::sleep_for(2s);
-std::cout << “Promise sets shared state to ” << x << std::endl;
-px.set_value(x);
+    using namespace std::literals;
+    int x = 42;
+    std::this_thread::sleep_for(2s);
+    std::cout << "Promise sets shared state to " << x << std::endl;
+    px.set_value(x);
 }
 void consume(std::future<int> &fx)
 {
-std::cout << “Future calling get()… ” << std::endl;
-int x = fx.get();
-std::cout << “Future returns from calling get() ” << std::endl;
-std::cout << “The answer is ” << x << std::endl;
+    std::cout << "Future calling get()... " << std::endl;
+    int x = fx.get();
+    std::cout << "Future returns from calling get() " << std::endl;
+    std::cout << "The answer is " << x << std::endl;
 }
 int main()
 {
-std::promise<int> prom;
-std::future<int> fut = prom.get_future();
-std::thread thr_producer(produce, std::ref(prom));
-std::thread thr_consumer(consume, std::ref(fut));
-thr_producer.join();
-the_consumer.join();
+    std::promise<int> prom;
+    std::future<int> fut = prom.get_future();
+    std::thread thr_producer(produce, std::ref(prom));
+    std::thread thr_consumer(consume, std::ref(fut));
+    thr_producer.join();
+    the_consumer.join();
 }
 ```
 
@@ -3913,40 +3537,32 @@ the_consumer.join();
 int counter = 0;
 void task()
 {
-for (int i = 0; i < 100000; i++)
-{
-std::lock_guard<std::mutex> lck_guard(mut);
-++counter;
-}
+    for (int i = 0; i < 100000; i++)
+    {
+        std::lock_guard<std::mutex> lck_guard(mut);
+        ++counter;
+    }
 }
 ```
 
 ## 27.28. Atomic Keyword
 
 The compiler will generate special instructions which
-
 Disable pre-fetch for count
-
 Flush the store buffer immediately after doing the increment
-
 This also avoids some other problems
-
 Hardware optimizations which change the instructions order
-
 Compiler optimizations which change the instructions order
-
 The result is that only one thread can access count at a time
-
 This prevents the data race
-
 It also makes the operation take much longer
 ```cpp
 #include<atomic>
 std::atomic<int> counter = 0;
 void task()
 {
-for(int i = 0; i < 100000; i++)
-++counter;
+    for(int i = 0; i < 100000; i++)
+    ++counter;
 }
 ```
 
@@ -3956,57 +3572,39 @@ for(int i = 0; i < 100000; i++)
 store()
 ```
 
-Atomically replace the object’s value with its argument
+Atomically replace the object's value with its argument
 ```cpp
 load()
 ```
 
-Atomically return the object’s value
-
+Atomically return the object's value
 operator =()
-
 operator T()
-
 synonyms for store() and load()
 ```cpp
 exchange()
 ```
 
-Atomically replace the object’s value with its argument
-
+Atomically replace the object's value with its argument
 Returns the previous value
-
 Atomic pointers support arithmetic
-
 increment and decrement operators
-```cpp
 fetch.add() synonym for x++
-```
-
-fetch.sub() synonym for x—
+fetch.sub() synonym for x--
 
 += and -= operators
-
 Integer specializations have these, plus
-
 Atomic bitwise logical operations &,| and ^
 
 ## 27.30. std::atomic_flag
 
 std::atomic_flag is an atomic Boolean type
-
 Has less overhead than std::atomic<bool>
-
 Only three operations
-
 clear() sets the flag to false
-
 test_and_set() sets the flag to true
-
 and returns the previous value
-
 operator =()
-
 Must be initialized to false
 ```cpp
 std::atomic_flag lock = ATOMIC_FLAG_INIT;
@@ -4015,125 +3613,98 @@ std::atomic_flag lock = ATOMIC_FLAG_INIT;
 ## 27.31. Spin lock
 
 A spin lock is essentially an infinite loop
-
-It keeps “spinning” until a condition becomes true.
-
+It keeps "spinning" until a condition becomes true.
 An alternative to locking a mutex or using a conditional variable
-
 We can use std::atomic_flag to implement a basic spin lock
-
 The loop condition is the value of the flag
 
 ## 27.32. Spin lock with std::atomic_flag
 
 Each thread calls test_and_sets() in a loop
-
 If this returns true
-
 Some other thread has set the flag and is in the critical section
-
 Iterate again
-
 If it returns false
-
 This thread has set the flag
-
 Exit the loop and proceed into the critical section
-
 After the critical section, set the flag to false
-
 This allows another thread to execute in the critical section
-
 std::atomic_flag flag = ATOMIC_FLAG_INIT; //false
 ```cpp
 void task(int x)
 {
-while(flag.test_and_set())
-{
-// Code Logic
-}
-flag.clear();
+    while(flag.test_and_set())
+    {
+        // Code Logic
+    }
+    flag.clear();
 }
 ```
 
 ## 27.33. Lock-free programming
 
 We will implement a simple queue
-
 No internal or external locks
-
 The queue is only accessed by two threads
-
 A producer thread inserts elements into the queue
-
 A consumer thread removes elements from the queue
-
 The code is carefully designed
-
 The consumer and producer threads never work on adjacent elements
-
 The two threads always work on different parts of the queue
-
 Only the Producer thread can modify the queue
-
 The producer queue inserts the element
-
 The producer queue erases the element
-
 The two threads never overlap
-
 iHead and iTail never refer to the same element
-
 The Producer thread never modifies iHead
-
 The Consumer thread never accesses elements after iHead
 ```cpp
 template <typename T>
 struct LockFreeQueue
 {
 private:
-std::list<T> list;
-typename std::list<T>::iterator iHead, iTail;
+    std::list<T> list;
+    typename std::list<T>::iterator iHead, iTail;
 public:
-LockFreeQueue()
-{
-list.push_back(T()); //create a dummy element
-iHead = list.begin();
-iTail = list.end();
-}
-bool Consume(T &t)
-{
-auto iFirst = iHead;
-++iFirst;
-if (iFirst != iTail)
-{
-iHead = iFirst;
-t = *iHead;
-return true;
-}
-return false; // no elements to fetch
-}
-void Produce(const T &t)
-{
-list.push_back(t);
-iTail = list.end();
-list.erase(list.begin(), iHead);
-}
+    LockFreeQueue()
+    {
+        list.push_back(T()); //create a dummy element
+        iHead = list.begin();
+        iTail = list.end();
+    }
+    bool Consume(T &t)
+    {
+        auto iFirst = iHead;
+        ++iFirst;
+        if (iFirst != iTail)
+        {
+            iHead = iFirst;
+            t = *iHead;
+            return true;
+        }
+        return false; // no elements to fetch
+    }
+    void Produce(const T &t)
+    {
+        list.push_back(t);
+        iTail = list.end();
+        list.erase(list.begin(), iHead);
+    }
 };
 int main()
 {
-LockFreeQueue<int> lfq;
-std::vector<std::thread> threads;
-int j = 1;
-for (int i = 0; i < 10; i++)
-{
-std::thread produce(&LockFreeQueue<int>::Produce, &lfq, std::ref(i));
-threads.push_back(std::move(produce));
-std::thread consume(&LockFreeQueue<int>::Consume, &lfq, std::ref(i));
-threads.push_back(std::move(consume));
-}
-for (auto & thr:threads)
-thr.join();
+    LockFreeQueue<int> lfq;
+    std::vector<std::thread> threads;
+    int j = 1;
+    for (int i = 0; i < 10; i++)
+    {
+        std::thread produce(&LockFreeQueue<int>::Produce, &lfq, std::ref(i));
+        threads.push_back(std::move(produce));
+        std::thread consume(&LockFreeQueue<int>::Consume, &lfq, std::ref(i));
+        threads.push_back(std::move(consume));
+    }
+    for (auto & thr:threads)
+    thr.join();
 }
 ```
 
@@ -4160,11 +3731,8 @@ Condition-variable waits should use a predicate because notifications can be mis
 ## 28.1. Range Algorithms
 
 Legacy Algorithms
-
 Work on iterator pairs
-
 Range Algorithms
-
 Work on containers directly
 ```cpp
 auto result = std::ranges::all_of(numbers, odd);
@@ -4173,7 +3741,7 @@ std::ranges::sort(numbers);
 auto odd_n_position = std::ranges::find_if(numbers, odd);
 if(odd_n_position != std::end(numbers))
 {
-std::cout << “Found” << std::endl;
+    std::cout << "Found" << std::endl;
 }
 ```
 
@@ -4201,12 +3769,11 @@ A view is a non-owning range
 ```cpp
 std::vector<int> vi {1,2,3,4,5,6,7,8,9};
 auto evens = [](int i) {
-return (i%2 == 0);
+    return (i%2 == 0);
 }
 ```
 
 std::ranges::filter::view v_evens = std::ranges::filter_view(vi, evens); //No computation
-
 print(v_evens); // Computation happens here
 
 ## 28.5. transform_view
@@ -4239,7 +3806,7 @@ std::ranges::take_drop_view v_drop_while = std::ranges::drop_view(vi, [](int i){
 
 ```cpp
 using pair = std::pair<int, std::string>;
-std::vector<pair> numbers {{1,”one”}, {2,”two”}};
+std::vector<pair> numbers {{1,"one"}, {2,"two"}};
 auto k_view = std::views::keys(numbers);
 auto k_values = std::views::values(numbers);
 ```
@@ -4256,8 +3823,8 @@ auto v_evens = std::views::filter(vi, evens);
 auto even = [](int n) { return (n%2 == 0);};
 auto my_view = std::views::transform(std::views::filter(vi, even), [](auto n) {return n*=n;});
 std::map<std::string, int> classroom {
-{“John”, 11},
-{“Mary”, 17}
+    {"John", 11},
+    {"Mary", 17}
 };
 auto names_view = classroom | std::views::keys;
 ```
@@ -4290,28 +3857,20 @@ auto evens = values | std::views::filter([](int n) { return n % 2 == 0; });
 
 # 29. Coroutines (C++20)
 
-co_yield
-
+### co_yield
 suspends the execution and returns a value
 
-co_return
-
+### co_return
 completes execution and optionally returns a value
 
-co_await
-
+### co_await
 suspends the execution until resumed
 
 If a function has one of those keywords, it becomes a coroutine.
-
-The below functions can’t be coroutine.
-
+The below functions can't be coroutine.
 Constexpr functions
-
 Constructors
-
 Destructors
-
 the main function
 
 ## 29.1. co_yield
@@ -4320,19 +3879,19 @@ the main function
 #include <iostream>
 coro[int] func1()
 {
-co_yield 45;
-co_yield 46;
-co_yield 47;
-co_yield 48;
+    co_yield 45;
+    co_yield 46;
+    co_yield 47;
+    co_yield 48;
 }
 int main(int argc, char **argv)
 {
-auto f1 = func1();
-std::cout << f1() << std::endl;	//45
-std::cout << f1() << std::endl;	//46
-std::cout << f1() << std::endl;	//47
-std::cout << f1() << std::endl;	//48
-return 0;
+    auto f1 = func1();
+    std::cout << f1() << std::endl;	//45
+    std::cout << f1() << std::endl;	//46
+    std::cout << f1() << std::endl;	//47
+    std::cout << f1() << std::endl;	//48
+    return 0;
 }
 ```
 
@@ -4342,13 +3901,13 @@ return 0;
 #include <iostream>
 coro[int] func3()
 {
-co_return 55;
+    co_return 55;
 }
 int main(int argc, char **argv)
 {
-auto f3 = func3();
-std::cout << f3() << std::endl;
-return 0;
+    auto f3 = func3();
+    std::cout << f3() << std::endl;
+    return 0;
 }
 ```
 
@@ -4357,20 +3916,20 @@ return 0;
 ```cpp
 coro[int] do_work()
 {
-std::cout << “Doing first thing … “ << std::endl;
-co_await std::suspend_always{};
-std::cout << “Doing second thing … “ << std::endl;
-co_await std::suspend_always{};
-std::cout << “Doing third thing … “ << std::endl;
+    std::cout << "Doing first thing ... " << std::endl;
+    co_await std::suspend_always{};
+    std::cout << "Doing second thing ... " << std::endl;
+    co_await std::suspend_always{};
+    std::cout << "Doing third thing ... " << std::endl;
 }
 int main(int argc, char **argv)
 {
-auto task = do_work();
-task.resume();
-task.resume();
-task.resume();
-std::cout << “Done!” << std::endl;
-return 0;
+    auto task = do_work();
+    task.resume();
+    task.resume();
+    task.resume();
+    std::cout << "Done!" << std::endl;
+    return 0;
 }
 ```
 
@@ -4402,12 +3961,11 @@ import <string>;
 import <iostream>;
 export void print_msg(const std::string &msg)
 {
-std::cout << “Msg: “ << msg << std::endl;
+    std::cout << "Msg: " << msg << std::endl;
 }
 ```
 
 Module file extension
-
 Module files(.ixx)
 ```cpp
 BMI(ifc)
@@ -4429,27 +3987,24 @@ import <iostream>;
 //Module purview
 export double add (doube a, double b)
 {
-return a+b;
+    return a+b;
 }
 export void greet(const std::string &name)
 {
-std::string dest;
-dest = “Hello “;
-dest.append(name);
-std::cout << dest << std::endl;
+    std::string dest;
+    dest = "Hello ";
+    dest.append(name);
+    std::cout << dest << std::endl;
 }
 export void print_name_length(const char *c_str_name)
 {
-std::cout << “Length: “ << std::strlen(c_str_name) << std::endl;
+    std::cout << "Length: " << std::strlen(c_str_name) << std::endl;
 }
 ```
 
 Three options for working with modules
-
 Include translation
-
 Header importation
-
 Module importation
 
 ## 30.2. main.cpp
@@ -4459,11 +4014,11 @@ import <iostream>
 import math_stuff;
 int main()
 {
-auto result = add(10,20);
-std::cout << “Result: “ << result << std::endl;
-greet(“John”);
-print_name_length(“John”);
-return 0;
+    auto result = add(10,20);
+    std::cout << "Result: " << result << std::endl;
+    greet("John");
+    print_name_length("John");
+    return 0;
 }
 ```
 
