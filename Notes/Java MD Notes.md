@@ -1,3 +1,19 @@
+## Table of Contents
+
+- [1. Fundamentals](#1-fundamentals)
+- [2. Object-Oriented Programming](#2-object-oriented-programming)
+- [3. Keywords and Essentials](#3-keywords-and-essentials)
+- [4. Memory and Strings](#4-memory-and-strings)
+- [5. Exception Handling](#5-exception-handling)
+- [6. Collections Framework](#6-collections-framework)
+- [7. Generics](#7-generics)
+- [8. Multithreading and Concurrency](#8-multithreading-and-concurrency)
+- [9. Java 8+ Features](#9-java-8-features)
+- [10. JVM Internals](#10-jvm-internals)
+- [11. Advanced Core Java](#11-advanced-core-java)
+- [12. Java Platform Module System](#12-java-platform-module-system)
+- [13. Modern Java Features](#13-modern-java-features)
+
 # 1. Fundamentals
 
 ## 1.1 Java Platform Components
