@@ -1,45 +1,3 @@
-# Java Notes
-
-A practical reference for Core Java, modern language features, JVM internals, testing, build tools, and production best practices.
-
-## Contents
-
-- [How to Use These Notes](#how-to-use-these-notes)
-- [Part I: Java Language Foundations](#part-i-java-language-foundations)
-  - [1. Fundamentals](#1-fundamentals)
-  - [2. Object-Oriented Programming](#2-object-oriented-programming)
-  - [3. Keywords and Essentials](#3-keywords-and-essentials)
-  - [4. Memory and Strings](#4-memory-and-strings)
-  - [5. Exception Handling](#5-exception-handling)
-- [Part II: Collections, Functional Java, and Concurrency](#part-ii-collections-functional-java-and-concurrency)
-  - [6. Collections Framework](#6-collections-framework)
-  - [7. Generics](#7-generics)
-  - [8. Multithreading and Concurrency](#8-multithreading-and-concurrency)
-  - [9. Java 8+ Features](#9-java-8-features)
-- [Part III: JVM and Advanced Java](#part-iii-jvm-and-advanced-java)
-  - [10. JVM Internals](#10-jvm-internals)
-  - [11. Advanced Core Java](#11-advanced-core-java)
-- [Part IV: Design, Build, Test, and Platform Evolution](#part-iv-design-build-test-and-platform-evolution)
-  - [12. SOLID Principles and Design Patterns](#12-solid-principles-and-design-patterns)
-  - [13. Maven and Gradle](#13-maven-and-gradle)
-  - [14. Testing with JUnit and Mockito](#14-testing-with-junit-and-mockito)
-  - [15. Java Platform Module System](#15-java-platform-module-system)
-  - [16. Modern Java Features](#16-modern-java-features)
-- [Part V: Production, Security, and Operations](#part-v-production-security-and-operations)
-  - [17. Production Java Best Practices](#17-production-java-best-practices)
-  - [18. Security Essentials](#18-security-essentials)
-  - [19. Performance, Monitoring, and Troubleshooting](#19-performance-monitoring-and-troubleshooting)
-  - [20. Quick Revision Checklist](#20-quick-revision-checklist)
-
-## How to Use These Notes
-
-- Read Parts I and II in order when learning Java fundamentals.
-- Use Parts III and IV to understand runtime behavior and engineering practices.
-- Use Part V as a production-readiness and interview-revision reference.
-- Each chapter moves from core concepts to advanced behavior, then ends with review notes and common pitfalls.
-- Code samples are illustrative; verify imports, Java-version requirements, and error handling before using them in production.
-
-
 ## Part I: Java Language Foundations
 
 Core syntax, type rules, object-oriented design, memory concepts, text handling, and exceptions.
@@ -71,15 +29,11 @@ Core syntax, type rules, object-oriented design, memory concepts, text handling,
 
 #### 1.2 Variables and Data Types
 
-**Explanation:** A variable is a named location whose declared type limits the values and operations the compiler permits. Primitive variables contain simple values, while reference variables can point to objects or be null.
-
-**Why it matters:** These rules are enforced by the compiler or runtime and become assumptions used by every Java API.
-
-- Variable: Name for memory location. Must declare type before use.
-  int age; // declaration
-  age = 25; // initialization
-  final int MAX = 100; // constant, cannot change
-- Primitive - 8 types:
+- Variable: A named storage location in memory. Java requires you to declare the type before using it.
+  int age;              // declaration
+  age = 25;             // initialization
+  final int MAX = 100;  // constant: value cannot change after assignment
+- Primitive data types (8 total):
 
 | Type | Size | Range / Values | Default |
 | --- | --- | --- | --- |
@@ -92,24 +46,23 @@ Core syntax, type rules, object-oriented design, memory concepts, text handling,
 | `char` | 2 bytes | UTF-16 code unit | `'\u0000'` |
 | `boolean` | JVM-dependent storage | `true` or `false` | `false` |
 
-- Reference: Stores address pointing to heap.
-  String name = "Stitch"; // String pool
-  int[] arr = new int[5]; // array is object in Java
-  // Reference comparison: == checks address,.equals() checks content
-- Memory: Primitives on stack (fast), objects on heap (GC cleans). Local variables no default - you must init.
+- Reference variables: hold the memory address (reference) of an object on the heap.
+  String name = "Stitch"; // String literal may be stored in the String pool
+  int[] arr = new int[5]; // arrays are objects and live on the heap
+  // Comparison:
+  // == checks whether two references point to the same object
+  // .equals() checks whether the objects have the same value/content
+- Memory model: primitive values are stored on the stack; objects and arrays are stored on the heap and managed by the garbage collector. Local variables are not automatically initialized, so you must assign a value before using them.
 
 #### 1.3 Operators and Type Casting
 
-**Explanation:** Operators build expressions from values. Casting asks Java to view or convert a value as another type; widening usually preserves information, while narrowing can overflow, truncate, or fail at runtime.
-
-**Why it matters:** These rules are enforced by the compiler or runtime and become assumptions used by every Java API.
-
-- Unary: ++a pre-increment, a++ post, --, !, ~
-- Arithmetic: + - * / %.
-- Relational: ==!= > < >= <=
-- Logical: &&, ||
-- Ternary: String res = (marks>40)? "pass" : "fail";
-- instanceof: checks object type - if(obj instanceof String)
+- Unary: `++a` increments before use; `a++` increments after use. Also includes `--` (decrement), `!` (logical NOT), and `~` (bitwise NOT).
+- Unary: `++a` increments before its value is used, while `a++` uses the current value and increments afterward. For example, `int b = a++;` assigns the old value of `a` to `b`. The `--` operator decrements; `!` reverses a boolean; `~` flips every bit in an integer.
+- Arithmetic: `+`, `-`, `*`, `/`, and `%` perform addition, subtraction, multiplication, division, and remainder. With integers, `/` truncates toward zero (`7 / 2` is `3`), while `%` gives the remainder (`7 % 2` is `1`). Integer division by zero throws `ArithmeticException`.
+- Relational: `==`, `!=`, `<`, `>`, `<=`, and `>=` compare values and produce a `boolean`. For primitives, `==` compares values; for object references, it checks whether both references point to the same object. Use `.equals()` to compare object content, such as strings.
+- Logical: `&&` (AND) and `||` (OR) combine boolean expressions and short-circuit once the result is known. For example, `obj != null && obj.isReady()` avoids calling `isReady()` when `obj` is null. `!` negates a boolean expression.
+- Ternary: `String res = marks > 40 ? "pass" : "fail";` evaluates the condition and returns the expression after `?` when true, or after `:` when false. The two result expressions must have compatible types; use this operator for concise choices rather than complex branching.
+- `instanceof`: checks whether a non-null object is compatible with a type, e.g. `if (obj instanceof String)`. It returns `false` for `null`. Since Java 16, pattern matching can also declare a typed variable: `if (obj instanceof String text) { System.out.println(text.length()); }`.
 
 - Type Casting:
     - Widening (Implicit) - safe: JVM does automatically.
@@ -123,16 +76,12 @@ Core syntax, type rules, object-oriented design, memory concepts, text handling,
 
 #### 1.4 Control Flow
 
-**Explanation:** Control-flow statements decide which instructions execute and how often. Each branch and loop should have a clear condition, termination rule, and behavior for boundary inputs.
-
-**Why it matters:** These rules are enforced by the compiler or runtime and become assumptions used by every Java API.
-
-- if-else ladder: For ranges. Only first true executes.
+- `if`-`else if`-`else` ladder: Use this to choose one path based on conditions, especially for ranges. Java checks conditions from top to bottom and runs only the first matching branch, so order cases from most specific to least specific. A final `else` handles any value not matched above.
   if (score >= 90) grade='A';
   else if (score >= 75) grade='B';
   else grade='C';
 
-- switch: Works with int, char, String, enum. Break needed else fall-through.
+- `switch`: Use this to select among discrete values rather than ranges. Traditional `switch` supports integral types except `long`, `char`, `String`, and enums. In colon-style cases, execution continues into the next case unless stopped with `break`, `return`, or another control-flow statement; unintended fall-through is a common bug.
   int month=2;
   switch(month){
     case 1: System.out.println("Jan"); break;
@@ -140,35 +89,35 @@ Core syntax, type rules, object-oriented design, memory concepts, text handling,
     default: System.out.println("Invalid");
   }
 
-  // Java 14+ switch expression - no break needed
+  // Java 14+ switch expression: arrow cases do not fall through and produce a value
   String res = switch(month){
     case 1 -> "Jan";
     case 2 -> "Feb";
     default -> "Invalid";
   };
+  // Every possible input must produce a value; include a default unless all values are covered.
 
-- Loops:
-  // for - when you know count
+- Loops repeat a block while their condition is satisfied. Ensure each loop can eventually stop—for example, update a counter or consume input—or it may run indefinitely.
+  // for - keeps initialization, condition, and update together; useful for counted repetition
   for(int i=0; i<10; i++){ if(i==5) continue; }
 
-  // while - when cond is unknown
+  // while - tests before each iteration; useful when the number of repetitions is not known in advance
   while(scanner.hasNext()){ }
 
-  // do-while - executes atleast once
+  // do-while - tests after the body, so the body always runs at least once
   do{ } while(x<10);
 
-  // for-each - for array/collection
+  // for-each - visits every element of an array or iterable collection; use an indexed loop if you need the position
   for(String s: list){ System.out.println(s); }
-- break vs continue vs return:
-    - break; - breaks out of loop/switch fully.
-    - continue; - skips rest of current iteration, goes to next.
-    - Labeled break: outer: for() { for() { break outer; } } - breaks outer loop.
+
+- `break`, `continue`, and `return` have different scopes: `break` exits the nearest loop or `switch`; `continue` skips the rest of the current loop iteration and starts the next one; `return` exits the current method (and supplies a value when required). A labeled `break` exits the named enclosing loop, which is useful for leaving nested loops.
+  outer: for(int i=0; i<3; i++) {
+    for(int j=0; j<3; j++) {
+      if(i == 1 && j == 1) break outer; // exits both loops
+    }
+  }
 
 #### 1.5 Input and Output
-
-**Explanation:** Input converts external text or bytes into program values, while output converts values into a representation for a console, file, or another system. Parsing and formatting are boundary operations and need validation.
-
-**Why it matters:** These rules are enforced by the compiler or runtime and become assumptions used by every Java API.
 
 - Output:
   System.out.println(); // with newline
@@ -249,10 +198,6 @@ Math.addExact(value, 1);       // throws ArithmeticException
 
 #### 1.8 Scope, Lifetime, and Parameter Passing
 
-**Explanation:** Scope determines where a name is visible; lifetime determines how long its value or object remains reachable. Java passes every argument by value, including a copied value of an object reference.
-
-**Why it matters:** These rules are enforced by the compiler or runtime and become assumptions used by every Java API.
-
 - Local variables exist within their declaring block and must be definitely assigned before use.
 - Instance fields belong to an object and receive default values.
 - Static fields belong to the class and are shared by instances loaded by that class loader.
@@ -266,10 +211,6 @@ static void rename(StringBuilder name) {
 ```
 
 #### 1.9 Arrays
-
-**Explanation:** An array is a fixed-length object containing elements of one component type. It provides fast indexed access but no automatic growth, so collection classes are usually easier for changing data sets.
-
-**Why it matters:** These rules are enforced by the compiler or runtime and become assumptions used by every Java API.
 
 - Arrays are fixed-size objects with zero-based indexes.
 - Array elements receive defaults; a local array reference does not.
@@ -321,10 +262,6 @@ value += 2;        // compiles
 Evaluate operands before applying operators. `&&` and `||` short-circuit; `&` and `|` always evaluate both boolean operands.
 
 #### 1.12 Command-Line Arguments and Environment
-
-**Explanation:** Arguments, environment variables, and system properties provide external configuration as text. They must be parsed into typed values, validated, and handled without exposing secrets.
-
-**Why it matters:** These rules are enforced by the compiler or runtime and become assumptions used by every Java API.
 
 ```java
 public static void main(String[] args) {
@@ -419,9 +356,6 @@ java -jar app.jar
 
 #### 2.1 Classes, Objects, and Constructors
 
-**Explanation:** A class defines state and behavior; an object is one instance with its own instance state. A constructor should create a complete valid object rather than leave callers to finish initialization.
-
-**Why it matters:** Clear object boundaries make later changes and tests safer because state can change only through known contracts.
 
 - Class: Blueprint / template. No memory.
   public class Employee {
@@ -449,9 +383,6 @@ java -jar app.jar
 
 #### 2.2 Encapsulation and Accessors
 
-**Explanation:** Encapsulation keeps representation details private and exposes operations that preserve invariants. Getters and setters are useful only when they do not bypass the rules the class is responsible for enforcing.
-
-**Why it matters:** Clear object boundaries make later changes and tests safer because state can change only through known contracts.
 
 - Encapsulation: Hide data using private, expose via methods. For data security + validation.
   public class BankAccount {
@@ -468,10 +399,6 @@ java -jar app.jar
     - Interview: Encapsulation is data hiding, Abstraction is implementation hiding.
 
 #### 2.3 Inheritance
-
-**Explanation:** Inheritance creates an IS-A relationship in which a child receives accessible parent behavior. It should be used only when every child can safely substitute for the parent contract.
-
-**Why it matters:** Clear object boundaries make later changes and tests safer because state can change only through known contracts.
 
 - One class gets properties of another. For code reuse. IS-A relationship.
   class Parent { String surname = "Khan"; }
@@ -492,10 +419,6 @@ java -jar app.jar
 
 #### 2.4 Polymorphism
 
-**Explanation:** Polymorphism lets code depend on a shared type while runtime dispatch selects the object's overriding implementation. Overloading is different: the compiler selects an overload from declared argument types.
-
-**Why it matters:** Clear object boundaries make later changes and tests safer because state can change only through known contracts.
-
 - A. Compile-time / Static - Overloading: Same method name, different params in SAME class. Compiler decides which to call.
   class Calculator {
     int add(int a, int b) { return a+b; }
@@ -514,10 +437,6 @@ java -jar app.jar
 - Rules for overriding: Need inheritance, same signature, cannot override private/static/final, access cannot be more restrictive.
 
 #### 2.5 Abstraction: Abstract Classes and Interfaces
-
-**Explanation:** Abstraction exposes what a type promises while hiding how it performs the work. Interfaces emphasize capabilities; abstract classes can additionally share state, construction, and implementation.
-
-**Why it matters:** Clear object boundaries make later changes and tests safer because state can change only through known contracts.
 
 - Show WHAT to do, hide HOW.
 - Abstract Class (0-100% abstraction):
@@ -573,10 +492,6 @@ public class A {
 
 #### 2.7 Composition, Association, and Aggregation
 
-**Explanation:** These relationships describe objects using or owning other objects. Composition is usually more flexible than inheritance because collaborators can be replaced without changing the containing type hierarchy.
-
-**Why it matters:** Clear object boundaries make later changes and tests safer because state can change only through known contracts.
-
 - **Association:** one object knows or uses another, such as `Order` using `PaymentService`.
 - **Aggregation:** a whole references parts that can exist independently, such as `Department` and `Employee`.
 - **Composition:** the whole owns the part's lifecycle, such as `House` creating and owning its `Room` objects.
@@ -608,10 +523,6 @@ Calling an overridable method from a constructor is dangerous because child fiel
 
 #### 2.9 Method Dispatch and Covariant Returns
 
-**Explanation:** Overridden instance methods dispatch from the runtime receiver type. An override may return a more specific type, but it must preserve access, exception, and behavioral promises.
-
-**Why it matters:** Clear object boundaries make later changes and tests safer because state can change only through known contracts.
-
 - Instance methods are dynamically dispatched from the runtime object type.
 - Fields, static methods, and private methods are resolved from the reference or declaring type and are not polymorphic.
 - An overriding method may return a subtype of the parent's return type.
@@ -639,10 +550,6 @@ final class Schedule {
 Immutability simplifies equality, caching, and thread safety, although copying large mutable inputs may have a cost.
 
 #### 2.11 Nested Classes
-
-**Explanation:** Nested types keep helper concepts near their owner. Static nested classes do not retain an outer instance, whereas inner classes do and can access that outer object's members.
-
-**Why it matters:** Clear object boundaries make later changes and tests safer because state can change only through known contracts.
 
 - A static nested class has no implicit outer-object reference.
 - An inner class is tied to an enclosing instance and can access its members.
@@ -848,10 +755,6 @@ System.out.println(Employee.company);
 
 #### 3.5 Packages and Imports
 
-**Explanation:** Packages organize types and provide an access boundary. Imports only shorten source names; they neither install a library nor load a class.
-
-**Why it matters:** Misunderstanding declaration modifiers and resolution rules often creates subtle initialization, equality, or visibility bugs.
-
 Package = folder to avoid name clash, organize code.
 package com.stitch.payment; // first line, defines package
 
@@ -900,10 +803,6 @@ Integer.MAX_VALUE; // constants
 Interview note: use `.equals()` rather than `==` to compare wrapper values.
 
 #### 3.7 Important Modifiers
-
-**Explanation:** Modifiers change declaration behavior, such as whether a member is abstract, synchronized, volatile, transient, or implemented natively. Each modifier affects a different compiler, runtime, or serialization rule.
-
-**Why it matters:** Misunderstanding declaration modifiers and resolution rules often creates subtle initialization, equality, or visibility bugs.
 
 - `abstract`: declares an incomplete class or method.
 - `synchronized`: acquires an intrinsic monitor for mutual exclusion and visibility.
