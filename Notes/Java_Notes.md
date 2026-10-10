@@ -65,7 +65,13 @@
     int i = (int) d; // 100; fractional part discarded
     int big = 130;
     byte b = (byte) big; // -126 - overflow
-- Upcasting/Downcasting for objects: Parent p = new Child(); // upcast auto and Child c = (Child) p; // downcast
+- Upcasting is implicit; downcasting requires a runtime type check or may throw `ClassCastException`:
+  ```java
+  Parent parent = new Child();
+  if (parent instanceof Child child) {
+    child.childOnlyMethod();
+  }
+  ```
 
 #### 1.4 Control Flow
 
@@ -336,19 +342,19 @@ java -jar app.jar
       System.out.println(super.surname);
     }
   }
-- Types: Single, Multilevel (A->B->C), Hierarchical (B and C extends A). Java doesn't support Multiple inheritance with classes (diamond problem) - use interfaces.
-- Object class is parent of all classes in Java.
+- Common class hierarchies are single, multilevel, and hierarchical. A class can extend only one class but can implement multiple interfaces.
+- Every class without an explicit superclass extends `Object`; interfaces do not extend `Object`.
 
 #### 2.4 Polymorphism
 
-- A. Compile-time / Static - Overloading: Same method name, different params in SAME class. Compiler decides which to call.
+- Overloading: methods share a name but have different parameter signatures; overload resolution uses compile-time argument types and applicable conversions. Return type alone does not distinguish overloads.
   class Calculator {
     int add(int a, int b) { return a+b; }
     int add(int a, int b, int c) { return a+b+c; } // diff count
     double add(double a, double b) { return a+b; } // diff type
   }
   // Rules: Return type alone not enough to overload, must change params
-- B. Runtime / Dynamic - Overriding: Same method name + same params, in CHILD class. JVM decides at runtime which to call based on object.
+- Overriding: a subtype supplies an implementation of an inherited instance method. The runtime receiver type selects the implementation; fields and static methods are not dynamically overridden.
   class Bank { double getRate() { return 5.0; } }
   class SBI extends Bank {
     @Override
@@ -356,7 +362,7 @@ java -jar app.jar
   }
   Bank b = new SBI(); // Parent ref, Child object
   b.getRate(); // 7.5 - Child's method runs - Runtime Polymorphism
-- Rules for overriding: Need inheritance, same signature, cannot override private/static/final, access cannot be more restrictive.
+- Rules for overriding: the method must be inherited and have a subsignature; private methods are not inherited, static methods are hidden, and final methods cannot be overridden. An override cannot reduce visibility or broaden checked exceptions.
 
 #### 2.5 Abstraction: Abstract Classes and Interfaces
 
@@ -397,7 +403,7 @@ Controls visibility:
 | --- | --- | --- | --- | --- |
 | private | YES | NO | NO | NO |
 | default (no keyword) | YES | YES | NO | NO |
-| protected | YES | YES | YES | NO |
+| protected | YES | YES | YES, through subclass access rules | NO |
 | public | YES | YES | YES | YES |
 
 public class A {
@@ -409,7 +415,7 @@ public class A {
 
 ##### Interview Notes
 
-- Why protected needed? To allow child outside package to access parent.
+- Outside the package, a subclass can access a protected instance member through `this`, or through a reference whose compile-time type is that subclass (or its subtype); it cannot freely access the member through an arbitrary parent-typed reference.
 - Encapsulation uses private + public getters/setters.
 
 #### 2.7 Composition, Association, and Aggregation
@@ -432,16 +438,15 @@ class ReportService {
 
 #### 2.8 Initialization Order
 
-Object initialization follows this general order:
+For a newly created instance, class initialization happens first if needed; instance initialization then follows this order:
 
-1. Parent class initialization, then child class initialization, once per class.
-2. Memory allocation with instance fields set to default values.
-3. Parent instance field initializers and initializer blocks.
-4. Parent constructor.
-5. Child instance field initializers and initializer blocks.
-6. Child constructor.
+1. Memory allocation with instance fields set to default values.
+2. Parent instance field initializers and initializer blocks.
+3. Parent constructor body.
+4. Child instance field initializers and initializer blocks.
+5. Child constructor body.
 
-Calling an overridable method from a constructor is dangerous because child fields may not yet be initialized.
+Each superclass constructor runs after that class's instance initializers and before the subclass's initializers. Calling an overridable method from a constructor is dangerous because subclass fields may not yet be initialized.
 
 #### 2.9 Method Dispatch and Covariant Returns
 
@@ -469,7 +474,7 @@ final class Schedule {
 }
 ```
 
-Immutability simplifies equality, caching, and thread safety, although copying large mutable inputs may have a cost.
+Immutability simplifies equality, caching, and thread safety, although copying large mutable inputs may have a cost. A `final` reference only prevents reassignment; it does not freeze the referenced object.
 
 #### 2.11 Nested Classes
 
@@ -548,14 +553,14 @@ This is not a ban on getters. The goal is to avoid moving domain rules into unre
 
 #### 3.1 `this` Keyword
 
-Current object reference. Used to remove ambiguity.
+`this` refers to the current instance in an instance context. It can disambiguate fields from parameters, delegate constructors, and be passed or returned as a reference.
 class Employee {
   String name;
   Employee(String name) {
     this.name = name; // this.name = instance var, name = local param
   }
   void display() {
-    System.out.println(this); // prints object address
+    System.out.println(this); // calls toString(); Object's default form is not a memory address
   }
   void methodA() { this.methodB(); } // calls current class method
   Employee getObj() { return this; } // return current object
@@ -589,16 +594,16 @@ class Child extends Parent {
     class Parent { final void pay(){} }
     class Child extends Parent { // void pay(){} ERROR
     }
-3.  final class: Cannot be inherited. Used for security.
+3.  final class: Cannot be inherited. Useful to prevent subclassing, but not by itself a security boundary.
     final class SBI {} // class Child extends SBI ERROR
     // String, Integer are final classes in Java
 
 #### 3.4 `static` Keyword
 
-Memory once in Method Area, shared by all objects.
+Static members belong to a class rather than an instance; their lifetime and identity follow the defining class loader.
 class Employee {
   String name; // instance - each object has own copy
-  static String company = "Stitch"; // class variable - one copy for all
+  static String company = "Stitch"; // class variable shared by instances of this loaded class
   static int count = 0;
 
   Employee() { count++; } // counts objects
@@ -610,12 +615,12 @@ class Employee {
   void display() {
     System.out.println(name + " " + company); // non-static can access static
   }
-  static { System.out.println("Static block runs once when class loads"); }
+  static { System.out.println("Static block runs once when this class is initialized"); }
 }
 Employee.changeCompany(); // call without object - ClassName.method
 System.out.println(Employee.company);
 - Static method cannot use this/super.
-- Static block executes when class loads, before main, used to init static vars.
+- A static initializer runs as part of class initialization on first active use, not necessarily before `main` in every program.
 - Interview trick: Can we override static method? No, it's method hiding not overriding. Parent p = new Child(); p.staticMethod() calls Parent's, not Child's.
 
 #### 3.5 Packages and Imports
@@ -1447,104 +1452,104 @@ Compound actions still need atomic methods such as `compute`, `merge`, `putIfAbs
 
 #### 7.1 Generic Classes
 
-class Box<T> { // T = Type placeholder
-  T value;
-  Box(T value){ this.value = value; }
-  T getValue(){ return value; }
-  void setValue(T value){ this.value = value; }
+`T` is a compile-time type parameter. Parameterizing a class lets the compiler check values at the boundary instead of requiring callers to cast:
+
+```java
+final class Box<T> {
+  private T value;
+
+  Box(T value) { this.value = value; }
+  T getValue() { return value; }
+  void setValue(T value) { this.value = value; }
 }
 
-Box<String> b1 = new Box<>("Hello");
-Box<Integer> b2 = new Box<>(100);
-Box<Employee> b3 = new Box<>(new Employee());
+Box<String> message = new Box<>("Hello");
+String value = message.getValue(); // no cast; type is checked by the compiler
+```
 
-// Multiple type params
-class Pair<K,V> {
-  K key; V value;
-  Pair(K k, V v){ this.key=k; this.value=v; }
-}
-Pair<Integer, String> p = new Pair<>(1, "Stitch");
-Common naming: T - Type, E - Element, K - Key, V - Value, N - Number
+A class can declare multiple independent type parameters, as in `Pair<K, V>`. Common conventions are `T` (type), `E` (element), `K` (key), `V` (value), and `N` (number).
 
 #### 7.2 Generic Methods
 
 class Util {
   // Method with its own generic type <T>
-  public static <T> void printArray(T[] arr){
-    for(T t: arr) System.out.println(t);
+  public static <T> void printArray(T[] values) {
+    for (T value : values) System.out.println(value);
   }
-  public static <T> T getFirst(T[] arr){ return arr[0]; }
+  public static <T> Optional<T> first(T[] values) {
+    return values.length == 0 ? Optional.empty() : Optional.ofNullable(values[0]);
+  }
 }
 
 Integer[] intArr = {1,2,3};
 String[] strArr = {"A","B"};
-Util.<Integer>printArray(intArr); // explicit
-Util.printArray(strArr); // type inference - auto detects String
+Util.<Integer>printArray(intArr); // explicit type witness
+Util.printArray(strArr);           // compiler infers T as String
 
 #### 7.3 Bounded Types and Wildcards
 
-1. Upper Bounded ? extends Type - You can READ but not write (except null)
-// T must be Number or child of Number (Integer, Double etc)
-class NumberBox<T extends Number> { // bounded class
-  T num;
+An upper-bounded wildcard accepts a producer of some unknown subtype. Values can be read as the bound, but a non-null value generally cannot be added because the exact element type is unknown:
+
+```java
+static double sum(List<? extends Number> numbers) {
+  double total = 0;
+  for (Number number : numbers) total += number.doubleValue();
+  return total;
 }
 
-NumberBox<Integer> ok = new NumberBox<>(); // Integer extends Number - ok
-// NumberBox<String> error - String not extends Number
+List<Integer> integers = List.of(1, 2, 3);
+double total = sum(integers); // accepts List<Integer>, List<Double>, or List<Number>
+```
 
-// In method - wildcard extends
-void sum(List<? extends Number> list){ // accepts List<Integer>, List<Double>, List<Number>
-  Number n = list.get(0); // can read as Number - safe
-  // list.add(10); // ERROR - cannot add, because you don't know exact type - could be Double list
-  // list.add(null) allowed
-  double total=0; for(Number x: list) total+= x.doubleValue();
+An unbounded wildcard means a list of one unknown element type. Reading yields `Object`; only `null` can be added through `List<?>`.
+
+A lower-bounded wildcard accepts a consumer of a type or one of its supertypes:
+
+```java
+static void addDefaults(List<? super Integer> destination) {
+  destination.add(10);
+  destination.add(20);
 }
-2. Lower Bounded ? super Type - You can WRITE but read as Object
-void addNumbers(List<? super Integer> list){ // accepts List<Integer>, List<Number>, List<Object>
-  list.add(10); // can add Integer - safe, Integer is child of all these
-  list.add(20);
-  // Integer i = list.get(0); // ERROR - could be Object list
-  Object o = list.get(0); // only Object safe
-}
-3. Unbounded ? - Unknown type
-void print(List<?> list){ // accepts any type
-  Object o = list.get(0); // can only read as Object
-  // list.add("A"); // ERROR - cannot add
-  for(Object x: list) System.out.println(x);
-}
-PECS Rule - Remember for interview: Producer Extends, Consumer Super
-- If list PRODUCES data (you read from it) -> use extends
-- If list CONSUMES data (you write to it) -> use super
+
+List<Number> numbers = new ArrayList<>();
+addDefaults(numbers); // also accepts List<Integer> and List<Object>
+```
+
+**PECS** is a useful API-design heuristic: use `extends` when a parameter produces values for you to read, and `super` when it consumes values you provide. A wildcard is not write-only: a `List<? super Integer>` can also be read, but the only statically safe result type is `Object`.
 
 #### 7.4 Type Erasure
 
-- Java keeps generics only at compile time for type check. At runtime, JVM removes generic info and replaces with Object / bounded type.
-// Your code
-ArrayList<String> list = new ArrayList<>();
-// After compilation - type erased
-ArrayList list = new ArrayList(); // String removed -> Object
+- Generic type arguments are erased from ordinary runtime object types; the erased form uses the first bound or `Object`.
+- Class files retain some generic-signature metadata for reflection, but runtime checks cannot distinguish ordinary `List<String>` from `List<Integer>`.
 - Because of erasure:
 // These are same after erasure - cannot overload
 void method(List<String> list){}
 void method(List<Integer> list){} // COMPILE ERROR - same after erasure
 
-// You cannot create generic array
-T[] arr = new T[10]; // ERROR
-// instanceof with generics not allowed
-if(list instanceof ArrayList<String>) // ERROR
+// Cannot create an array of a non-reifiable parameterized type:
+// T[] values = new T[10]; // ERROR
+// Runtime checks cannot test a specific type argument:
+// if (value instanceof ArrayList<String>) { } // ERROR
+if (value instanceof ArrayList<?> list) { // allowed: unbounded wildcard is reifiable
+  System.out.println(list.size());
+}
 
 #### 7.5 Generic Interfaces
 
-interface Repository<T> {
-  void save(T t);
-  T findById(int id);
+interface Repository<T, ID> {
+  void save(T entity);
+  Optional<T> findById(ID id);
 }
-class EmployeeRepo implements Repository<Employee> {
-  public void save(Employee e){}
-  public Employee findById(int id){ return new Employee(); }
+final class EmployeeRepository implements Repository<Employee, Long> {
+  public void save(Employee entity) { /* persist entity */ }
+  public Optional<Employee> findById(Long id) {
+    return Optional.empty(); // replace with the actual lookup result
+  }
 }
 
-#### 7.7 Wildcard Capture
+The implementation fixes `T` as `Employee` and `ID` as `Long`, so callers cannot accidentally save a different entity type or pass an unrelated identifier type.
+
+#### 7.6 Wildcard Capture
 
 A helper can capture an unknown wildcard:
 
@@ -1560,7 +1565,7 @@ private static <T> void reverseCaptured(List<T> list) {
 
 Use a type parameter when arguments or return values must share a type. Use a wildcard when the exact type is irrelevant.
 
-#### 7.8 Generic API Design
+#### 7.7 Generic API Design
 
 ```java
 static <T> void copy(
@@ -1575,7 +1580,7 @@ static <T> void copy(
 - Avoid raw types; use `List<?>` when the element type is unknown.
 - Do not expose implementation-specific collection types unless their behavior is part of the contract.
 
-#### 7.9 Heap Pollution and Varargs
+#### 7.8 Heap Pollution and Varargs
 
 Heap pollution occurs when a parameterized variable refers to an incompatible value, often through raw types, unchecked casts, or generic varargs.
 
@@ -1588,9 +1593,9 @@ static <T> List<T> combine(List<? extends T>... lists) {
 }
 ```
 
-Use `@SafeVarargs` only when the method performs no unsafe operation on the varargs array.
+`@SafeVarargs` suppresses a specific warning; use it only when callers cannot observe heap pollution caused by the method. A method can still be unsafe even if it never assigns directly into the array—for example, exposing the array through an alias can allow incompatible values to be stored.
 
-#### 7.10 Reifiable Types
+#### 7.9 Reifiable Types
 
 Reifiable types retain enough runtime information for operations such as `instanceof`. Examples include primitives, non-generic classes, raw types, and unbounded wildcard types:
 
@@ -1602,7 +1607,7 @@ if (value instanceof List<?> list) {
 
 `List<String>` is non-reifiable because its element type is erased.
 
-#### 7.11 Recursive Bounds
+#### 7.10 Recursive Bounds
 
 Recursive bounds express relationships involving the type itself:
 
@@ -1614,7 +1619,7 @@ static <T extends Comparable<? super T>> T max(List<? extends T> values) {
 
 `Comparable<? super T>` permits comparison logic inherited from a supertype and is more flexible than `Comparable<T>`.
 
-#### 7.12 Multiple Bounds
+#### 7.11 Multiple Bounds
 
 A type parameter can require one class and multiple interfaces:
 
@@ -1627,7 +1632,7 @@ T choose(T left, T right) {
 
 The class bound, if any, must appear first. Erasure uses the leftmost bound, which can affect generated casts and binary compatibility.
 
-#### 7.13 Bridge Methods
+#### 7.12 Bridge Methods
 
 Type erasure can change an overriding method's erased signature. The compiler creates a synthetic bridge method to preserve polymorphism:
 
@@ -1641,7 +1646,7 @@ class StringBox implements Comparable<StringBox> {
 
 Reflection and stack traces may expose bridge methods. `Method.isBridge()` identifies them.
 
-#### 7.14 Generic Factories
+#### 7.13 Generic Factories
 
 Static factories can infer type arguments more cleanly than constructors:
 
@@ -1655,7 +1660,7 @@ Map<String, Integer> counts = newMap();
 
 The diamond operator can infer constructor types from the target context. Anonymous classes have supported the diamond operator since Java 9, with restrictions based on inferred non-denotable types.
 
-#### 7.15 Variance Summary
+#### 7.14 Variance Summary
 
 - Java generic types are invariant: `List<Integer>` is not a subtype of `List<Number>`.
 - `? extends Number` provides a covariant read view.
@@ -1746,25 +1751,31 @@ volatile boolean flag = false; // a write happens-before a later read that obser
 // 1. Single thread
 ExecutorService ex = Executors.newSingleThreadExecutor();
 
-// 2. Fixed pool - n threads; its default work queue is unbounded
-ExecutorService ex = Executors.newFixedThreadPool(5); // bound the queue for overload-sensitive services
+// Use a bounded queue and an explicit rejection policy rather than allowing
+// overload to accumulate in memory.
+ExecutorService ex = new ThreadPoolExecutor(
+    5, 5, 0L, TimeUnit.MILLISECONDS,
+    new ArrayBlockingQueue<>(100),
+    new ThreadPoolExecutor.AbortPolicy());
 
 // 3. Cached pool - creates new if needed, reuse idle
 ExecutorService ex = Executors.newCachedThreadPool();
 
-// 4. Scheduled - for cron jobs
+// 4. Scheduled - for recurring or delayed in-process tasks, not a durable cron service
 ScheduledExecutorService sched = Executors.newScheduledThreadPool(2);
 sched.schedule(() -> System.out.println("After 5 sec"), 5, TimeUnit.SECONDS);
 sched.scheduleAtFixedRate(() -> {}, 0, 1, TimeUnit.SECONDS);
 
 ex.submit(() -> System.out.println("Task")); // submit Runnable
 Future<Integer> f = ex.submit(() -> 10+20); // submit Callable
-Integer result = f.get(); // blocking call - waits for result
+Integer result = f.get(); // blocks; may throw InterruptedException or ExecutionException
 f.isDone(); f.cancel(true);
 
 ex.shutdown(); // stop accepting new, completes running tasks
-ex.shutdownNow(); // tries to stop running tasks
-ex.awaitTermination(5, TimeUnit.SECONDS);
+// shutdownNow() requests interruption and returns tasks that never started.
+if (!ex.awaitTermination(5, TimeUnit.SECONDS)) {
+  ex.shutdownNow();
+}
 - Future problem: get() blocks - cannot chain.
 
 - CompletableFuture - Java 8 - compose stages without blocking between each stage
@@ -2025,17 +2036,19 @@ Do not attempt manual padding without profiling and JVM-specific evidence. Often
 
 #### 9.1 Functional Interfaces, Lambdas, and Method References
 
-- Functional Interface: Only 1 abstract method. Can have default/static. Marked with @FunctionalInterface
+- A functional interface has one abstract method (excluding public methods corresponding to `Object`). It may also have default and static methods; `@FunctionalInterface` asks the compiler to verify the contract.
 @FunctionalInterface
 interface MyFunc { int add(int a, int b); } // 1 abstract method
 
-// Built-in FIs - you must know:
-1. Predicate<T> -> boolean test(T t) - for filter condition
-2. Function<T,R> -> R apply(T t) - transform
-3. Consumer<T> -> void accept(T t) - consume, no return
-4. Supplier<T> -> T get() - supply value
-5. BiFunction, BiPredicate, UnaryOperator, BinaryOperator
-- Lambda: Anonymous function - short form of FI implementation (params) -> {body}
+Common `java.util.function` interfaces:
+
+- `Predicate<T>` tests a value and returns `boolean`.
+- `Function<T, R>` transforms a `T` into an `R`.
+- `Consumer<T>` accepts a value and returns no result.
+- `Supplier<T>` provides a value without an input.
+- `BiFunction`, `BiPredicate`, `UnaryOperator`, and `BinaryOperator` cover common two-input or same-type cases.
+
+A lambda provides an implementation of the target functional interface. The target type supplies the parameter and return types:
 // Old way
 MyFunc f = new MyFunc(){ public int add(int a,int b){ return a+b; } };
 
@@ -2051,7 +2064,10 @@ Supplier<Integer> random = () -> new Random().nextInt();
 // Usage
 isEven.test(10); // true
 len.apply("Stitch"); // 6
-- Method Reference: Shortcut for lambda Class::method - even shorter
+
+Captured local variables must be final or effectively final. Keep lambdas short and side-effect-light so behavior remains clear when APIs defer or parallelize execution.
+
+Method references are a concise form when an existing method already matches the functional interface's signature:
 // Types:
 // 1. Static method
 Function<String,Integer> f = s -> Integer.parseInt(s);
@@ -2063,7 +2079,7 @@ Consumer<String> c2 = System.out::println;
 
 // 3. Instance method of arbitrary object
 Function<String,String> f3 = s -> s.toUpperCase();
-Function<String,String> f4 = String::toUpperCase;
+Function<String,String> f4 = String::toUpperCase; // unbound instance method; input supplies the receiver
 
 // 4. Constructor
 Supplier<List<String>> s1 = () -> new ArrayList<>();
@@ -2089,7 +2105,7 @@ Intermediate Ops (return Stream - lazy):
 filter(Predicate) - keep matching
 map(Function) - 1 to 1 transform
 flatMap - 1 to many - flattens
-  List<List<String>> list = [[A,B],[C,D]] -> flatMap -> [A,B,C,D]
+  // [["A", "B"], ["C", "D"]] -> ["A", "B", "C", "D"]
   .flatMap(Collection::stream)
 
 distinct() - removes duplicates
@@ -2135,6 +2151,7 @@ employees.stream()
 // Parallel streams commonly use the shared ForkJoinPool.
 list.parallelStream().filter(...).collect(toList());
 // Measure first; side effects, ordering requirements, small inputs, and blocking work can make parallelism slower or incorrect.
+- `Stream.toList()` returns an unmodifiable list; `Collectors.toList()` does not promise a particular implementation or mutability. Choose an explicit collector such as `toCollection(ArrayList::new)` when a mutable result is required.
 - Avoid modifying a stream's source or shared mutable state from intermediate operations. Prefer stateless transformations and collectors.
 
 #### 9.3 Optional
@@ -2163,7 +2180,7 @@ public Optional<Employee> findById(int id){ return Optional.ofNullable(db.get(id
 
 #### 9.4 Default and Static Interface Methods
 
-Why? To add new methods to interface without breaking old implementations.
+Default methods can evolve an interface without requiring every existing implementation to add a method, but adding one may still create conflicts with inherited methods or another interface's default.
 interface Payment {
   void pay(); // abstract
   
@@ -2187,12 +2204,15 @@ LocalTime time = LocalTime.now(); // 10:30:15 - only time
 LocalDateTime dt = LocalDateTime.now(); // both - most used
 ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
 // LocalDateTime has no time zone or offset; use Instant or ZonedDateTime for unambiguous moments.
+// Inject a Clock so "now" can be fixed in tests.
+Clock clock = Clock.fixed(Instant.parse("2026-01-01T00:00:00Z"), ZoneOffset.UTC);
+LocalDate testDate = LocalDate.now(clock);
 
 dt.plusDays(5).minusMonths(1);
 dt.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
 
 LocalDate dob = LocalDate.of(2000,1,15);
-Period age = Period.between(dob, LocalDate.now()); // age.getYears()
+Period age = Period.between(dob, LocalDate.now(clock)); // deterministic in tests
 
 Duration dur = Duration.between(time1, time2); // time diff
 
@@ -2244,8 +2264,9 @@ String json = """
 list.stream().collect(groupingBy(Function.identity(), counting()))
     .entrySet().stream().filter(e->e.getValue()>1).map(Map.Entry::getKey).collect(toList())
 
-// 2nd highest salary
-employees.stream().map(e->e.salary).sorted(Comparator.reverseOrder()).skip(1).findFirst()
+// Second distinct-highest salary; duplicates otherwise affect the result.
+employees.stream().map(Employee::getSalary).distinct()
+    .sorted(Comparator.reverseOrder()).skip(1).findFirst()
 
 #### 9.7 Stream Semantics and Laziness
 
@@ -2644,23 +2665,31 @@ Modern JVMs detect container CPU and memory limits, but deployment settings stil
 class Employee implements Serializable {
   private static final long serialVersionUID = 1L; // compatibility identifier; class changes do not always imply incompatibility
   int id; String name;
+  String getName() { return name; }
   transient String password; // omitted by default serialization; transient does not erase the in-memory value
   static String company = "Stitch"; // static not serialized - belongs to class not object
 }
 
- // Serialization; close streams even when writing fails.
-Employee e = new Employee(1,"Ali");
- try (ObjectOutputStream out =
-          new ObjectOutputStream(new FileOutputStream("emp.ser"))) {
-   out.writeObject(e);
- }
+// Serialization is suitable only for trusted, compatible data; prefer an explicit
+// schema format for files or data crossing service boundaries.
+Employee e = new Employee();
+e.id = 1;
+e.name = "Ali";
+try (ObjectOutputStream out =
+         new ObjectOutputStream(new FileOutputStream("emp.ser"))) {
+  out.writeObject(e);
+}
 
- // Deserialization bypasses constructors of serializable classes;
- // the no-argument constructor of the first non-serializable superclass runs.
- try (ObjectInputStream in =
-          new ObjectInputStream(new FileInputStream("emp.ser"))) {
-   Employee e2 = (Employee) in.readObject();
- }
+// Deserialization bypasses constructors of serializable classes;
+// the no-argument constructor of the first non-serializable superclass runs.
+try (ObjectInputStream in =
+         new ObjectInputStream(new FileInputStream("emp.ser"))) {
+  // ObjectInputFilter is available since Java 9. This sample class is in the
+  // default package; use its fully qualified name when it belongs to a package.
+  in.setObjectInputFilter(ObjectInputFilter.Config.createFilter(
+      "maxdepth=20;maxrefs=10000;maxbytes=1000000;Employee;!*"));
+  Employee e2 = (Employee) in.readObject();
+}
 
 // Externalizable vs Serializable: Externalizable you control writeExternal/readExternal, Serializable auto
 - Cloning: Copy of object. Cloneable marker interface, else CloneNotSupportedException
@@ -2676,7 +2705,8 @@ class Employee implements Cloneable {
 Employee e1 = new Employee(1,"Ali", new Address("Chennai"));
 Employee e2 = (Employee) e1.clone(); // shallow: e1.addr and e2.addr SAME object - if e2 changes address, e1 also changes - BUG
 
-// Deep clone - you clone inner objects also
+// A deep copy must copy every mutable reachable object that should be independent.
+// Prefer explicit copy constructors; this sketch assumes addr is non-null and cloneable.
 @Override protected Object clone() throws CloneNotSupportedException {
   Employee cloned = (Employee) super.clone();
   cloned.addr = (Address) this.addr.clone(); // deep - new Address object
@@ -2686,20 +2716,24 @@ Use copy constructor instead of clone - better practice.
 
 #### 11.2 Reflection and Annotations
 
-- Reflection: Inspecting class at runtime - framework uses (Spring, Hibernate).
+- Reflection inspects or invokes runtime types; frameworks use it for discovery and integration.
 Class<?> clazz = Employee.class; // or Class.forName("com.stitch.Employee") or e.getClass()
 
 clazz.getName(); clazz.getDeclaredFields(); clazz.getDeclaredMethods(); clazz.getConstructors();
 
-// Create object via reflection - even private constructor
-Constructor<?> cons = clazz.getDeclaredConstructor(); cons.setAccessible(true); Object obj = cons.newInstance();
+// Reflection access remains subject to module boundaries and access checks.
+Constructor<?> cons = clazz.getDeclaredConstructor();
+if (!cons.trySetAccessible()) {
+  throw new IllegalAccessException("Constructor is not accessible");
+}
+Object obj = cons.newInstance();
 
 // Call method
-Method m = clazz.getDeclaredMethod("getName"); m.setAccessible(true); m.invoke(obj);
-Field f = clazz.getDeclaredField("id"); f.setAccessible(true); f.set(obj, 100);
+Method m = clazz.getDeclaredMethod("getName");
+Object name = m.invoke(obj); // unwrap InvocationTargetException to inspect target failures
 
-// Use case: Spring @Autowired uses reflection to inject, JUnit uses to run @Test methods
-// Disadvantage: Slow, breaks encapsulation, security issue
+// getDeclared* includes non-public members declared on this class, not inherited members.
+// Prefer ordinary APIs; reflection moves access/type failures to runtime.
 - Annotations: Metadata - give info to compiler/framework.
 // Built-in: @Override, @Deprecated, @FunctionalInterface, @SuppressWarnings
 
@@ -2719,7 +2753,9 @@ class Service {
 
 // Read annotation via reflection
 MyAnnotation ann = Service.class.getAnnotation(MyAnnotation.class);
-ann.value(); // Payment
+if (ann != null) {
+  ann.value(); // Payment
+}
 
 #### 11.3 I/O, NIO, and File Handling
 
@@ -2730,89 +2766,62 @@ ann.value(); // Payment
 | No selector in classic stream APIs | Selectors can multiplex non-blocking channels |
 | Still useful for many tasks | Choose based on workload; NIO is not automatically faster |
 
-// IO - File handling
-File f = new File("a.txt"); f.exists(); f.createNewFile(); f.delete(); f.isDirectory();
+// Text I/O with an explicit charset and deterministic resource cleanup.
+// This example uses Java 11 APIs (Path.of, Files.writeString); transferTo is Java 9+.
+Path path = Path.of("a.txt");
+try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+  String line;
+  while ((line = reader.readLine()) != null) {
+    System.out.println(line);
+  }
+}
 
-FileReader fr = new FileReader("a.txt"); // char stream - text file
-BufferedReader br = new BufferedReader(fr); // buffered - fast
-String line; while((line=br.readLine())!=null){}
-
-FileInputStream fis = new FileInputStream("a.jpg"); // byte stream - image, pdf
-FileOutputStream fos = new FileOutputStream("b.jpg");
-
-// Java 7+ best way - auto close
-try(BufferedReader br = new BufferedReader(new FileReader("a.txt"))){
-  br.lines().forEach(System.out::println);
+// Streams handle bytes. Buffer large copies instead of loading huge files into memory.
+try (InputStream input = Files.newInputStream(Path.of("a.jpg"));
+     OutputStream output = Files.newOutputStream(Path.of("b.jpg"))) {
+  input.transferTo(output);
 }
 
 // NIO file APIs
-Path path = Paths.get("a.txt");
-Files.readAllLines(path, StandardCharsets.UTF_8);
 Files.writeString(path, "hello", StandardCharsets.UTF_8);
-Files.exists(path); Files.createFile(path); Files.delete(path);
+// Files.exists can return false when existence cannot be determined; perform the
+// operation and handle IOException when correctness depends on the result.
 
-FileChannel channel = FileChannel.open(path, StandardOpenOption.READ);
-ByteBuffer buffer = ByteBuffer.allocate(1024);
-channel.read(buffer);
+try (FileChannel channel = FileChannel.open(path, StandardOpenOption.READ)) {
+  ByteBuffer buffer = ByteBuffer.allocate(1024);
+  while (channel.read(buffer) != -1) {
+    buffer.flip(); // switch from writing into the buffer to reading from it
+    while (buffer.hasRemaining()) {
+      consume(buffer.get());
+    }
+    buffer.clear();
+  }
+}
 
 #### 11.4 JDBC
 
-5 steps - must memorize:
-// Step 1: Load Driver (Java 8+ auto loads, optional)
-Class.forName("com.mysql.cj.jdbc.Driver");
+Use a `DataSource` (usually managed by the application or a connection pool) and try-with-resources so connections, statements, and result sets close on every exit path:
 
-// Step 2: Get Connection
-String url = "jdbc:mysql://localhost:3306/stitchdb";
-Connection con = DriverManager.getConnection(url, "root", "password");
-
-// Step 3: Create Statement
-Statement stmt = con.createStatement(); // simple, SQL injection risk
-// Prefer parameter binding; values remain data rather than SQL syntax.
-PreparedStatement ps = con.prepareStatement("SELECT * FROM emp WHERE id=?");
-ps.setInt(1, 100);
-// Placeholders cannot represent table/column names; whitelist dynamic identifiers.
-
-// Step 4: Execute Query
-ResultSet rs = ps.executeQuery(); // for SELECT
-int count = stmt.executeUpdate("INSERT INTO emp VALUES(1,'Ali')"); // for INSERT/UPDATE/DELETE returns rows affected
-
-while(rs.next()){
-  int id = rs.getInt("id"); // or rs.getInt(1)
-  String name = rs.getString("name");
-}
-
-// Step 5: Close - reverse order
-rs.close(); ps.close(); con.close();
-
-// Try-with-resources closes the ResultSet, statement, and connection.
-try(Connection con = DriverManager.getConnection(url,user,pass);
-    PreparedStatement ps = con.prepareStatement("SELECT id, name FROM emp WHERE id=?")){
-    ps.setInt(1, 100);
-    try (ResultSet rs = ps.executeQuery()) {
-      while (rs.next()) {
-        System.out.println(rs.getString("name"));
-      }
+```java
+String sql = "SELECT id, name FROM emp WHERE id = ?";
+try (Connection connection = dataSource.getConnection();
+     PreparedStatement statement = connection.prepareStatement(sql)) {
+  statement.setInt(1, 100);
+  try (ResultSet rows = statement.executeQuery()) {
+    while (rows.next()) {
+      int id = rows.getInt("id");
+      String name = rows.getString("name");
+      System.out.println(id + ": " + name);
     }
-}
-- Statement vs PreparedStatement vs CallableStatement:
-    - Statement: SQL text is assembled directly; concatenating untrusted input can enable SQL injection.
-    - PreparedStatement: binds values separately from SQL syntax; usually the right choice for user-supplied values and repeated execution. Server-side preparation and performance depend on the driver/database.
-    - CallableStatement: For calling stored procedures {call proc(?,?)}
-
-- Transactions:
-con.setAutoCommit(false);
-try {
-  ps1.executeUpdate();
-  ps2.executeUpdate();
-  con.commit();
-} catch (SQLException failure) {
-  try {
-    con.rollback();
-  } catch (SQLException rollbackFailure) {
-    failure.addSuppressed(rollbackFailure);
   }
-  throw failure;
 }
+```
+
+Modern JDBC drivers normally load through service-provider discovery; explicit `Class.forName` is only needed for legacy driver setups. Parameter placeholders bind values, not table or column names; validate dynamic identifiers against an allowlist.
+- Statement vs PreparedStatement vs CallableStatement:
+    - `Statement`: appropriate for fixed SQL without user-provided values; concatenating untrusted input can enable SQL injection.
+    - `PreparedStatement`: binds values separately from SQL syntax and is usually the right choice for input values or repeated execution. Server-side preparation and performance depend on the driver/database.
+    - `CallableStatement`: invokes stored procedures, for example `{call proc(?, ?)}`.
 
 #### 11.5 Serialization Safety and Versioning
 
@@ -2864,7 +2873,11 @@ try (Connection connection = dataSource.getConnection()) {
     createOrder(connection);
     connection.commit();
   } catch (SQLException e) {
-    connection.rollback();
+    try {
+      connection.rollback();
+    } catch (SQLException rollbackFailure) {
+      e.addSuppressed(rollbackFailure);
+    }
     throw e;
   }
 }
@@ -2972,9 +2985,9 @@ PaymentService proxy = (PaymentService) Proxy.newProxyInstance(
 
 Frameworks use proxies for transactions, security, and interception. Self-invocation may bypass proxy behavior, and checked exceptions from reflection require careful unwrapping.
 
-### 15. Java Platform Module System
+### 12. Java Platform Module System
 
-#### 15.1 Named, Automatic, and Unnamed Modules
+#### 12.1 Named, Automatic, and Unnamed Modules
 
 - A **named module** contains `module-info.class`.
 - An **automatic module** is a non-modular JAR placed on the module path; its name comes from `Automatic-Module-Name` or the JAR file.
@@ -2982,7 +2995,7 @@ Frameworks use proxies for transactions, security, and interception. Self-invoca
 
 Automatic modules ease migration but expose all packages and have less reliable naming unless the manifest defines it.
 
-#### 15.2 Strong Encapsulation
+#### 12.2 Strong Encapsulation
 
 `exports` allows normal compiled access to public types. `opens` allows deep reflection. They solve different problems:
 
@@ -2995,7 +3008,17 @@ module com.example.orders {
 
 Qualified exports or opens grant access only to listed modules. Avoid opening every package merely to silence reflective-access failures.
 
-#### 15.3 Compilation and Execution
+`requires` declares a readability dependency; it does not export the requiring module's packages. Consumers also need the target package exported, and the referenced type/member must be accessible:
+
+```java
+module com.example.web {
+  requires com.example.orders;
+}
+```
+
+Use `requires transitive` only when a dependency's types are part of your module's public API and downstream modules need readability to use them.
+
+#### 12.3 Compilation and Execution
 
 ```text
 javac -d out --module-source-path src -m com.example.app
@@ -3012,7 +3035,9 @@ jlink --module-path out --add-modules com.example.app --output runtime
 
 `jlink` creates a custom runtime image containing selected modules and dependencies. It is useful for controlled deployments but must be rebuilt for security updates.
 
-#### 15.4 Migration Strategy
+Classpath and module-path launch modes have different resolution and encapsulation rules. Test the exact packaged artifact and launch command; a successful IDE classpath run does not prove the module graph is valid.
+
+#### 12.4 Migration Strategy
 
 1. Remove dependencies on JDK internals.
 2. Give published JARs stable automatic module names.
@@ -3021,7 +3046,7 @@ jlink --module-path out --add-modules com.example.app --output runtime
 5. Open only packages that frameworks need for reflection.
 6. Test both modular packaging and runtime launch commands.
 
-#### 15.5 Services Across Modules
+#### 12.5 Services Across Modules
 
 The service-provider API decouples consumers from implementations:
 
@@ -3039,7 +3064,7 @@ module com.example.card {
 
 Providers need an accessible provider constructor or provider method according to service-loading rules. Handle absent, duplicate, or misconfigured providers explicitly.
 
-#### 15.6 Reflection and Modules
+#### 12.6 Reflection and Modules
 
 Named modules strongly encapsulate non-exported packages. Reflective frameworks may require:
 
@@ -3049,13 +3074,13 @@ Named modules strongly encapsulate non-exported packages. Reflective frameworks 
 
 `--add-opens` and `--add-exports` are deployment escape hatches, not ideal permanent library contracts.
 
-#### 15.7 Module Layers
+#### 12.7 Module Layers
 
 A `ModuleLayer` can load additional module configurations at runtime, useful for plugin systems. Each layer can use distinct class loaders and service providers.
 
 This flexibility adds class-identity, lifecycle, and unloading complexity. Define strict plugin APIs and prevent plugins from depending on application internals.
 
-#### 15.8 Modular JARs and Multi-Release JARs
+#### 12.8 Modular JARs and Multi-Release JARs
 
 - A modular JAR contains `module-info.class`.
 - A multi-release JAR can provide version-specific classes under `META-INF/versions/<n>`.
@@ -3064,15 +3089,15 @@ This flexibility adds class-identity, lifecycle, and unloading complexity. Defin
 
 Test every supported runtime because only that runtime selects its relevant entries.
 
-#### 15.9 JPMS Limitations and Decisions
+#### 12.9 JPMS Limitations and Decisions
 
 JPMS provides reliable configuration and strong encapsulation, but it is not a security sandbox. It does not replace process isolation, authorization, or OS permissions.
 
 Libraries should consider module compatibility even when applications remain on the classpath. Applications should adopt modules when encapsulation, custom runtime images, or explicit dependency graphs justify migration cost.
 
-### 16. Modern Java Features
+### 13. Modern Java Features
 
-#### 16.1 `var` for Local Variables (Java 10)
+#### 13.1 `var` for Local Variables (Java 10)
 
 ```java
 var names = new ArrayList<String>(); // inferred as ArrayList<String>
@@ -3081,11 +3106,11 @@ var total = calculateTotal();        // inferred from return type
 
 `var` is not dynamic typing. The compiler still assigns one static type. It works only for local variables with an initializer, enhanced-for variables, and lambda parameters. Avoid it when the inferred type is unclear.
 
-#### 16.2 Helpful NullPointerExceptions (Java 14)
+#### 13.2 Helpful NullPointerExceptions (Java 14)
 
 The JVM can identify which part of a chained expression was null. This improves diagnostics but does not replace input validation or null-safe design.
 
-#### 16.3 Records (Final in Java 16)
+#### 13.3 Records (Final in Java 16)
 
 Records model transparent, shallowly immutable data:
 
@@ -3108,7 +3133,7 @@ record Team(List<String> members) {
 }
 ```
 
-#### 16.4 Sealed Types (Final in Java 17)
+#### 13.4 Sealed Types (Final in Java 17)
 
 ```java
 sealed interface Result permits Success, Failure {}
@@ -3118,7 +3143,7 @@ record Failure(String message) implements Result {}
 
 Permitted implementations must be `final`, `sealed`, or `non-sealed`. Sealed hierarchies work well with exhaustive pattern matching.
 
-#### 16.5 Pattern Matching for `switch` (Final in Java 21)
+#### 13.5 Pattern Matching for `switch` (Final in Java 21)
 
 ```java
 static String describe(Object value) {
@@ -3134,7 +3159,7 @@ static String describe(Object value) {
 
 Case order matters when one pattern dominates another. Exhaustive switches over enums and sealed hierarchies reduce missing-case bugs.
 
-#### 16.6 Virtual Threads (Final in Java 21)
+#### 13.6 Virtual Threads (Final in Java 21)
 
 Virtual threads are lightweight JVM-managed threads suited to high-throughput tasks that spend much of their time blocked on I/O.
 
@@ -3154,7 +3179,7 @@ Guidance:
 - Avoid long blocking operations while holding `synchronized` monitors, especially on older JDK 21 implementations where pinning can reduce scalability.
 - Measure before and after migration.
 
-#### 16.7 Sequenced Collections (Java 21)
+#### 13.7 Sequenced Collections (Java 21)
 
 `SequencedCollection`, `SequencedSet`, and `SequencedMap` provide a uniform API for ordered collections:
 
@@ -3166,7 +3191,7 @@ String first = names.getFirst();
 SequencedCollection<String> reversed = names.reversed();
 ```
 
-#### 16.8 Switch Expressions and Text Blocks
+#### 13.8 Switch Expressions and Text Blocks
 
 ```java
 String label = switch (status) {
@@ -3185,7 +3210,7 @@ String json = """
 
 Switch expressions must produce a value for every possible path. Use `yield` from a multi-statement case block.
 
-#### 16.9 Feature Lifecycle and Compatibility
+#### 13.9 Feature Lifecycle and Compatibility
 
 Java features may be permanent, preview, incubating, or experimental:
 
@@ -3201,7 +3226,7 @@ javac --release 17 Main.java
 
 `--release` constrains language features, bytecode level, and documented JDK APIs together. Setting only `-source` and `-target` does not prevent accidental use of newer library APIs.
 
-#### 16.10 Pattern Matching Design
+#### 13.10 Pattern Matching Design
 
 Patterns improve data-oriented branching but should not replace polymorphism automatically.
 
@@ -3210,7 +3235,7 @@ Patterns improve data-oriented branching but should not replace polymorphism aut
 - Guarded cases should appear before broader cases.
 - Exhaustive sealed-type switches make new subtype additions visible as compile errors.
 
-#### 16.11 Virtual Threads vs Reactive Programming
+#### 13.11 Virtual Threads vs Reactive Programming
 
 Virtual threads simplify high-concurrency blocking code and stack traces. Reactive APIs remain useful when:
 
@@ -3220,7 +3245,7 @@ Virtual threads simplify high-concurrency blocking code and stack traces. Reacti
 
 Do not mix models casually. Blocking inside an event-loop thread can stall many requests, while wrapping every trivial call in a virtual thread adds complexity without benefit.
 
-#### 16.12 New Collection and Stream Conveniences
+#### 13.12 New Collection and Stream Conveniences
 
 Modern JDKs include useful additions such as:
 
@@ -3232,7 +3257,7 @@ Modern JDKs include useful additions such as:
 
 Check the exact minimum JDK version before adopting an API in a shared library.
 
-#### 16.13 Record Patterns
+#### 13.13 Record Patterns
 
 Record patterns destructure record values and can nest:
 
@@ -3250,7 +3275,7 @@ static int startX(Object value) {
 
 They work well with sealed algebraic data models. Keep patterns readable; deeply nested destructuring can obscure intent.
 
-#### 16.14 Unnamed Variables and Patterns
+#### 13.14 Unnamed Variables and Patterns
 
 Modern Java permits `_` in selected declarations where a value is intentionally unused:
 
@@ -3264,7 +3289,7 @@ try {
 
 Unnamed variables and patterns became permanent in Java 22. They document intentional non-use and prevent accidental access; compile using a release that supports the syntax.
 
-#### 16.15 Foreign Function and Memory API
+#### 13.15 Foreign Function and Memory API
 
 The Foreign Function and Memory (FFM) API became a permanent feature in Java 22. It provides supported access to native libraries and off-heap memory without much of JNI's boilerplate.
 
@@ -3277,7 +3302,7 @@ Core concepts include:
 
 Native interaction remains unsafe at the system boundary: signatures, ownership, thread rules, and library compatibility must be exact.
 
-#### 16.16 Scoped Values
+#### 13.16 Scoped Values
 
 Scoped values became a permanent feature in Java 25. They provide immutable context inherited through a bounded dynamic scope and are designed as a safer alternative to many `ThreadLocal` use cases, especially with virtual threads.
 
@@ -3293,7 +3318,7 @@ ScopedValue.where(REQUEST_ID, "req-123").run(() -> {
 
 Compile against a JDK that includes the feature; preview status can differ across earlier releases.
 
-#### 16.17 API Evolution Awareness
+#### 13.17 API Evolution Awareness
 
 When using modern APIs:
 
