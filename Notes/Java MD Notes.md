@@ -892,48 +892,56 @@ Use it only when one process-wide instance is genuinely appropriate. Dependency 
 
 ## 4.1 Heap, Stack, and Metaspace
 
-- Each thread has a JVM stack for method frames and execution state. The JVM specification does not require every local value or reference to physically reside on a native stack.
-- Objects and arrays are logically allocated from the heap and are garbage-collected when unreachable. JIT optimizations may eliminate some allocations.
-- A `StackOverflowError` can result from excessive recursion; `OutOfMemoryError` can result from heap exhaustion, native-memory exhaustion, or other resource limits.
-- Class metadata is commonly stored in native-memory Metaspace in HotSpot. The string intern pool is on the heap; static fields are not generally stored in Metaspace as ordinary object state.
+- **Heap:** stores objects and arrays during their lifetime. The garbage collector can reclaim an object when it is no longer reachable from live code; collection timing is not guaranteed. JIT optimizations may eliminate or transform some allocations, so source-level `new` does not always imply a physical heap allocation.
+- **JVM stack:** each thread has its own stack of method frames. Frames track method execution, including local variables and intermediate computation state. The JVM specification does not require every local value or reference to physically reside on a native stack.
+- **Metaspace:** HotSpot commonly stores class metadata in native memory. This is distinct from the heap and may be limited with JVM options such as `-XX:MaxMetaspaceSize`.
+- Static fields are associated with their class and are not themselves ordinary objects stored in Metaspace; an object referenced by a static field is still an object. The string intern pool is on the heap in modern Java.
+- `StackOverflowError` commonly results from excessive recursion. `OutOfMemoryError` may result from heap or native-memory exhaustion, including Metaspace exhaustion. These are different resource failures; increasing one memory limit does not necessarily address the other.
 
 ## 4.2 String Pool
 
-- String literals and compile-time constant strings are interned; equal literals in the same runtime can refer to the same pooled object.
-String s1 = "Stitch";
-String s2 = "Stitch";
-System.out.println(s1 == s2); // true: both refer to the interned literal
-
-- intern() method:
-String s3 = new String("Stitch"); // explicitly creates a distinct String object
-String s4 = s3.intern();          // returns the canonical pooled reference
-// s1 == s4 is true; s1 == s3 is false
+- String literals and compile-time constant string expressions are interned. Equal literals in the same runtime can therefore refer to the same canonical object. Use `equals()` for content comparisons; do not rely on pooling for correctness.
+  ```java
+  String first = "Java";
+  String second = "Java";
+  System.out.println(first == second); // true: both are the same interned literal
+  System.out.println(first.equals(second)); // true: contents are equal
+  ```
+- A string created at runtime is not guaranteed to be interned. `intern()` returns the canonical pooled reference for the same contents; compare strings by content unless identity is specifically required.
+  ```java
+  String created = new String("Java");
+  String canonical = created.intern();
+  System.out.println(created == first);   // false: explicitly created distinct object
+  System.out.println(canonical == first); // true: canonical pooled reference
+  ```
+- Pooling can reduce duplicate string storage in suitable cases, but interning large amounts of unbounded or user-generated text can increase memory pressure. It is not a replacement for a cache with an explicit eviction policy.
 
 ## 4.3 String, StringBuilder, and StringBuffer
 
 | Feature | String | StringBuilder | StringBuffer |
 | --- | --- | --- | --- |
-| Mutable? | NO - Immutable | YES - Mutable | YES - Mutable |
-| Thread Safe? | Yes (immutable) | No - faster | Yes - synchronized, slower |
-| When to use | General text values | Repeated mutation in one thread | Legacy shared mutable text |
-| Memory | New object each change | Same object modified | Same object modified |
+| Property | `String` | `StringBuilder` | `StringBuffer` |
+| --- | --- | --- | --- |
+| Mutable? | No; immutable | Yes | Yes |
+| Synchronization | Safe to share as an immutable value | Not synchronized | Most methods are synchronized |
+| Typical use | General text values, map keys | Building text locally, especially in loops | Legacy APIs requiring synchronized mutable text |
 
-- Immutability allows safe sharing, pooling, and stable hash keys. It does not make `String` a secure password container; secrets may remain in memory until collected.
-// Concatenation produces a new String value; repeated concatenation in a loop can recopy growing text.
-String s = "a";
-s = s + "b"; // s now refers to "ab"; the old value may be reclaimed when unreachable
-
-// StringBuilder - good
-StringBuilder sb = new StringBuilder("a");
-sb.append("b"); // same object modified, no new object
-sb.append("c").reverse().toString();
-
-StringBuffer sbf = new StringBuffer("a");
-sbf.append("b"); // synchronized - thread safe
-- For concatenation in a loop, `StringBuilder` is usually clearer and avoids repeatedly copying the growing result. Simple `+` expressions are optimized by modern compilers and should not be mechanically replaced.
-- Interview code:
-String s = "a"; for(int i=0;i<1000;i++) s+= "b"; // repeatedly copies the growing result
-StringBuilder sb = new StringBuilder(); for(int i=0;i<1000;i++) sb.append("b"); // reuses a mutable buffer; it may resize
+- Immutability makes strings safe to share and gives them stable hash codes. It does not make `String` a secure password container: secrets may remain in memory until the strings are collected, and copies may be made.
+- `+` creates a new string value. Simple concatenation expressions are commonly optimized by compilers; repeated concatenation in a loop can repeatedly copy the growing result. Use `StringBuilder` when incrementally building text.
+  ```java
+  StringBuilder builder = new StringBuilder("Java");
+  builder.append(" ").append("notes");
+  builder.reverse();
+  String result = builder.toString();
+  ```
+- A builder has a mutable capacity and may resize as text is appended. If the approximate output size is known, an initial capacity can reduce resizing:
+  ```java
+  StringBuilder output = new StringBuilder(256);
+  for (String part : parts) {
+    output.append(part);
+  }
+  ```
+- `StringBuffer` synchronizes its individual methods, but that does not automatically make a sequence of multiple calls an atomic operation. Prefer `StringBuilder` for thread-confined use; use explicit coordination when multiple threads must safely share a mutable text buffer.
 
 ## 4.4 `equals()` and `==`
 
@@ -988,97 +996,189 @@ System.out.println(e1.equals(e2)); // false by default! Because Object's equals(
 
 ## 4.5 Unicode and String Operations
 
-`String.length()` counts UTF-16 code units, not user-perceived characters:
+Java `String` uses UTF-16 code units. String indexes and methods such as `length()`, `charAt()`, and `substring()` operate on code-unit positions, not user-perceived characters:
 
 ```java
 String value = "A😀";
-System.out.println(value.length()); // 3 code units
-System.out.println(value.codePointCount(0, value.length())); // 2 code points
+System.out.println(value.length()); // 3 UTF-16 code units
+System.out.println(value.codePointCount(0, value.length())); // 2 Unicode code points
+System.out.println(value.charAt(1)); // first half of the emoji's surrogate pair
 ```
 
-Use code-point APIs when processing arbitrary Unicode. Locale-sensitive transformations should specify a locale:
+Use code-point APIs when processing Unicode code points, especially for supplementary characters outside the Basic Multilingual Plane:
+```java
+int codePoint = value.codePointAt(1);
+String fromCodePoints = new String(Character.toChars(codePoint));
+value.codePoints().forEach(System.out::println);
+```
+
+Code points are not always the same as user-perceived characters (grapheme clusters): a displayed character can consist of multiple code points, such as a base letter plus a combining mark. Use a Unicode-aware text or grapheme segmentation library when user-visible character boundaries matter.
+
+Unicode strings may have canonically equivalent representations. Normalize when the application needs consistent comparison or storage, while choosing the normalization form according to the data's requirements:
+```java
+String normalized = java.text.Normalizer.normalize(
+    input, java.text.Normalizer.Form.NFC);
+```
+
+Locale-sensitive case conversion should specify a locale. Use `Locale.ROOT` for machine-readable identifiers and a user locale for display text:
 
 ```java
-String key = input.toLowerCase(Locale.ROOT);
+String key = input.toLowerCase(java.util.Locale.ROOT);
 ```
 
-Use `Locale.ROOT` for machine-readable identifiers and a user locale for display text.
+Use `equalsIgnoreCase()` only when its locale-independent semantics fit the domain; language-aware sorting and comparison may require `Collator`.
 
 ## 4.6 Concatenation and Formatting
 
-- The compiler usually optimizes simple concatenation.
-- Repeated concatenation inside loops should use `StringBuilder`.
-- `String.join` and `Collectors.joining` handle delimiters cleanly.
-- `String.formatted` and `Formatter` improve readability but are slower in hot paths.
-- Never build SQL by concatenating values; formatting does not make SQL safe.
+- Use `+` for short, readable expressions. The compiler commonly optimizes concatenation within one expression; use `StringBuilder` for incrementally assembling text, particularly in loops.
+- Use `String.join` or `Collectors.joining` to combine values with a delimiter without manually handling separators:
+  ```java
+  String csv = String.join(", ", names);
+  ```
+- `String.formatted(...)` (Java 15+) and `String.format(...)` use format specifiers such as `%s`, `%d`, and `%.2f`. They do not append a newline unless the format includes `%n`; use `printf` when writing formatted output directly.
+  ```java
+  String message = "User: %s, score: %.1f".formatted(name, score);
+  ```
+- Formatting is useful for presentation but generally more expensive than direct appends in hot paths. Specify a locale when numeric or date formatting must be predictable; default-locale formatting can vary between machines.
+- Formatting does not escape data for another language or protocol. Never construct SQL by concatenating or formatting values; use prepared statements with parameters. Apply the appropriate contextual encoding for HTML, shell commands, URLs, or other output formats.
 
 ## 4.7 Defensive String Handling
 
-- Use `isBlank()` when whitespace-only input is invalid.
-- `strip()` is Unicode-aware; `trim()` removes only characters up to U+0020.
-- Use `equalsIgnoreCase()` only when its locale-independent semantics fit the domain.
-- Prefer short-lived `char[]` for secrets where APIs support it, though copies may still exist.
+- Validate and normalize input at the boundary, then keep the canonical form consistent throughout the application. Decide explicitly whether leading/trailing whitespace is allowed; do not silently normalize identifiers if doing so could change their meaning.
+- `isBlank()` treats a string containing only Java whitespace characters as blank. `strip()` trims according to `Character.isWhitespace`; `trim()` removes only characters up to U+0020. None of these methods removes every invisible Unicode format character.
+  ```java
+  String candidate = java.util.Objects.requireNonNull(input, "input").strip();
+  if (candidate.isEmpty()) {
+    throw new IllegalArgumentException("Value must not be blank");
+  }
+  ```
+- Choose case handling according to the domain. `toLowerCase(Locale.ROOT)` can help canonicalize machine identifiers, but case folding and `equalsIgnoreCase()` are not substitutes for locale-aware human-language comparison or a documented identifier policy.
+- Escape or encode untrusted text for the specific output context (HTML, SQL, shell, URL, and so on); trimming or validating a string does not make it safe for every context. Use parameterized APIs such as prepared statements for SQL.
+- Prefer APIs that accept `char[]` for secrets and clear the array when finished, but this only reduces exposure: input handling, libraries, logging, garbage collection, and conversions may create copies. Avoid turning secrets into `String` where possible, and never log them.
 
 ## 4.8 Reference Strengths and Cleanup
 
-- Strong references keep objects alive normally.
-- `SoftReference` may be cleared under memory pressure and is unsuitable for predictable cache policy.
-- `WeakReference` does not prevent collection and can support carefully designed canonical mappings.
-- `PhantomReference` plus `ReferenceQueue` supports post-mortem cleanup coordination.
-
-Finalization is deprecated for removal and has unpredictable timing. Use try-with-resources; use `Cleaner` only as a last-resort safety net.
+- **Strong references** are the normal kind: an object remains reachable while live code can reach it through strong references. Garbage collection does not provide a deterministic cleanup schedule.
+- **Soft references** may be cleared under memory pressure. Their timing is unpredictable, so they are generally a poor basis for application caches; use a cache with explicit size, expiry, and eviction policy.
+- **Weak references** do not keep their referents alive. They are useful for certain associations whose values should not extend key/object lifetimes, but must be designed around the possibility that the referent disappears at any time. `WeakHashMap` uses weak keys, not weak values; a map value that strongly refers back to its key can prevent that key from being collected.
+- **Phantom references** allow cleanup coordination after an object becomes phantom reachable. Their referent cannot be retrieved; use a `ReferenceQueue` and keep the cleanup state separate from, and not strongly referencing, the object being collected.
+- Reference objects do not replace deterministic resource management. Close files, sockets, and similar resources with try-with-resources:
+  ```java
+  try (var reader = java.nio.file.Files.newBufferedReader(path)) {
+    // Read from the file.
+  }
+  ```
+- Finalization is deprecated for removal and has unpredictable timing. `Cleaner` can be a last-resort safety net for native or other resources, but its action is not prompt or guaranteed to run before process exit; explicit `close()` remains the primary lifecycle mechanism.
 
 ## 4.9 String Internals and Compact Strings
 
-Modern JDK implementations may store strings internally as Latin-1 or UTF-16 bytes using compact strings. This is an implementation detail, not an API guarantee.
+In modern HotSpot JDKs, compact strings can store string contents using a byte array and a coder that selects a compact Latin-1 representation or UTF-16 when needed. This is an implementation detail, not an API guarantee.
 
-- Never depend on a particular backing representation.
-- `substring` in modern JDKs creates independent storage rather than retaining the original full array.
-- String hash codes may be cached because strings are immutable.
-- Interning unbounded dynamic input can retain large numbers of strings and should not be used as a general cache.
+- Use the public `String` APIs; never depend on its backing representation, object layout, or memory footprint.
+- Current common JDK implementations copy the relevant contents for `substring` rather than retaining the original full backing array. Do not assume this storage behavior across all Java implementations or use it as an API contract.
+- `String` hash codes can be cached because strings are immutable. Application code should rely on the documented `hashCode()` result, not whether or when it is cached.
+- Interning unbounded dynamic input may keep many canonical strings reachable. It is not a general-purpose cache; use an explicitly bounded cache when caching is needed.
 
 ## 4.10 Regular Expressions
 
-```java
-private static final Pattern EMAIL_SHAPE =
-    Pattern.compile("[^@\\s]+@[^@\\s]+");
+Java regular expressions are described by `Pattern` and applied with a `Matcher`. Regex syntax is embedded in a Java string literal, so backslashes usually need to be doubled:
 
-boolean matches = EMAIL_SHAPE.matcher(input).matches();
+```java
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+private static final Pattern POSTAL_CODE =
+    Pattern.compile("\\d{5}");
+
+boolean valid = POSTAL_CODE.matcher(input).matches();
 ```
 
-- Compile reused expressions once.
-- `matches()` requires the entire input to match; `find()` searches for a matching region.
-- Java string escaping and regex escaping both apply, so a regex backslash often appears as `\\`.
-- Avoid catastrophic backtracking on attacker-controlled input; use bounded input, simpler expressions, or possessive quantifiers where appropriate.
-- Regex validates syntax, not necessarily business meaning.
+Common building blocks:
+
+| Syntax | Meaning | Example |
+| --- | --- | --- |
+| `.` | Any character (except line terminators by default) | `a.c` |
+| `\d`, `\w`, `\s` | Digit, word character, whitespace | `\d+` |
+| `[abc]`, `[^abc]` | Character set, or its negation | `[A-F0-9]+` |
+| `[a-z]` | Character range | `[a-z]+` |
+| `*`, `+`, `?`, `{n,m}` | Zero-or-more, one-or-more, optional, bounded repetitions | `\\d{1,3}` |
+| `^`, `$` | Line/input boundaries, depending on flags | `^start` |
+| `(...)`, `(?:...)` | Capturing and non-capturing groups | `(ab)+` |
+| `|` | Alternation | `cat|dog` |
+
+`Pattern` supports more than basic syntax, including lookarounds, named groups, and flags. Use `Pattern.CASE_INSENSITIVE` or inline flags such as `(?i)` when case-insensitive matching is needed; Unicode-aware case behavior can require `Pattern.UNICODE_CASE` as well.
+
+Choose the `Matcher` operation based on whether the pattern should cover all input or find part of it:
+```java
+Pattern wordPattern = Pattern.compile("[A-Za-z]+");
+Matcher matcher = wordPattern.matcher("Java 21");
+
+boolean wholeInputIsWord = matcher.matches(); // false: requires the whole region
+boolean containsWord = matcher.find();        // true: finds "Java"
+String firstWord = matcher.group();           // "Java", after a successful find()
+```
+
+Capture groups retrieve parts of a match with `group(1)`, `group(2)`, and so on; group zero is the complete match. Check that a match succeeded before calling `group()`, or `IllegalStateException` is thrown. `Matcher.find()` can be called repeatedly to find successive matches.
+
+For replacement and splitting, use the dedicated APIs. In replacement strings, `$1` refers to a captured group and a backslash quotes the next replacement character; use `Matcher.quoteReplacement` if replacement text is literal.
+```java
+String masked = Pattern.compile("\\d")
+    .matcher("Order 123")
+    .replaceAll("*"); // "Order ***"
+
+String[] fields = Pattern.compile(",")
+    .split("one,two,three");
+```
+
+- Compile reused patterns once, for example as `static final Pattern` constants; `Pattern` instances are immutable and safe to share. A `Matcher` holds per-input state, so create one per operation or thread.
+- Keep Java string escaping and regex escaping distinct: regex `\d+` must be written as `"\\d+"` in a Java string. A character class such as `[.]` matches a literal period without escaping; outside a character class, use `\\.`.
+- Anchors and character classes have details: `matches()` already requires a full-region match, while `^` and `$` are affected by multiline mode and line terminators. By default, `\d` and `\w` have ASCII-oriented behavior; enable Unicode character classes with `Pattern.UNICODE_CHARACTER_CLASS` when appropriate.
+- Avoid catastrophic backtracking on attacker-controlled input. Bound input length, prefer clear and constrained patterns, and consider possessive quantifiers or atomic groups when they preserve the intended match. Do not assume a regex is safe merely because it is short.
+- Regex can validate syntax, not necessarily business meaning. For example, a simple email-shaped pattern does not establish that an address exists or satisfies every valid email-address rule; use domain-specific parsing or verification where required.
 
 ## 4.11 Character Encoding
 
-Text becomes bytes only through a charset:
+Characters in a Java `String` are not bytes. When text crosses a file, network, or other byte-oriented boundary, encode and decode it with an explicit charset:
 
 ```java
-byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
-String restored = new String(bytes, StandardCharsets.UTF_8);
+byte[] bytes = text.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+String restored = new String(bytes, java.nio.charset.StandardCharsets.UTF_8);
 ```
 
-- Never rely on the platform default for persisted or network data.
-- UTF-8 is variable-length and widely interoperable.
-- A byte-order mark may appear in some files and may need explicit handling.
-- Configure malformed/unmappable input behavior with `CharsetDecoder` when silent replacement is unacceptable.
+- UTF-8 is variable-length and widely interoperable. Use `StandardCharsets.UTF_8` for portable data formats and protocols unless their specification requires another charset.
+- Avoid default-charset overloads for persistent or network data: their behavior can depend on the Java version, runtime configuration, or platform. State the charset explicitly in readers, writers, and file APIs too.
+- Some text files begin with a byte-order mark (BOM). BOM handling is format-specific; decide whether to preserve, remove, or reject it rather than assuming every decoder removes it.
+- Convenience decoding methods can replace malformed input. If invalid byte sequences must be rejected or reported, configure a decoder explicitly:
+  ```java
+  java.nio.charset.CharsetDecoder decoder =
+      java.nio.charset.StandardCharsets.UTF_8.newDecoder()
+          .onMalformedInput(java.nio.charset.CodingErrorAction.REPORT)
+          .onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPORT);
+  String strict = decoder.decode(java.nio.ByteBuffer.wrap(bytes)).toString();
+  ```
+- Encoding and decoding are inverse operations only when the same charset is used and the input bytes are valid for that charset. A charset does not define application-level normalization or remove a BOM automatically.
 
 ## 4.12 String Comparison and Collation
 
-- `String.compareTo` compares UTF-16 values lexicographically, not natural-language dictionary order.
-- Use `Collator` for locale-sensitive user-facing sorting.
-- Normalize Unicode when canonically equivalent sequences must compare consistently.
+- `equals()` compares exact string contents; `compareTo()` provides a lexicographic ordering based on UTF-16 code units. Neither performs locale-aware dictionary comparison, Unicode normalization, or general linguistic case folding.
+- Use `Collator` to sort human-readable text according to a locale. Collation behavior varies by locale and configuration; set strength or decomposition when the product's comparison rules require it.
+  ```java
+  java.text.Collator collator =
+      java.text.Collator.getInstance(userLocale);
+  names.sort(collator);
+  ```
+- Collation can consider distinct strings equivalent at a given strength. If a total, deterministic order is needed for ties (for example in pagination), add an explicit tie-breaker such as the original string's `compareTo`.
+- Canonically equivalent Unicode sequences can have different code-unit representations. Normalize both values to the same form when the domain requires canonical equivalence:
 
 ```java
-String normalized = Normalizer.normalize(input, Normalizer.Form.NFC);
-Collator collator = Collator.getInstance(userLocale);
-names.sort(collator);
+String left = java.text.Normalizer.normalize(
+    input, java.text.Normalizer.Form.NFC);
+String right = java.text.Normalizer.normalize(
+    other, java.text.Normalizer.Form.NFC);
+boolean equalAfterNormalization = left.equals(right);
 ```
 
-Normalization and case folding have domain-specific security implications; identifiers should follow a documented policy.
+Normalization and case handling have domain-specific security implications. For security-sensitive identifiers, define which characters and equivalences are allowed, normalize consistently at boundaries, and avoid treating visual similarity as equality.
 
 # 5. Exception Handling
 
