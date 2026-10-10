@@ -4,32 +4,51 @@ A practical reference for Core Java, modern language features, JVM internals, te
 
 ## Contents
 
-1. [Fundamentals](#1-fundamentals)
-2. [Object-Oriented Programming](#2-object-oriented-programming)
-3. [Keywords and Essentials](#3-keywords-and-essentials)
-4. [Memory and Strings](#4-memory-and-strings)
-5. [Exception Handling](#5-exception-handling)
-6. [Collections Framework](#6-collections-framework)
-7. [Generics](#7-generics)
-8. [Multithreading and Concurrency](#8-multithreading-and-concurrency)
-9. [Java 8+ Features](#9-java-8-features)
-10. [JVM Internals](#10-jvm-internals)
-11. [Advanced Core Java](#11-advanced-core-java)
-12. [SOLID Principles and Design Patterns](#12-solid-principles-and-design-patterns)
-13. [Maven and Gradle](#13-maven-and-gradle)
-14. [Testing with JUnit and Mockito](#14-testing-with-junit-and-mockito)
-15. [Java Platform Module System](#15-java-platform-module-system)
-16. [Modern Java Features](#16-modern-java-features)
-17. [Production Java Best Practices](#17-production-java-best-practices)
-18. [Security Essentials](#18-security-essentials)
-19. [Performance, Monitoring, and Troubleshooting](#19-performance-monitoring-and-troubleshooting)
-20. [Quick Revision Checklist](#20-quick-revision-checklist)
+- [How to Use These Notes](#how-to-use-these-notes)
+- [Part I: Java Language Foundations](#part-i-java-language-foundations)
+  - [1. Fundamentals](#1-fundamentals)
+  - [2. Object-Oriented Programming](#2-object-oriented-programming)
+  - [3. Keywords and Essentials](#3-keywords-and-essentials)
+  - [4. Memory and Strings](#4-memory-and-strings)
+  - [5. Exception Handling](#5-exception-handling)
+- [Part II: Collections, Functional Java, and Concurrency](#part-ii-collections-functional-java-and-concurrency)
+  - [6. Collections Framework](#6-collections-framework)
+  - [7. Generics](#7-generics)
+  - [8. Multithreading and Concurrency](#8-multithreading-and-concurrency)
+  - [9. Java 8+ Features](#9-java-8-features)
+- [Part III: JVM and Advanced Java](#part-iii-jvm-and-advanced-java)
+  - [10. JVM Internals](#10-jvm-internals)
+  - [11. Advanced Core Java](#11-advanced-core-java)
+- [Part IV: Design, Build, Test, and Platform Evolution](#part-iv-design-build-test-and-platform-evolution)
+  - [12. SOLID Principles and Design Patterns](#12-solid-principles-and-design-patterns)
+  - [13. Maven and Gradle](#13-maven-and-gradle)
+  - [14. Testing with JUnit and Mockito](#14-testing-with-junit-and-mockito)
+  - [15. Java Platform Module System](#15-java-platform-module-system)
+  - [16. Modern Java Features](#16-modern-java-features)
+- [Part V: Production, Security, and Operations](#part-v-production-security-and-operations)
+  - [17. Production Java Best Practices](#17-production-java-best-practices)
+  - [18. Security Essentials](#18-security-essentials)
+  - [19. Performance, Monitoring, and Troubleshooting](#19-performance-monitoring-and-troubleshooting)
+  - [20. Quick Revision Checklist](#20-quick-revision-checklist)
 
-## 1. Fundamentals
+## How to Use These Notes
 
-### 1.1 Java Platform Components
+- Read Parts I and II in order when learning Java fundamentals.
+- Use Parts III and IV to understand runtime behavior and engineering practices.
+- Use Part V as a production-readiness and interview-revision reference.
+- Each chapter moves from core concepts to advanced behavior, then ends with review notes and common pitfalls.
+- Code samples are illustrative; verify imports, Java-version requirements, and error handling before using them in production.
 
-#### JVM - Java Virtual Machine
+
+## Part I: Java Language Foundations
+
+Core syntax, type rules, object-oriented design, memory concepts, text handling, and exceptions.
+
+### 1. Fundamentals
+
+#### 1.1 Java Platform Components
+
+##### JVM - Java Virtual Machine
 
 - The engine that actually runs your code
 - Reads .class bytecode and converts it to machine code for your OS
@@ -37,20 +56,20 @@ A practical reference for Core Java, modern language features, JVM internals, te
 - You never download JVM alone - it comes inside JRE/JDK
 - One JVM per platform: Windows JVM, Linux JVM, etc. That's why Java is "write once, run anywhere" - same bytecode, different JVM translates it.
 
-#### JRE - Java Runtime Environment
+##### JRE - Java Runtime Environment
 
 - JVM + libraries needed to _run_ Java apps
 - Contains: JVM + core class libraries (java.lang, java.util etc) + other supporting files
 - If you only want to RUN a Java app (like Minecraft), you need JRE
 - Cannot develop - no compiler inside
 
-#### JDK - Java Development Kit
+##### JDK - Java Development Kit
 
 - JRE + tools needed to _develop_ Java apps
 - Contains: JRE (so includes JVM) + javac compiler + debugger + javadoc + other dev tools
 - If you want to WRITE and compile Java code, you need JDK
 
-### 1.2 Variables and Data Types
+#### 1.2 Variables and Data Types
 
 - Variable: Name for memory location. Must declare type before use.
   int age; // declaration
@@ -75,7 +94,7 @@ A practical reference for Core Java, modern language features, JVM internals, te
   // Reference comparison: == checks address,.equals() checks content
 - Memory: Primitives on stack (fast), objects on heap (GC cleans). Local variables no default - you must init.
 
-### 1.3 Operators and Type Casting
+#### 1.3 Operators and Type Casting
 
 - Unary: ++a pre-increment, a++ post, --, !, ~
 - Arithmetic: + - * / %.
@@ -94,7 +113,7 @@ A practical reference for Core Java, modern language features, JVM internals, te
     byte b = (byte) big; // -126 - overflow
 - Upcasting/Downcasting for objects: Parent p = new Child(); // upcast auto and Child c = (Child) p; // downcast
 
-### 1.4 Control Flow
+#### 1.4 Control Flow
 
 - if-else ladder: For ranges. Only first true executes.
   if (score >= 90) grade='A';
@@ -133,7 +152,7 @@ A practical reference for Core Java, modern language features, JVM internals, te
     - continue; - skips rest of current iteration, goes to next.
     - Labeled break: outer: for() { for() { break outer; } } - breaks outer loop.
 
-### 1.5 Input and Output
+#### 1.5 Input and Output
 
 - Output:
   System.out.println(); // with newline
@@ -161,7 +180,7 @@ A practical reference for Core Java, modern language features, JVM internals, te
   char[] pwd = c.readPassword();
 
 
-### 1.6 Compilation, Execution, and Classpath
+#### 1.6 Compilation, Execution, and Classpath
 
 The normal lifecycle is:
 
@@ -183,7 +202,7 @@ java -cp app.jar com.example.Main
 - `NoClassDefFoundError` means a class available during compilation could not be loaded at runtime or failed initialization.
 - `ClassNotFoundException` is a checked exception produced by explicit dynamic-loading APIs such as `Class.forName`.
 
-### 1.7 Primitive Details and Numeric Accuracy
+#### 1.7 Primitive Details and Numeric Accuracy
 
 - `byte`, `short`, `int`, and `long` are signed two's-complement integers.
 - `char` is an unsigned UTF-16 code unit, not necessarily a complete Unicode character.
@@ -208,7 +227,7 @@ System.out.println(value + 1); // wraps to Integer.MIN_VALUE
 Math.addExact(value, 1);       // throws ArithmeticException
 ```
 
-### 1.8 Scope, Lifetime, and Parameter Passing
+#### 1.8 Scope, Lifetime, and Parameter Passing
 
 - Local variables exist within their declaring block and must be definitely assigned before use.
 - Instance fields belong to an object and receive default values.
@@ -222,7 +241,7 @@ static void rename(StringBuilder name) {
 }
 ```
 
-### 1.9 Arrays
+#### 1.9 Arrays
 
 - Arrays are fixed-size objects with zero-based indexes.
 - Array elements receive defaults; a local array reference does not.
@@ -230,7 +249,7 @@ static void rename(StringBuilder name) {
 - Common utilities include `Arrays.copyOf`, `sort`, `binarySearch`, `equals`, and `deepEquals`.
 - For resizable sequences, prefer `ArrayList`.
 
-### 1.10 Literals and Compile-Time Constants
+#### 1.10 Literals and Compile-Time Constants
 
 Java supports decimal, hexadecimal, octal, and binary integer literals:
 
@@ -247,7 +266,7 @@ int readable = 1_000_000;
 - A compile-time constant is a primitive or `String` `final` variable initialized with a constant expression.
 - Compile-time constants may be inlined into client bytecode. Changing a public constant may therefore require recompiling clients.
 
-### 1.11 Expressions and Promotion Rules
+#### 1.11 Expressions and Promotion Rules
 
 Binary numeric promotion converts operands before arithmetic:
 
@@ -273,7 +292,7 @@ value += 2;        // compiles
 
 Evaluate operands before applying operators. `&&` and `||` short-circuit; `&` and `|` always evaluate both boolean operands.
 
-### 1.12 Command-Line Arguments and Environment
+#### 1.12 Command-Line Arguments and Environment
 
 ```java
 public static void main(String[] args) {
@@ -289,7 +308,7 @@ public static void main(String[] args) {
 - Set a system property with `-Dapp.mode=production`.
 - Environment and system properties are global process state; wrap access behind typed configuration for testability.
 
-### 1.13 Packages, JARs, and Manifests
+#### 1.13 Packages, JARs, and Manifests
 
 A JAR is a ZIP archive containing classes, resources, and metadata.
 
@@ -300,16 +319,16 @@ java -jar app.jar
 
 `META-INF/MANIFEST.MF` can declare `Main-Class`, implementation version, automatic module name, and other metadata. A normal executable JAR does not automatically include dependency JARs; use an application layout, module path, or deliberately built executable/fat JAR.
 
-### 1.14 Detailed Notes for Fundamental Subsections
+#### 1.14 Chapter Review and Common Pitfalls
 
-#### JVM, JRE, and JDK
+##### JVM, JRE, and JDK
 
 - A JDK distribution includes development tools and a runtime, but since Java 11 most vendors no longer ship a separate consumer JRE.
 - Java SE defines specifications; OpenJDK provides the reference implementation. Vendors may package different collectors, diagnostics, support periods, and licenses while preserving Java compatibility.
 - `java -version`, `javac -version`, and the runtime actually used by a service can differ. Record both compiler and runtime versions during diagnosis.
 - Bytecode compatibility flows toward newer runtimes: a newer JVM can usually load older class files, while an older JVM rejects newer class-file versions with `UnsupportedClassVersionError`.
 
-#### Variables, primitives, and references
+##### Variables, primitives, and references
 
 - Field defaults do not apply to local variables. Definite-assignment analysis proves local initialization along every reachable path.
 - A reference value is either `null` or identifies an object; Java does not expose pointer arithmetic.
@@ -317,7 +336,7 @@ java -jar app.jar
 - Primitive comparison is value-based. Floating-point `NaN` is unequal to every value, including itself; use `Double.isNaN`.
 - Use `Integer.compare`, `Long.compare`, and `Double.compare` rather than subtraction in comparators.
 
-#### Operators and expressions
+##### Operators and expressions
 
 - Operator precedence controls grouping, not evaluation order. Java evaluates operands left-to-right.
 - `a && b` skips `b` when `a` is false; `a || b` skips `b` when `a` is true.
@@ -325,14 +344,14 @@ java -jar app.jar
 - `>>` preserves the sign bit; `>>>` shifts in zeros.
 - Parentheses should clarify mixed arithmetic, logical, and bitwise expressions even when precedence is known.
 
-#### Control flow
+##### Control flow
 
 - A `switch` expression must be exhaustive. Enums and sealed hierarchies enable compile-time exhaustiveness checks.
 - `break`, `continue`, and `return` still execute enclosing `finally` blocks.
 - Prefer early return for invalid conditions when it reduces nesting, but keep cleanup centralized through try-with-resources.
 - Labeled flow is legal but often signals logic that should be extracted into a method.
 
-#### Input and output
+##### Input and output
 
 - `Scanner` performs tokenization and regex parsing and is unsuitable for high-volume parsing without measurement.
 - `BufferedReader.readLine()` removes line terminators; preserve separators explicitly if exact file reproduction matters.
@@ -340,7 +359,7 @@ java -jar app.jar
 - Specify `Locale` for parsing formatted numbers and `Charset` for text bytes.
 - Closing a wrapper stream normally closes its underlying stream; do not close process-wide `System.in`, `System.out`, or `System.err` from library code.
 
-#### Compilation and classpath
+##### Compilation and classpath
 
 - Classpath order can determine which duplicate class is loaded, producing environment-specific failures.
 - Package-private access is enforced by both package name and runtime module/class-loader context.
@@ -348,7 +367,7 @@ java -jar app.jar
 - `javap -c -p ClassName` inspects bytecode and helps explain compiler transformations.
 - Compile and run from a clean output directory to avoid stale class files masking source changes.
 
-#### Numeric precision and arrays
+##### Numeric precision and arrays
 
 - `BigDecimal.equals` compares value and scale; `1.0` and `1.00` are unequal. `compareTo` treats them as numerically equal.
 - Specify a `MathContext` or rounding mode for non-terminating decimal operations.
@@ -356,7 +375,7 @@ java -jar app.jar
 - `System.arraycopy` handles overlapping ranges and performs runtime type checks for reference arrays.
 - An array's `clone()` makes a shallow copy; nested arrays or mutable elements remain shared.
 
-#### CLI, environment, and packaging
+##### CLI, environment, and packaging
 
 - Treat command-line and environment values as untrusted text: parse, validate, and report the exact option without exposing secrets.
 - Environment variable names and case sensitivity vary by operating system.
@@ -364,9 +383,9 @@ java -jar app.jar
 - Signed JARs protect artifact integrity, not application authorization.
 - Shaded JARs can break service descriptors, signatures, resources, and reflection unless transformers are configured correctly.
 
-## 2. Object-Oriented Programming
+### 2. Object-Oriented Programming
 
-### 2.1 Classes, Objects, and Constructors
+#### 2.1 Classes, Objects, and Constructors
 
 - Class: Blueprint / template. No memory.
   public class Employee {
@@ -392,7 +411,7 @@ java -jar app.jar
 - Constructor chaining: this() calls another constructor of same class, must be first line.
   Employee() { this("Unknown"); } // calls parameterized
 
-### 2.2 Encapsulation and Accessors
+#### 2.2 Encapsulation and Accessors
 
 - Encapsulation: Hide data using private, expose via methods. For data security + validation.
   public class BankAccount {
@@ -408,7 +427,7 @@ java -jar app.jar
 - Why? If variable public, anyone can set balance = -10000. With setter, you control.
     - Interview: Encapsulation is data hiding, Abstraction is implementation hiding.
 
-### 2.3 Inheritance
+#### 2.3 Inheritance
 
 - One class gets properties of another. For code reuse. IS-A relationship.
   class Parent { String surname = "Khan"; }
@@ -427,7 +446,7 @@ java -jar app.jar
 - Types: Single, Multilevel (A->B->C), Hierarchical (B and C extends A). Java doesn't support Multiple inheritance with classes (diamond problem) - use interfaces.
 - Object class is parent of all classes in Java.
 
-### 2.4 Polymorphism
+#### 2.4 Polymorphism
 
 - A. Compile-time / Static - Overloading: Same method name, different params in SAME class. Compiler decides which to call.
   class Calculator {
@@ -446,7 +465,7 @@ java -jar app.jar
   b.getRate(); // 7.5 - Child's method runs - Runtime Polymorphism
 - Rules for overriding: Need inheritance, same signature, cannot override private/static/final, access cannot be more restrictive.
 
-### 2.5 Abstraction: Abstract Classes and Interfaces
+#### 2.5 Abstraction: Abstract Classes and Interfaces
 
 - Show WHAT to do, hide HOW.
 - Abstract Class (0-100% abstraction):
@@ -478,7 +497,7 @@ java -jar app.jar
 
 Java 8+: Interface can have default and static methods to avoid breaking old code.
 
-### 2.6 Access Modifiers
+#### 2.6 Access Modifiers
 
 Controls visibility:
 | Modifier | Same Class | Same Package | Child (diff pkg) | World |
@@ -495,12 +514,12 @@ public class A {
   public int d = 4; // anywhere
 }
 
-#### Interview Notes
+##### Interview Notes
 
 - Why protected needed? To allow child outside package to access parent.
 - Encapsulation uses private + public getters/setters.
 
-### 2.7 Composition, Association, and Aggregation
+#### 2.7 Composition, Association, and Aggregation
 
 - **Association:** one object knows or uses another, such as `Order` using `PaymentService`.
 - **Aggregation:** a whole references parts that can exist independently, such as `Department` and `Employee`.
@@ -518,7 +537,7 @@ class ReportService {
 }
 ```
 
-### 2.8 Initialization Order
+#### 2.8 Initialization Order
 
 Object initialization follows this general order:
 
@@ -531,7 +550,7 @@ Object initialization follows this general order:
 
 Calling an overridable method from a constructor is dangerous because child fields may not yet be initialized.
 
-### 2.9 Method Dispatch and Covariant Returns
+#### 2.9 Method Dispatch and Covariant Returns
 
 - Instance methods are dynamically dispatched from the runtime object type.
 - Fields, static methods, and private methods are resolved from the reference or declaring type and are not polymorphic.
@@ -539,7 +558,7 @@ Calling an overridable method from a constructor is dangerous because child fiel
 - It cannot throw broader checked exceptions than the overridden method.
 - It may widen access, such as `protected` to `public`, but cannot narrow access.
 
-### 2.10 Immutability
+#### 2.10 Immutability
 
 An immutable class should initialize all state during construction, prevent mutation, avoid leaking mutable internals, and prevent unsafe subclassing.
 
@@ -559,7 +578,7 @@ final class Schedule {
 
 Immutability simplifies equality, caching, and thread safety, although copying large mutable inputs may have a cost.
 
-### 2.11 Nested Classes
+#### 2.11 Nested Classes
 
 - A static nested class has no implicit outer-object reference.
 - An inner class is tied to an enclosing instance and can access its members.
@@ -582,7 +601,7 @@ class Outer {
 
 Prefer static nested classes unless access to an enclosing instance is required. A non-static inner instance can unintentionally retain its outer object.
 
-### 2.12 Enums as Full Classes
+#### 2.12 Enums as Full Classes
 
 Enums provide a fixed set of instances and can have fields, methods, constructors, and per-constant behavior:
 
@@ -604,7 +623,7 @@ enum Operation {
 - Persist a stable external code rather than `ordinal()`, because reordering constants changes ordinals.
 - `EnumSet` and `EnumMap` are compact, efficient collections for enum keys.
 
-### 2.13 Object Methods
+#### 2.13 Object Methods
 
 Important methods inherited from `Object`:
 
@@ -616,7 +635,7 @@ Important methods inherited from `Object`:
 
 When inheritance is allowed, decide whether equality uses `instanceof` or exact `getClass()` checks. Exact-class equality avoids many symmetry problems; value-based hierarchies require particularly careful design.
 
-### 2.14 Tell, Do Not Ask
+#### 2.14 Tell, Do Not Ask
 
 Objects should generally protect their own invariants:
 
@@ -632,9 +651,9 @@ account.withdraw(amount);
 
 This is not a ban on getters. The goal is to avoid moving domain rules into unrelated callers and duplicating invariants.
 
-### 2.15 Detailed Notes for OOP Subsections
+#### 2.15 Chapter Review and Common Pitfalls
 
-#### Classes, objects, and constructors
+##### Classes, objects, and constructors
 
 - Object identity is distinct from logical equality. Two separate objects may represent the same value.
 - Constructor overloads should delegate to one canonical constructor so validation is not duplicated.
@@ -642,14 +661,14 @@ This is not a ban on getters. The goal is to avoid moving domain rules into unre
 - Static factories can name creation modes, cache instances, return subtypes, and avoid constructing invalid objects.
 - Avoid doing remote calls or starting threads inside constructors.
 
-#### Encapsulation
+##### Encapsulation
 
 - Encapsulation protects invariants, not merely fields. A class with private fields but unrestricted setters may still be poorly encapsulated.
 - Expose operations such as `deposit` or `reschedule` instead of generic mutation when rules accompany the change.
 - Defensive copying must happen on both input and output boundaries when mutable values are involved.
 - Package-private types and methods are useful implementation boundaries that remain testable within the package.
 
-#### Inheritance
+##### Inheritance
 
 - Inheritance couples child code to protected behavior and superclass construction rules.
 - Favor shallow hierarchies and stable abstract contracts.
@@ -657,7 +676,7 @@ This is not a ban on getters. The goal is to avoid moving domain rules into unre
 - Constructors are not inherited. A child constructor always invokes a parent constructor.
 - Private members exist in the parent portion of the object but are not directly accessible by the child.
 
-#### Polymorphism
+##### Polymorphism
 
 - Overload resolution occurs at compile time from declared argument types; overriding dispatch occurs at runtime from the receiver object.
 - Passing `null` to overloaded reference parameters can be ambiguous.
@@ -665,7 +684,7 @@ This is not a ban on getters. The goal is to avoid moving domain rules into unre
 - Static method hiding should be avoided because behavior depends on the reference type.
 - Use `@Override` so the compiler catches accidental signature mismatches.
 
-#### Abstract classes and interfaces
+##### Abstract classes and interfaces
 
 - Abstract classes can own instance state and protected construction; interfaces define capabilities and support multiple inheritance of type.
 - Interface fields are implicitly `public static final`.
@@ -673,7 +692,7 @@ This is not a ban on getters. The goal is to avoid moving domain rules into unre
 - Default-method conflicts must be resolved explicitly; class methods take precedence over interface defaults.
 - Prefer small interfaces defined near the consumer rather than broad provider-shaped interfaces.
 
-#### Nested types, enums, and Object methods
+##### Nested types, enums, and Object methods
 
 - Local and anonymous classes can capture only final or effectively final local variables.
 - Enum constants are initialized during class initialization; avoid circular static dependencies.
@@ -681,7 +700,7 @@ This is not a ban on getters. The goal is to avoid moving domain rules into unre
 - Equality across mutable inheritance hierarchies is difficult to make symmetric and transitive; composition or final value classes are safer.
 - `System.identityHashCode` exposes identity hashing even when `hashCode` is overridden, but it is not a memory address.
 
-#### Composition and modeling
+##### Composition and modeling
 
 - Constructor injection establishes required dependencies; method injection fits per-operation collaborators.
 - Avoid bidirectional associations unless both navigation directions are required and consistency is maintained.
@@ -689,9 +708,9 @@ This is not a ban on getters. The goal is to avoid moving domain rules into unre
 - Value objects should validate at construction and usually be immutable.
 - Domain objects should not depend directly on transport or persistence frameworks unless the trade-off is intentional.
 
-## 3. Keywords and Essentials
+### 3. Keywords and Essentials
 
-### 3.1 `this` Keyword
+#### 3.1 `this` Keyword
 
 Current object reference. Used to remove ambiguity.
 class Employee {
@@ -709,7 +728,7 @@ class Employee {
 }
 - Interview: this cannot be used in static context because static has no object.
 
-### 3.2 `super` Keyword
+#### 3.2 `super` Keyword
 
 Parent object reference.
 class Parent { int x=10; void show(){ System.out.println("Parent"); } Parent(){ System.out.println("Parent cons"); } }
@@ -724,7 +743,7 @@ class Child extends Parent {
 }
 - this() vs super(): Both must be first line, so you cannot use both in same constructor.
 
-### 3.3 `final` Keyword
+#### 3.3 `final` Keyword
 
 1.  final variable: Constant, cannot reassign. Must init once.
     final int MAX = 100;
@@ -738,7 +757,7 @@ class Child extends Parent {
     final class SBI {} // class Child extends SBI ERROR
     // String, Integer are final classes in Java
 
-### 3.4 `static` Keyword
+#### 3.4 `static` Keyword
 
 Memory once in Method Area, shared by all objects.
 class Employee {
@@ -763,7 +782,7 @@ System.out.println(Employee.company);
 - Static block executes when class loads, before main, used to init static vars.
 - Interview trick: Can we override static method? No, it's method hiding not overriding. Parent p = new Child(); p.staticMethod() calls Parent's, not Child's.
 
-### 3.5 Packages and Imports
+#### 3.5 Packages and Imports
 
 Package = folder to avoid name clash, organize code.
 package com.stitch.payment; // first line, defines package
@@ -778,7 +797,7 @@ public class UPI {
 - java.lang is auto imported (String, System, Math).
 - To create package: javac -d . File.java creates folder structure.
 
-### 3.6 Wrapper Classes and Autoboxing
+#### 3.6 Wrapper Classes and Autoboxing
 
 Primitives have object version - needed for Collections (Collections cannot store primitive).
 | Primitive | Wrapper (in java.lang) |
@@ -812,7 +831,7 @@ Integer.MAX_VALUE; // constants
 
 Interview note: use `.equals()` rather than `==` to compare wrapper values.
 
-### 3.7 Important Modifiers
+#### 3.7 Important Modifiers
 
 - `abstract`: declares an incomplete class or method.
 - `synchronized`: acquires an intrinsic monitor for mutual exclusion and visibility.
@@ -821,7 +840,7 @@ Interview note: use `.equals()` rather than `==` to compare wrapper values.
 - `native`: declares a method implemented outside Java through JNI.
 - `strictfp`: historically enforced strict floating-point behavior; since Java 17, floating-point operations are always strict.
 
-### 3.8 `final` vs Immutability
+#### 3.8 `final` vs Immutability
 
 `final` prevents reassignment; it does not make a referenced object immutable:
 
@@ -833,21 +852,21 @@ names.add("Ali");              // allowed
 
 Correctly constructed `final` fields also have safe-publication guarantees, provided `this` does not escape during construction.
 
-### 3.9 Static Initialization
+#### 3.9 Static Initialization
 
 - A class initializes on first active use, such as construction, static method invocation, or access to a non-constant static field.
 - Compile-time constants may be inlined and may not trigger initialization.
 - If initialization throws, the first access receives `ExceptionInInitializerError`; later access commonly receives `NoClassDefFoundError`.
 - Avoid heavy I/O, networking, or recoverable configuration work in static initializers.
 
-### 3.10 Imports and Name Resolution
+#### 3.10 Imports and Name Resolution
 
 - Imports affect source-name resolution only; they do not load classes or add dependencies.
 - Wildcard imports do not include subpackages.
 - Use static imports sparingly, where they improve readability, such as test assertions.
 - If imported classes share a simple name, use a fully qualified name for at least one.
 
-### 3.11 `this`, `super`, and Dispatch During Construction
+#### 3.11 `this`, `super`, and Dispatch During Construction
 
 - `this(...)` delegates to another constructor in the same class.
 - `super(...)` delegates to a parent constructor.
@@ -855,7 +874,7 @@ Correctly constructed `final` fields also have safe-publication guarantees, prov
 - Constructor delegation must eventually reach a superclass constructor.
 - Dynamic dispatch still applies inside constructors, which is why invoking overridable methods there is unsafe.
 
-### 3.12 Access Across Packages
+#### 3.12 Access Across Packages
 
 `protected` has two distinct forms of access:
 
@@ -864,7 +883,7 @@ Correctly constructed `final` fields also have safe-publication guarantees, prov
 
 An out-of-package subclass cannot use an arbitrary parent instance to access the parent's protected member. Prefer protected methods over protected mutable fields.
 
-### 3.13 Annotation Basics
+#### 3.13 Annotation Basics
 
 Annotations can target declarations or type uses and can have different retention:
 
@@ -882,7 +901,7 @@ List<@NonEmpty String> names;
 
 Annotations contain metadata, not executable behavior. A compiler, annotation processor, framework, or application code must interpret them.
 
-### 3.14 Initialization-on-Demand Holder
+#### 3.14 Initialization-on-Demand Holder
 
 A nested static holder provides lazy, thread-safe initialization using class-initialization guarantees:
 
@@ -902,37 +921,37 @@ final class ConfigRegistry {
 
 Use it only when one process-wide instance is genuinely appropriate. Dependency injection is usually clearer for application services.
 
-### 3.15 Detailed Notes for Keyword Subsections
+#### 3.15 Chapter Review and Common Pitfalls
 
-#### `this` and `super`
+##### `this` and `super`
 
 - `this` cannot be referenced before the superclass constructor has completed.
 - A qualified expression such as `Outer.this` accesses an enclosing instance from an inner class.
 - `InterfaceName.super.method()` can select a particular inherited default method.
 - Constructor arguments are evaluated before the delegated constructor executes.
 
-#### `final`
+##### `final`
 
 - A blank final instance field must be assigned on every constructor path.
 - A blank static final field must be assigned during declaration or static initialization.
 - A final method prevents overriding but can still call overridable methods.
 - A final reference can point to mutable state; immutability is a property of the object's API and implementation.
 
-#### `static`
+##### `static`
 
 - Static state is scoped to a defining class loader, so plugin or application-server environments may have multiple copies.
 - Static mutable fields create hidden process-wide coupling and complicate parallel tests.
 - Static methods are appropriate for pure operations and factories that require no replaceable dependency.
 - Initialization cycles can expose default values before all static assignments complete.
 
-#### Packages and access
+##### Packages and access
 
 - The unnamed/default package should not be used for maintainable applications and cannot be imported by named-package code.
 - Package naming convention uses reversed domain ownership and lowercase segments.
 - `public` exposes a type only if its enclosing type and module/package are also accessible.
 - Package-private constructors can force callers through validated factories.
 
-#### Wrappers and boxing
+##### Wrappers and boxing
 
 - Boxing in tight loops or streams can increase allocation and GC pressure; primitive streams avoid it.
 - Wrapper constructors such as `new Integer(...)` are deprecated; use `valueOf` or autoboxing.
@@ -940,7 +959,7 @@ Use it only when one process-wide instance is genuinely appropriate. Dependency 
 - Parsing methods throw `NumberFormatException`; validate or translate at the input boundary.
 - Unsigned helper methods exist for integer comparison, division, parsing, and formatting, but storage remains signed.
 
-#### Modifiers and annotations
+##### Modifiers and annotations
 
 - `volatile` is suitable for independent state publication, flags, and immutable snapshots, not compound invariants.
 - `synchronized` applies to a monitor and provides both exclusion and happens-before visibility.
@@ -948,9 +967,9 @@ Use it only when one process-wide instance is genuinely appropriate. Dependency 
 - Inherited annotations work only for class annotations marked `@Inherited`, not methods or interfaces.
 - Type-use annotations enable nullness and other static-analysis systems but require tooling to enforce meaning.
 
-## 4. Memory and Strings
+### 4. Memory and Strings
 
-### 4.1 Heap, Stack, and Metaspace
+#### 4.1 Heap, Stack, and Metaspace
 
 - Stack:
     - Stores: Method calls, local variables (primitive + reference address), execution order LIFO
@@ -972,7 +991,7 @@ Use it only when one process-wide instance is genuinely appropriate. Dependency 
 - Method Area / Metaspace (part of heap in Java 8+):
     - Stores: Class metadata, static variables, String Pool
 
-### 4.2 String Pool
+#### 4.2 String Pool
 
 - String Pool is special area inside heap (Method Area) to save memory.
 String s1 = "Stitch"; // literal - goes to String Pool. If "Stitch" already exists, reuse it
@@ -986,7 +1005,7 @@ String s4 = new String("Stitch"); // new object in heap again - s3 != s4
 String s3 = new String("Stitch").intern(); // force to use from pool
 // Now s1 == s3 true
 
-### 4.3 String, StringBuilder, and StringBuffer
+#### 4.3 String, StringBuilder, and StringBuffer
 
 | Feature | String | StringBuilder | StringBuffer |
 | --- | --- | --- | --- |
@@ -1012,7 +1031,7 @@ sbf.append("b"); // synchronized - thread safe
 String s = "a"; for(int i=0;i<1000;i++) s+= "b"; // creates 1000 objects - slow
 StringBuilder sb = new StringBuilder(); for(int i=0;i<1000;i++) sb.append("b"); // 1 object
 
-### 4.4 `equals()` and `==`
+#### 4.4 `equals()` and `==`
 
 - == : Checks address / reference equality. Are both pointing to same memory location?
 - .equals() : Checks content equality. Method defined in Object class, String class overrides it to check characters.
@@ -1047,7 +1066,7 @@ public int hashCode() { return name.hashCode(); }
 
 - Bonus: equals() contract - reflexive, symmetric, transitive, consistent.
 
-### 4.5 Unicode and String Operations
+#### 4.5 Unicode and String Operations
 
 `String.length()` counts UTF-16 code units, not user-perceived characters:
 
@@ -1065,7 +1084,7 @@ String key = input.toLowerCase(Locale.ROOT);
 
 Use `Locale.ROOT` for machine-readable identifiers and a user locale for display text.
 
-### 4.6 Concatenation and Formatting
+#### 4.6 Concatenation and Formatting
 
 - The compiler usually optimizes simple concatenation.
 - Repeated concatenation inside loops should use `StringBuilder`.
@@ -1073,14 +1092,14 @@ Use `Locale.ROOT` for machine-readable identifiers and a user locale for display
 - `String.formatted` and `Formatter` improve readability but are slower in hot paths.
 - Never build SQL by concatenating values; formatting does not make SQL safe.
 
-### 4.7 Defensive String Handling
+#### 4.7 Defensive String Handling
 
 - Use `isBlank()` when whitespace-only input is invalid.
 - `strip()` is Unicode-aware; `trim()` removes only characters up to U+0020.
 - Use `equalsIgnoreCase()` only when its locale-independent semantics fit the domain.
 - Prefer short-lived `char[]` for secrets where APIs support it, though copies may still exist.
 
-### 4.8 Reference Strengths and Cleanup
+#### 4.8 Reference Strengths and Cleanup
 
 - Strong references keep objects alive normally.
 - `SoftReference` may be cleared under memory pressure and is unsuitable for predictable cache policy.
@@ -1089,7 +1108,7 @@ Use `Locale.ROOT` for machine-readable identifiers and a user locale for display
 
 Finalization is deprecated for removal and has unpredictable timing. Use try-with-resources; use `Cleaner` only as a last-resort safety net.
 
-### 4.9 String Internals and Compact Strings
+#### 4.9 String Internals and Compact Strings
 
 Modern JDK implementations may store strings internally as Latin-1 or UTF-16 bytes using compact strings. This is an implementation detail, not an API guarantee.
 
@@ -1098,7 +1117,7 @@ Modern JDK implementations may store strings internally as Latin-1 or UTF-16 byt
 - String hash codes may be cached because strings are immutable.
 - Interning unbounded dynamic input can retain large numbers of strings and should not be used as a general cache.
 
-### 4.10 Regular Expressions
+#### 4.10 Regular Expressions
 
 ```java
 private static final Pattern EMAIL_SHAPE =
@@ -1113,7 +1132,7 @@ boolean matches = EMAIL_SHAPE.matcher(input).matches();
 - Avoid catastrophic backtracking on attacker-controlled input; use bounded input, simpler expressions, or possessive quantifiers where appropriate.
 - Regex validates syntax, not necessarily business meaning.
 
-### 4.11 Character Encoding
+#### 4.11 Character Encoding
 
 Text becomes bytes only through a charset:
 
@@ -1127,7 +1146,7 @@ String restored = new String(bytes, StandardCharsets.UTF_8);
 - A byte-order mark may appear in some files and may need explicit handling.
 - Configure malformed/unmappable input behavior with `CharsetDecoder` when silent replacement is unacceptable.
 
-### 4.12 String Comparison and Collation
+#### 4.12 String Comparison and Collation
 
 - `String.compareTo` compares UTF-16 values lexicographically, not natural-language dictionary order.
 - Use `Collator` for locale-sensitive user-facing sorting.
@@ -1141,9 +1160,9 @@ names.sort(collator);
 
 Normalization and case folding have domain-specific security implications; identifiers should follow a documented policy.
 
-### 4.13 Detailed Notes for Memory and String Subsections
+#### 4.13 Chapter Review and Common Pitfalls
 
-#### Stack, heap, and metaspace
+##### Stack, heap, and metaspace
 
 - The specification defines observable behavior, not that every local primitive physically lives on a native stack.
 - JIT optimization may scalar-replace objects or keep values in registers.
@@ -1151,28 +1170,28 @@ Normalization and case folding have domain-specific security implications; ident
 - Static fields are associated with class metadata but referenced objects still reside in the heap.
 - Metaspace uses native memory and grows according to loaded class metadata.
 
-#### String pool and interning
+##### String pool and interning
 
 - String literals and constant string expressions are interned.
 - Runtime concatenation is generally not interned unless `intern()` is called.
 - Interned strings use a global table associated with the runtime and can outlive short operations.
 - Reference equality between strings is an implementation-sensitive optimization observation, never content-comparison logic.
 
-#### StringBuilder and StringBuffer
+##### StringBuilder and StringBuffer
 
 - Builders grow internal capacity and may copy their backing storage; pre-size when the approximate output length is known and important.
 - Builders are not value types and do not override `equals` for content comparison.
 - `StringBuffer` synchronizes individual methods, but a multi-call sequence may still require external coordination.
 - Compiler-generated concatenation may use `invokedynamic` on modern JDKs rather than a visible `StringBuilder`.
 
-#### Equality
+##### Equality
 
 - `Objects.equals(a, b)` handles null safely.
 - `Arrays.equals` compares one-dimensional contents; `Arrays.deepEquals` recursively handles nested arrays.
 - Floating-point equality needs a domain-specific tolerance only for approximate computations; exact identifiers should not use floating point.
 - Compare `BigDecimal` using the rule appropriate to the domain: numeric order or scale-sensitive representation.
 
-#### Unicode and encoding
+##### Unicode and encoding
 
 - A grapheme visible to a user may contain multiple code points, such as combining marks or emoji sequences.
 - Code-point iteration still does not equal grapheme-cluster iteration.
@@ -1180,30 +1199,30 @@ Normalization and case folding have domain-specific security implications; ident
 - Mojibake occurs when bytes encoded with one charset are decoded with another.
 - Validate text normalization policy for identifiers to reduce confusing visually equivalent forms.
 
-#### Regular expressions
+##### Regular expressions
 
 - Use `Pattern.quote` for literal text inserted into a regex and `Matcher.quoteReplacement` for replacement text.
 - `Matcher` is mutable and not thread-safe; `Pattern` is immutable and safe to reuse.
 - Named capture groups improve maintainability.
 - Anchors such as `^` and `$` can be affected by multiline mode; `\A` and `\z` target absolute input boundaries.
 
-#### References and cleanup
+##### References and cleanup
 
 - Reachability includes strong paths from GC roots, not only local variables visible in source.
 - Weak-reference processing is nondeterministic and unsuitable for correctness-sensitive cleanup.
 - `Cleaner` actions must not strongly retain the object they clean.
 - Native resources need explicit ownership, idempotent close behavior, and try-with-resources.
 
-## 5. Exception Handling
+### 5. Exception Handling
 
-### 5.1 Exception Hierarchy
+#### 5.1 Exception Hierarchy
 
 Abnormal event that breaks normal flow. Object of Throwable class.
 Object -> Throwable -> 2 childs
                                       1. Exception -> Checked + Unchecked (RuntimeException)
                                       2. Error -> OutOfMemoryError, StackOverflowError - don't handle
 
-### 5.2 Checked and Unchecked Exceptions
+#### 5.2 Checked and Unchecked Exceptions
 
 | Checked (Compile-time) | Unchecked (Runtime) |
 | --- | --- |
@@ -1220,7 +1239,7 @@ FileReader fr = new FileReader("file.txt"); // Must surround with try-catch
 int a = 10/0; // ArithmeticException at runtime
 String s = null; s.length(); // NullPointerException
 
-### 5.3 `try`, `catch`, `finally`, `throw`, and `throws`
+#### 5.3 `try`, `catch`, `finally`, `throw`, and `throws`
 
 try {
   int a = 10/0; // exception object created and thrown to catch
@@ -1260,7 +1279,7 @@ void readFile2() throws IOException, SQLException { // multiple
 }
 - Difference: throw is inside method body to throw object, throws is in method signature to declare.
 
-### 5.4 Exception Flow Examples
+#### 5.4 Exception Flow Examples
 
 // Case 1: Exception handled
 try { riskyCode(); } 
@@ -1277,7 +1296,7 @@ try { riskyCode(); } // throws NullPointer
 catch(ArithmeticException e) { } // not matched
 finally { cleanup; } // finally runs, then exception goes up
 
-### 5.5 Custom Exceptions
+#### 5.5 Custom Exceptions
 
 Why? Business logic - InsufficientBalanceException is more meaningful than Exception.
 // Step 1: Create class extends Exception for checked, RuntimeException for unchecked
@@ -1319,7 +1338,7 @@ public class Main {
     3.  Difference Error vs Exception? Error cannot be recovered, Exception can.
     4.  Why checked exception not good for microservices? Forces handling everywhere - so Spring uses unchecked.
 
-### 5.6 Exception Hierarchy and Boundaries
+#### 5.6 Exception Hierarchy and Boundaries
 
 ```text
 Throwable
@@ -1341,7 +1360,7 @@ try {
 }
 ```
 
-### 5.7 Multi-Catch and Suppressed Exceptions
+#### 5.7 Multi-Catch and Suppressed Exceptions
 
 ```java
 try {
@@ -1353,7 +1372,7 @@ try {
 
 Multi-catch alternatives cannot be parent and child types. In try-with-resources, resources initialize left-to-right and close right-to-left. If the body and `close()` both fail, close failures are available through `getSuppressed()`.
 
-### 5.8 Exception Design Guidelines
+#### 5.8 Exception Design Guidelines
 
 - Catch only where code can recover, add context, or translate abstractions.
 - Preserve causes when wrapping.
@@ -1363,7 +1382,7 @@ Multi-catch alternatives cannot be parent and child types. In try-with-resources
 - Never expose secrets or full sensitive payloads in exception messages.
 - Assertions are disabled by default and must not validate public input or required business rules.
 
-### 5.9 Common Anti-Patterns
+#### 5.9 Common Anti-Patterns
 
 - Empty catch blocks hide failures.
 - Broad catches may accidentally swallow cancellation or programming defects.
@@ -1372,7 +1391,7 @@ Multi-catch alternatives cannot be parent and child types. In try-with-resources
 - Throwing from `finally` can replace the original failure.
 - Failing to restore interrupted status can prevent task cancellation.
 
-### 5.10 Designing Custom Exceptions
+#### 5.10 Designing Custom Exceptions
 
 ```java
 class InsufficientFundsException extends RuntimeException {
@@ -1395,7 +1414,7 @@ class InsufficientFundsException extends RuntimeException {
 - Choose checked exceptions when callers can reasonably recover and the API benefits from forcing a decision.
 - Document whether operations are safe to retry.
 
-### 5.11 Stack Traces
+#### 5.11 Stack Traces
 
 A stack trace captures the call path when the throwable is created. Creating many exceptions can therefore be expensive.
 
@@ -1405,7 +1424,7 @@ A stack trace captures the call path when the throwable is created. Creating man
 - Async boundaries may split logical operations across different stacks; attach correlation context.
 - Do not call `fillInStackTrace` or remove stack information merely to hide performance issues without measurement.
 
-### 5.12 Exception Transparency in Lambdas
+#### 5.12 Exception Transparency in Lambdas
 
 Standard functional interfaces do not declare checked exceptions:
 
@@ -1415,7 +1434,7 @@ Standard functional interfaces do not declare checked exceptions:
 
 Options include handling inside the lambda, extracting a method that translates the exception, using a loop, or defining a domain-specific throwing interface. Avoid generic "sneaky throw" helpers that hide the API contract.
 
-### 5.13 Failure Atomicity
+#### 5.13 Failure Atomicity
 
 An operation is failure-atomic when a failed attempt leaves the object or system in its previous valid state.
 
@@ -1429,67 +1448,72 @@ Techniques include:
 
 Document partial-success behavior when atomicity cannot be guaranteed.
 
-### 5.14 Detailed Notes for Exception Subsections
+#### 5.14 Chapter Review and Common Pitfalls
 
-#### Checked and unchecked exceptions
+##### Checked and unchecked exceptions
 
 - Checked status is determined by inheritance, not by how severe or recoverable a failure is.
 - `RuntimeException` and its subclasses are unchecked; other `Exception` subclasses are checked.
 - Public APIs should document significant unchecked exceptions when callers can prevent them.
 - Library code should avoid converting every failure into one generic unchecked exception.
 
-#### Try, catch, and finally
+##### Try, catch, and finally
 
 - Catch blocks are tested from most specific to least specific; unreachable broader/smaller ordering is rejected.
 - A return expression is evaluated before `finally`, but a return from `finally` replaces it and should be avoided.
 - A try statement may have resources and `finally` without a catch.
 - Since Java 9, an effectively final variable can be used directly as a try-with-resources resource.
 
-#### Throwing and declaring
+##### Throwing and declaring
 
 - `throw` requires a `Throwable` instance; `throws` declares potential propagation.
 - Overridden methods may omit checked exceptions or declare narrower checked types.
 - Generic methods can propagate a type-parameterized checked exception, though such APIs can be difficult to use.
 - Exception translation should occur at a boundary where the lower-level type no longer has useful meaning.
 
-#### Custom exceptions
+##### Custom exceptions
 
 - Include machine-readable fields when callers need structured recovery.
 - Avoid enormous exception hierarchies that force callers to catch many equivalent types.
 - Make exception objects effectively immutable.
 - Messages should describe the failed operation and relevant safe identifiers.
 
-#### Resource failure
+##### Resource failure
 
 - Closing multiple resources continues after one close fails; later failures become suppressed.
 - If resource construction fails, already constructed earlier resources are closed.
 - A resource's `close()` should be idempotent when practical.
 - Do not reuse a resource after it has been transferred to an owner responsible for closing it.
 
-#### Interruption and cancellation
+##### Interruption and cancellation
 
 - `InterruptedException` clears the interrupted flag when thrown.
 - Restore it with `Thread.currentThread().interrupt()` when not rethrowing.
 - Methods should document cancellation behavior and whether partial work remains.
 - Do not treat interruption as an ordinary error to log repeatedly.
 
-#### Failure atomicity and retries
+##### Failure atomicity and retries
 
 - Retrying non-idempotent operations can duplicate side effects.
 - A timeout does not prove the remote operation failed; its result may be unknown.
 - Compensating actions are business operations and can themselves fail.
 - Store durable operation identity when exactly-once business effect is required over at-least-once delivery.
 
-## 6. Collections Framework
 
-### Collections Overview
+## Part II: Collections, Functional Java, and Concurrency
+
+Data structures, generic type safety, asynchronous execution, streams, and modern functional APIs.
+
+### 6. Collections Framework
+
+#### Collections Overview
 
 Collection -> List, Set, Queue
 Map is separate - key-value, not child of Collection
 
 ---
 
-### 6.1 List
+#### 6.1 List
 
 | Feature | ArrayList | LinkedList | Vector |
 | --- | --- | --- | --- |
@@ -1508,7 +1532,7 @@ Collections.sort(list);
 LinkedList<String> ll = new LinkedList<>();
 ll.addFirst("A"); ll.addLast("Z");
 
-### 6.2 Set
+#### 6.2 Set
 
 | HashSet | LinkedHashSet | TreeSet |
 | --- | --- | --- |
@@ -1526,7 +1550,7 @@ sorted.add(10); sorted.add(2); sorted.add(1);
 
 LinkedHashSet maintains insertion order
 
-### 6.3 Map
+#### 6.3 Map
 
 | HashMap | LinkedHashMap | TreeMap | ConcurrentHashMap |
 | --- | --- | --- | --- |
@@ -1552,7 +1576,7 @@ Map<Integer,String> tmap = new TreeMap<>(); // keys sorted 1,2,3
 Map<String,String> cmap = new ConcurrentHashMap<>(); // for thread safe without Hashtable
 - HashMap vs HashTable: Hashtable legacy, synchronized slow, no null. HashMap new, fast, allows null.
 
-### 6.4 Queue, Deque, and Stack
+#### 6.4 Queue, Deque, and Stack
 
 // Queue - FIFO
 Queue<Integer> q = new LinkedList<>(); // or PriorityQueue
@@ -1578,7 +1602,7 @@ st.peek();
 Deque<Integer> stack = new ArrayDeque<>();
 stack.push(10); stack.pop();
 
-### 6.5 Comparable and Comparator
+#### 6.5 Comparable and Comparator
 
 class Employee implements Comparable<Employee> { // Comparable - natural sorting, 1 way
   int id; String name;
@@ -1608,7 +1632,7 @@ empList.sort(Comparator.comparing(e -> e.name));
 | Natural ordering - single logic | Multiple logics |
 | java.lang package | java.util package |
 
-### 6.6 Iteration and Concurrent Modification
+#### 6.6 Iteration and Concurrent Modification
 
 List<String> list = new ArrayList<>();
 list.add("A"); list.add("B");
@@ -1638,7 +1662,7 @@ Interview Must-Know:
 3. When to use which Map/List - they give scenario.
 4. How to make ArrayList thread safe? Collections.synchronizedList(list) or CopyOnWriteArrayList
 
-### 6.7 Choosing a Collection
+#### 6.7 Choosing a Collection
 
 | Requirement | Typical choice |
 | --- | --- |
@@ -1656,7 +1680,7 @@ Interview Must-Know:
 
 `LinkedList` is rarely the best default: indexed access is O(n), nodes add allocation overhead, and traversal has poor memory locality.
 
-### 6.8 Complexity Guide
+#### 6.8 Complexity Guide
 
 - `ArrayList.get`: O(1); middle insertion/removal: O(n).
 - `HashMap.get/put`: expected O(1), depending on hashing and resizing.
@@ -1667,7 +1691,7 @@ Interview Must-Know:
 
 Big-O does not capture allocation, cache locality, hash quality, concurrency, or small-data constants. Measure critical paths.
 
-### 6.9 Immutable and Unmodifiable Collections
+#### 6.9 Immutable and Unmodifiable Collections
 
 ```java
 List<String> fixed = List.of("A", "B");
@@ -1680,7 +1704,7 @@ List<String> view = Collections.unmodifiableList(existing);
 - `unmodifiableList` is a view; backing-list changes remain visible.
 - `Arrays.asList` is fixed-size but permits replacement with `set`.
 
-### 6.10 Map Operations and Contracts
+#### 6.10 Map Operations and Contracts
 
 ```java
 counts.merge(word, 1, Integer::sum);
@@ -1693,7 +1717,7 @@ cache.computeIfPresent(key, (key, value) -> refresh(value));
 - Comparator subtraction can overflow; use `Integer.compare`.
 - Mutating fields used by hashing or ordering while an element is stored can make it logically unreachable.
 
-### 6.11 HashMap Internal Behavior
+#### 6.11 HashMap Internal Behavior
 
 A `HashMap` spreads a key's hash to choose a bucket. Within a bucket, it uses equality to find the exact key.
 
@@ -1704,7 +1728,7 @@ A `HashMap` spreads a key's hash to choose a bucket. Within a bucket, it uses eq
 
 When size exceeds `capacity * loadFactor`, the table resizes. Since Java 8, sufficiently large, heavily collided buckets may become balanced trees when table and bucket thresholds are met. This protects worst-case lookup behavior but does not excuse poor hash functions.
 
-### 6.12 Views and Backing Collections
+#### 6.12 Views and Backing Collections
 
 Many collection-returning methods create views:
 
@@ -1719,7 +1743,7 @@ keys.remove("Ali"); // removes the mapping from scores
 - `NavigableMap.subMap` and `headMap` expose bounded views.
 - Copy when an independent snapshot is required.
 
-### 6.13 Navigable Collections
+#### 6.13 Navigable Collections
 
 `NavigableSet` and `NavigableMap` support nearest-match and range operations:
 
@@ -1731,13 +1755,13 @@ keys.remove("Ali"); // removes the mapping from scores
 
 These are useful for scheduling, time ranges, leaderboards, and version lookup.
 
-### 6.14 Spliterator
+#### 6.14 Spliterator
 
 A `Spliterator` traverses and partitions elements for sequential or parallel processing. Characteristics such as `ORDERED`, `DISTINCT`, `SORTED`, `SIZED`, `IMMUTABLE`, and `CONCURRENT` help stream implementations optimize safely.
 
 Custom spliterators must partition without losing or duplicating elements and report only truthful characteristics.
 
-### 6.15 Concurrent Collection Semantics
+#### 6.15 Concurrent Collection Semantics
 
 - `ConcurrentHashMap` supports concurrent reads and updates without one global map lock.
 - Its iterators are weakly consistent: they do not throw `ConcurrentModificationException` and may reflect some concurrent changes.
@@ -1747,16 +1771,16 @@ Custom spliterators must partition without losing or duplicating elements and re
 
 Compound actions still need atomic methods such as `compute`, `merge`, `putIfAbsent`, or external coordination.
 
-### 6.16 Detailed Notes for Collection Subsections
+#### 6.16 Chapter Review and Common Pitfalls
 
-#### List implementations
+##### List implementations
 
 - `ArrayList` grows geometrically; capacity is an implementation detail and should not be treated as a contract.
 - `ensureCapacity` can reduce resizing when a large final size is known.
 - `LinkedList` implements both `List` and `Deque`, but its per-node overhead and traversal cost make it a specialized choice.
 - `Vector` and `Stack` are legacy synchronized collections; prefer modern alternatives.
 
-#### Sets and maps
+##### Sets and maps
 
 - A set delegates uniqueness to equality or comparator semantics.
 - `LinkedHashMap` can maintain insertion order or access order, enabling simple LRU-like policies through `removeEldestEntry`.
@@ -1764,49 +1788,49 @@ Compound actions still need atomic methods such as `compute`, `merge`, `putIfAbs
 - `WeakHashMap` weakly references keys, but values can accidentally retain their own keys.
 - `EnumMap` requires one enum key type and stores entries compactly.
 
-#### Sorted collections
+##### Sorted collections
 
 - A comparator should be antisymmetric, transitive, and consistent across repeated calls.
 - A comparator inconsistent with `equals` can cause a sorted set to treat unequal objects as duplicates.
 - Never use mutable ordering fields while an element remains in a tree-based collection.
 - Range views enforce their bounds and reject out-of-range insertions.
 
-#### Queues and deques
+##### Queues and deques
 
 - Queue pairs differ in failure behavior: `add/remove/element` throw, while `offer/poll/peek` return a special result.
 - Since null is often used to mean “no element,” most queue implementations disallow null.
 - `PriorityQueue` iteration is not sorted; repeatedly `poll` to observe priority order.
 - Equal-priority elements have no guaranteed FIFO order unless the comparator includes a sequence tie-breaker.
 
-#### Iteration
+##### Iteration
 
 - Fail-fast behavior is best-effort bug detection, not a concurrency guarantee.
 - `Iterator.remove` may be unsupported for immutable or specialized collections.
 - Structural modification usually means size or topology change, not replacing one existing list value.
 - Prefer collection bulk operations such as `removeIf`, `replaceAll`, and `sort` when they express the intent.
 
-#### Hashing and capacity
+##### Hashing and capacity
 
 - Good hash distribution reduces collisions but equality still determines key identity.
 - Resizing is expensive because the table structure changes; initial capacity can help known bulk loads.
 - Load factor trades memory for collision frequency; the default is appropriate for most uses.
 - Hash-based iteration order is unspecified and can change across JDKs, capacity changes, or process runs.
 
-#### Concurrent collections
+##### Concurrent collections
 
 - Thread-safe collection methods do not make multi-step workflows atomic.
 - `Collections.synchronizedList` requires synchronizing on the returned list during iteration.
 - `ConcurrentHashMap.size()` under concurrent updates is an observation, not a transactional snapshot.
 - Bounded blocking queues are useful load-shedding boundaries; unbounded queues merely defer overload.
 
-#### Collection API design
+##### Collection API design
 
 - Accept the most general useful interface, such as `Collection` or `Iterable`.
 - Return an immutable snapshot when callers must not observe future mutation.
 - Document iteration order, null policy, mutability, thread safety, and ownership.
 - Avoid returning `Stream` from APIs when the lifecycle of an underlying I/O resource would be unclear.
 
-## 7. Generics
+### 7. Generics
 
 Generics = type safety at compile time. Write code once, work for any type. Added in Java 5.
 
@@ -1822,7 +1846,7 @@ list.add("Stitch");
 // list.add(10); // COMPILE ERROR - type safe
 String s = list.get(0); // no cast needed
 
-### 7.1 Generic Classes
+#### 7.1 Generic Classes
 
 class Box<T> { // T = Type placeholder
   T value;
@@ -1843,7 +1867,7 @@ class Pair<K,V> {
 Pair<Integer, String> p = new Pair<>(1, "Stitch");
 Common naming: T - Type, E - Element, K - Key, V - Value, N - Number
 
-### 7.2 Generic Methods
+#### 7.2 Generic Methods
 
 class Util {
   // Method with its own generic type <T>
@@ -1858,7 +1882,7 @@ String[] strArr = {"A","B"};
 Util.<Integer>printArray(intArr); // explicit
 Util.printArray(strArr); // type inference - auto detects String
 
-### 7.3 Bounded Types and Wildcards
+#### 7.3 Bounded Types and Wildcards
 
 1. Upper Bounded ? extends Type - You can READ but not write (except null)
 // T must be Number or child of Number (Integer, Double etc)
@@ -1893,7 +1917,7 @@ PECS Rule - Remember for interview: Producer Extends, Consumer Super
 - If list PRODUCES data (you read from it) -> use extends
 - If list CONSUMES data (you write to it) -> use super
 
-### 7.4 Type Erasure
+#### 7.4 Type Erasure
 
 - Java keeps generics only at compile time for type check. At runtime, JVM removes generic info and replaces with Object / bounded type.
 // Your code
@@ -1910,7 +1934,7 @@ T[] arr = new T[10]; // ERROR
 // instanceof with generics not allowed
 if(list instanceof ArrayList<String>) // ERROR
 
-### 7.5 Generic Interfaces
+#### 7.5 Generic Interfaces
 
 interface Repository<T> {
   void save(T t);
@@ -1921,7 +1945,7 @@ class EmployeeRepo implements Repository<Employee> {
   public Employee findById(int id){ return new Employee(); }
 }
 
-### 7.6 Common Generic Pitfalls
+#### 7.6 Common Generic Pitfalls
 
 List<Object>!= List<String> // List<Object> cannot hold List<String>
 List<?> list = new ArrayList<String>(); // OK - wildcard allows
@@ -1935,13 +1959,13 @@ List<Integer> intList = new ArrayList<>();
 Integer[] intArr = new Integer[10];
 Number[] numArr = intArr; // OK in arrays - but can cause ArrayStoreException at runtime
 
-#### Quick Summary
+##### Quick Summary
 
 - Always use generics - type safe, no casting
 - Use extends when you need to read numbers, super when you need to add
 - All generic info erased at runtime
 
-### 7.7 Wildcard Capture
+#### 7.7 Wildcard Capture
 
 A helper can capture an unknown wildcard:
 
@@ -1957,7 +1981,7 @@ private static <T> void reverseCaptured(List<T> list) {
 
 Use a type parameter when arguments or return values must share a type. Use a wildcard when the exact type is irrelevant.
 
-### 7.8 Generic API Design
+#### 7.8 Generic API Design
 
 ```java
 static <T> void copy(
@@ -1972,7 +1996,7 @@ static <T> void copy(
 - Avoid raw types; use `List<?>` when the element type is unknown.
 - Do not expose implementation-specific collection types unless their behavior is part of the contract.
 
-### 7.9 Heap Pollution and Varargs
+#### 7.9 Heap Pollution and Varargs
 
 Heap pollution occurs when a parameterized variable refers to an incompatible value, often through raw types, unchecked casts, or generic varargs.
 
@@ -1987,7 +2011,7 @@ static <T> List<T> combine(List<? extends T>... lists) {
 
 Use `@SafeVarargs` only when the method performs no unsafe operation on the varargs array.
 
-### 7.10 Reifiable Types
+#### 7.10 Reifiable Types
 
 Reifiable types retain enough runtime information for operations such as `instanceof`. Examples include primitives, non-generic classes, raw types, and unbounded wildcard types:
 
@@ -1999,7 +2023,7 @@ if (value instanceof List<?> list) {
 
 `List<String>` is non-reifiable because its element type is erased.
 
-### 7.11 Recursive Bounds
+#### 7.11 Recursive Bounds
 
 Recursive bounds express relationships involving the type itself:
 
@@ -2011,7 +2035,7 @@ static <T extends Comparable<? super T>> T max(List<? extends T> values) {
 
 `Comparable<? super T>` permits comparison logic inherited from a supertype and is more flexible than `Comparable<T>`.
 
-### 7.12 Multiple Bounds
+#### 7.12 Multiple Bounds
 
 A type parameter can require one class and multiple interfaces:
 
@@ -2024,7 +2048,7 @@ T choose(T left, T right) {
 
 The class bound, if any, must appear first. Erasure uses the leftmost bound, which can affect generated casts and binary compatibility.
 
-### 7.13 Bridge Methods
+#### 7.13 Bridge Methods
 
 Type erasure can change an overriding method's erased signature. The compiler creates a synthetic bridge method to preserve polymorphism:
 
@@ -2038,7 +2062,7 @@ class StringBox implements Comparable<StringBox> {
 
 Reflection and stack traces may expose bridge methods. `Method.isBridge()` identifies them.
 
-### 7.14 Generic Factories
+#### 7.14 Generic Factories
 
 Static factories can infer type arguments more cleanly than constructors:
 
@@ -2052,7 +2076,7 @@ Map<String, Integer> counts = newMap();
 
 The diamond operator can infer constructor types from the target context. Anonymous classes have supported the diamond operator since Java 9, with restrictions based on inferred non-denotable types.
 
-### 7.15 Variance Summary
+#### 7.15 Variance Summary
 
 - Java generic types are invariant: `List<Integer>` is not a subtype of `List<Number>`.
 - `? extends Number` provides a covariant read view.
@@ -2062,67 +2086,67 @@ The diamond operator can infer constructor types from the target context. Anonym
 
 Example from `Stream.map` conceptually: `Function<? super T, ? extends R>`.
 
-### 7.16 Detailed Notes for Generic Subsections
+#### 7.16 Chapter Review and Common Pitfalls
 
-#### Generic classes and methods
+##### Generic classes and methods
 
 - Type parameters belong either to a class/interface or independently to a method/constructor.
 - A static member cannot use its class's type parameter because it belongs to the raw class, not an instance.
 - Type inference uses arguments, target types, bounds, and invocation context.
 - Explicit type witnesses such as `Collections.<String>emptyList()` can resolve rare inference ambiguities.
 
-#### Bounds and PECS
+##### Bounds and PECS
 
 - Upper bounds define capabilities available when reading a type.
 - Lower-bounded wildcards are particularly useful for callbacks and destination collections.
 - PECS is a guideline, not a substitute for understanding both reads and writes.
 - If a parameter both consumes and produces the exact same type, a named type parameter is often clearer than a wildcard.
 
-#### Erasure
+##### Erasure
 
 - Generic type arguments generally do not exist as ordinary runtime class objects.
 - `new T()`, `T.class`, and `new T[]` are unavailable because runtime representation is unknown.
 - Reflection can inspect generic signatures recorded in class metadata, but actual runtime values may still violate them due to unchecked operations.
 - Erasure preserves migration compatibility with pre-generics Java but limits reification.
 
-#### Raw types and unchecked operations
+##### Raw types and unchecked operations
 
 - Raw types disable part of the compiler's type safety and should be confined to legacy boundaries.
 - An unchecked warning identifies a point where the compiler cannot prove safety.
 - Suppress warnings on the narrowest declaration and explain the invariant that makes the operation safe.
 - Validate elements when adapting genuinely untyped external data.
 
-#### Wildcards
+##### Wildcards
 
 - `List<?>` means a list of one unknown type, not a list whose elements can independently be any type.
 - The only universally safe value to add through most unbounded wildcard references is null.
 - Capture conversion gives the unknown type a temporary compiler identity.
 - Avoid wildcard return types when they force every caller to perform capture work.
 
-#### Generic varargs
+##### Generic varargs
 
 - Varargs are arrays, and arrays are reified while generic element types are erased.
 - The generated array can be polluted through an `Object[]` alias.
 - A safe generic-varargs method neither stores incompatible values nor exposes the array.
 - Prefer a collection parameter where varargs add little usability.
 
-#### Recursive and multiple bounds
+##### Recursive and multiple bounds
 
 - F-bounded polymorphism expresses “a type comparable to itself” and fluent self types.
 - Fluent base classes using unchecked self casts require a carefully sealed or documented hierarchy.
 - Intersection types can appear through inference even when they cannot be written as ordinary variable types.
 - Bound order affects erasure and therefore binary signatures.
 
-#### API compatibility
+##### API compatibility
 
 - Changing generic signatures can remain binary compatible while breaking source compilation.
 - Adding a bound can reject previously valid callers.
 - Returning a narrower generic type may expose implementation decisions.
 - Published libraries should test source, binary, and behavioral compatibility separately.
 
-## 8. Multithreading and Concurrency
+### 8. Multithreading and Concurrency
 
-### 8.1 Threads, Runnable, and Lifecycle
+#### 8.1 Threads, Runnable, and Lifecycle
 
 Thread = lightweight process, shares memory.
 // Way 1: extends Thread - not recommended, you cannot extend other class
@@ -2161,7 +2185,7 @@ Thread.yield(); // hint to scheduler - give chance to other thread
 t.setPriority(1-10); // 10 max
 t.setDaemon(true); // background thread - JVM exits if only daemon left - GC thread is daemon
 
-### 8.2 `synchronized` and `volatile`
+#### 8.2 `synchronized` and `volatile`
 
 - Race Condition: 2 threads access same variable same time -> wrong result.
 int count=0;
@@ -2196,7 +2220,7 @@ volatile boolean flag = false; // now always reads from main memory, visible to 
 | Blocks threads | Doesn't block |
 | Use for compound actions | Use for flags - volatile boolean stop |
 
-### 8.3 ExecutorService, Future, and CompletableFuture
+#### 8.3 ExecutorService, Future, and CompletableFuture
 
 // ExecutorService - thread pool - reuse threads
 
@@ -2247,7 +2271,7 @@ cf.exceptionally(ex -> { System.out.println(ex); return "default"; });
 CompletableFuture.allOf(cf1, cf2).join(); // wait all
 CompletableFuture.anyOf(cf1, cf2).join(); // wait any
 
-### 8.4 Concurrent Utilities and Locks
+#### 8.4 Concurrent Utilities and Locks
 
 - java.util.concurrent - thread safe collections + utils:
 ConcurrentHashMap - instead of synchronized HashMap
@@ -2283,7 +2307,7 @@ rwLock.writeLock().lock(); // only one write, blocks reads
 AtomicInteger atomicCount = new AtomicInteger(0);
 atomicCount.incrementAndGet(); // atomic - uses CAS - no lock needed - faster
 
-### 8.5 Race Conditions, Deadlock, and Liveness
+#### 8.5 Race Conditions, Deadlock, and Liveness
 
 - Deadlock: 2 threads wait for each other's lock forever.
 // Thread1: lock A -> needs B, Thread2: lock B -> needs A -> DEADLOCK
@@ -2317,7 +2341,7 @@ Interview Must for Stitch Guindy:
 3.  wait() vs sleep()? wait releases lock, sleep doesn't.
 4.  How CompletableFuture works internally? ForkJoinPool.
 
-### 8.6 Java Memory Model
+#### 8.6 Java Memory Model
 
 The Java Memory Model defines when one thread's writes become visible to another and which reorderings are legal.
 
@@ -2335,7 +2359,7 @@ Atomicity, visibility, and ordering are different:
 - `volatile int count` makes values visible but does not make `count++` atomic.
 - Use locking, `AtomicInteger`, or `LongAdder` depending on the operation and contention.
 
-### 8.7 Safe Publication
+#### 8.7 Safe Publication
 
 An object is safely published when other threads cannot observe a partially constructed state. Common mechanisms:
 
@@ -2347,7 +2371,7 @@ An object is safely published when other threads cannot observe a partially cons
 
 Do not allow `this` to escape from a constructor by registering listeners, starting threads, or calling external code.
 
-### 8.8 Executor Sizing and Backpressure
+#### 8.8 Executor Sizing and Backpressure
 
 - CPU-bound pools are commonly near the number of available processors.
 - I/O-bound workloads may use more threads, but downstream capacity remains the real limit.
@@ -2365,7 +2389,7 @@ ExecutorService executor = new ThreadPoolExecutor(
 
 Always shut down owned executors and await termination with a deadline.
 
-### 8.9 Cancellation and Timeouts
+#### 8.9 Cancellation and Timeouts
 
 Interruption is cooperative cancellation:
 
@@ -2381,7 +2405,7 @@ while (!Thread.currentThread().isInterrupted()) {
 - Apply timeouts at every blocking boundary and use an overall request deadline when possible.
 - Avoid `CompletableFuture.join()` on threads that must remain responsive unless completion is guaranteed.
 
-### 8.10 Concurrent Utilities
+#### 8.10 Concurrent Utilities
 
 - `CountDownLatch`: wait until a fixed number of events complete; one-shot.
 - `CyclicBarrier`: repeatedly wait until a group reaches a point.
@@ -2393,7 +2417,7 @@ while (!Thread.currentThread().isInterrupted()) {
 
 Prefer high-level utilities over manual `wait()`/`notify()`. If using conditions, always wait in a loop because wakeups may be spurious.
 
-### 8.11 Intrinsic Locks and Reentrancy
+#### 8.11 Intrinsic Locks and Reentrancy
 
 Every object has an intrinsic monitor. A synchronized instance method locks `this`; a synchronized static method locks the `Class` object.
 
@@ -2401,7 +2425,7 @@ Locks are reentrant: a thread holding a monitor can acquire it again. Reentrancy
 
 Keep critical sections small, avoid calling unknown external code while locked, and never lock publicly accessible objects such as string literals.
 
-### 8.12 Lock Ordering
+#### 8.12 Lock Ordering
 
 Deadlock prevention commonly uses a global order:
 
@@ -2420,7 +2444,7 @@ void transfer(Account left, Account right, Money amount) {
 
 Real code must also handle equal ordering keys. Alternatives include a tie lock, `tryLock` with timeout, or redesigning ownership to avoid multiple locks.
 
-### 8.13 ThreadLocal
+#### 8.13 ThreadLocal
 
 `ThreadLocal` gives each thread a separate value:
 
@@ -2433,7 +2457,7 @@ Modern `DateTimeFormatter` is already thread-safe, so this example does not need
 
 In thread pools, always call `remove()` in a `finally` block for request-scoped values. Otherwise values can leak across requests and retain objects as long as the worker thread lives.
 
-### 8.14 CompletableFuture Error Flow
+#### 8.14 CompletableFuture Error Flow
 
 ```java
 CompletableFuture<Result> result = loadUser(id)
@@ -2452,7 +2476,7 @@ CompletableFuture<Result> result = loadUser(id)
 
 Unless an executor is supplied, async stages commonly use the common pool. Choose executors based on blocking behavior and lifecycle ownership.
 
-### 8.15 Atomic Classes
+#### 8.15 Atomic Classes
 
 Atomic variables support lock-free compare-and-set loops:
 
@@ -2463,36 +2487,36 @@ state.updateAndGet(current -> current.next());
 
 The update function may run more than once due to retries, so it must be side-effect free. Multiple independent atomic fields do not make a multi-field invariant atomic; use one immutable state object or a lock.
 
-### 8.16 False Sharing and Contention
+#### 8.16 False Sharing and Contention
 
 Independent frequently written fields can occupy the same cache line, causing cores to invalidate each other's cache entries. This is false sharing.
 
 Do not attempt manual padding without profiling and JVM-specific evidence. Often the better fix is reducing shared mutation, partitioning state, batching updates, or using contention-friendly utilities.
 
-### 8.17 Detailed Notes for Concurrency Subsections
+#### 8.17 Chapter Review and Common Pitfalls
 
-#### Thread lifecycle
+##### Thread lifecycle
 
 - `Thread.State` exposes `NEW`, `RUNNABLE`, `BLOCKED`, `WAITING`, `TIMED_WAITING`, and `TERMINATED`; the JVM does not expose a separate `RUNNING` state.
 - A Java `RUNNABLE` thread may be executing or waiting in native operating-system activity.
 - A thread cannot be restarted after termination.
 - Uncaught exceptions terminate the thread and are sent to its uncaught-exception handler.
 
-#### Visibility and atomicity
+##### Visibility and atomicity
 
 - Reads/writes of references and most primitives are atomic, but a correct algorithm also needs visibility and ordering.
 - Volatile publication works only when readers obtain all related state through the appropriate happens-before path.
 - Immutable objects with final fields are easier to publish safely.
 - Data races make behavior timing-dependent even when individual reads and writes do not tear.
 
-#### Synchronization
+##### Synchronization
 
 - Intrinsic locks are released automatically when control exits the synchronized block, including by exception.
 - `wait` releases the monitor; `sleep` does not.
 - `notify` chooses one arbitrary waiter; `notifyAll` lets all waiters recheck their conditions.
 - Wait conditions belong in `while` loops and all condition state must be protected by the same monitor.
 
-#### Executors
+##### Executors
 
 - Separate task submission from execution policy.
 - A fixed pool with an unbounded queue has no effective maximum beyond its core size.
@@ -2500,7 +2524,7 @@ Do not attempt manual padding without profiling and JVM-specific evidence. Often
 - Name threads and attach uncaught-exception handling for diagnostics.
 - Periodic scheduled tasks differ: fixed rate targets a schedule, while fixed delay waits after completion.
 
-#### Futures
+##### Futures
 
 - `Future.get` wraps task failure in `ExecutionException`.
 - `CompletableFuture.join` wraps failure in unchecked `CompletionException`.
@@ -2508,37 +2532,37 @@ Do not attempt manual padding without profiling and JVM-specific evidence. Often
 - `allOf` does not return component values; retain the original futures and inspect them after completion.
 - A recovery stage can accidentally turn failure into success; make that policy explicit.
 
-#### Locks and atomics
+##### Locks and atomics
 
 - `ReentrantLock` supports interruptible acquisition, timed acquisition, fairness, and multiple conditions.
 - Fair locks can reduce starvation but often reduce throughput.
 - Always unlock in `finally` after successful acquisition.
 - Compare-and-set loops can encounter the ABA problem when a value changes away and back; stamped/versioned references can help.
 
-#### Deadlock and liveness
+##### Deadlock and liveness
 
 - Livelock means threads keep reacting but make no progress.
 - Starvation means a thread repeatedly loses access to needed resources.
 - Lock ordering prevents only cycles involving correctly ordered locks; callbacks and external resources can introduce hidden edges.
 - Capture thread dumps during the incident, not only after recovery.
 
-#### Virtual threads
+##### Virtual threads
 
 - Virtual threads improve concurrency for blocking workloads, not single-request speed.
 - Thread-local-heavy designs can consume significant memory when millions of virtual threads are created.
 - Avoid using thread pools to ration virtual threads; use semaphores to limit the scarce dependency.
 - Profile pinning, carrier utilization, downstream pools, and total memory under realistic load.
 
-#### Structured concurrency
+##### Structured concurrency
 
 - Structured concurrency treats related child tasks as one lifetime-bounded operation.
 - Failure or cancellation can propagate to sibling tasks instead of leaving orphan work.
 - Scoped task results should not escape their enclosing scope.
 - Check the target JDK's preview/final status before adopting the API.
 
-## 9. Java 8+ Features
+### 9. Java 8+ Features
 
-### 9.1 Functional Interfaces, Lambdas, and Method References
+#### 9.1 Functional Interfaces, Lambdas, and Method References
 
 - Functional Interface: Only 1 abstract method. Can have default/static. Marked with @FunctionalInterface
 @FunctionalInterface
@@ -2584,7 +2608,7 @@ Function<String,String> f4 = String::toUpperCase;
 Supplier<List<String>> s1 = () -> new ArrayList<>();
 Supplier<List<String>> s2 = ArrayList::new;
 
-### 9.2 Stream API
+#### 9.2 Stream API
 
 Stream = pipeline to process collection - no storage, lazy, can be parallel.
 List<Integer> list = Arrays.asList(1,2,3,4,5,6);
@@ -2651,7 +2675,7 @@ employees.stream()
 list.parallelStream().filter(...).collect(toList());
 // Don't use parallel if order matters or small data
 
-### 9.3 Optional
+#### 9.3 Optional
 
 // Problem
 String s = null; s.length(); // NPE
@@ -2674,7 +2698,7 @@ opt.filter(v -> v.length()>3).map(String::toUpperCase).orElse("NA");
 // Real use in service
 public Optional<Employee> findById(int id){ return Optional.ofNullable(db.get(id)); }
 
-### 9.4 Default and Static Interface Methods
+#### 9.4 Default and Static Interface Methods
 
 Why? To add new methods to interface without breaking old implementations.
 interface Payment {
@@ -2689,7 +2713,7 @@ interface Payment {
 Payment.info(); // call static
 - Diamond problem with default methods? If class implements 2 interfaces with same default method, must override.
 
-### 9.5 Date and Time API
+#### 9.5 Date and Time API
 
 // Old Date is mutable, not thread safe - don't use
 Date d = new Date(); Calendar c = Calendar.getInstance();
@@ -2710,7 +2734,7 @@ Duration dur = Duration.between(time1, time2); // time diff
 
 Instant instant = Instant.now(); // timestamp for machine - UTC
 
-### 9.6 Records, Sealed Classes, and Pattern Matching
+#### 9.6 Records, Sealed Classes, and Pattern Matching
 
 - Record - immutable data carrier - auto generates constructor, getters, equals, hashCode, toString
 // Old - 50 lines
@@ -2750,7 +2774,7 @@ String json = """
   }
   """;
 
-#### Common Interview Exercises
+##### Common Interview Exercises
 
 // Find duplicate numbers using stream
 list.stream().collect(groupingBy(Function.identity(), counting()))
@@ -2759,7 +2783,7 @@ list.stream().collect(groupingBy(Function.identity(), counting()))
 // 2nd highest salary
 employees.stream().map(e->e.salary).sorted(Comparator.reverseOrder()).skip(1).findFirst()
 
-### 9.7 Stream Semantics and Laziness
+#### 9.7 Stream Semantics and Laziness
 
 A stream can be consumed only once. Intermediate operations run only when a terminal operation requests elements.
 
@@ -2774,7 +2798,7 @@ Optional<String> first = names.stream()
 
 Because `findFirst` short-circuits, later elements may never be inspected. Avoid side effects in `map`, `filter`, and `peek`; they make behavior dependent on pipeline optimization and parallel execution.
 
-### 9.8 Primitive Streams
+#### 9.8 Primitive Streams
 
 Use `IntStream`, `LongStream`, or `DoubleStream` to avoid boxing overhead and access numeric operations:
 
@@ -2789,7 +2813,7 @@ int maximum = stats.getMax();
 
 Use `mapToObj` to return to object streams and `boxed()` when a collection of wrappers is required.
 
-### 9.9 Collector Details
+#### 9.9 Collector Details
 
 ```java
 Map<String, Long> countByDepartment = employees.stream()
@@ -2806,7 +2830,7 @@ Map<Integer, Employee> byId = employees.stream()
 
 `toMap` needs a merge function when duplicate keys are possible. For parallel collection, a collector's supplier, accumulator, combiner, and characteristics must obey associativity and isolation rules.
 
-### 9.10 Parallel Stream Cautions
+#### 9.10 Parallel Stream Cautions
 
 - Parallel streams normally share the common `ForkJoinPool`.
 - Blocking operations can starve unrelated work using the same pool.
@@ -2815,7 +2839,7 @@ Map<Integer, Employee> byId = employees.stream()
 - Results must be independent of scheduling; do not mutate shared non-thread-safe state.
 - Benchmark with realistic data before using `parallelStream`.
 
-### 9.11 Optional Design
+#### 9.11 Optional Design
 
 - Use `map` when the function returns a plain value and `flatMap` when it returns another `Optional`.
 - `orElse` evaluates its argument eagerly; `orElseGet` invokes its supplier only when empty.
@@ -2830,7 +2854,7 @@ String city = findUser(id)
     .orElse("Unknown");
 ```
 
-### 9.12 Time-Zone and Clock Guidance
+#### 9.12 Time-Zone and Clock Guidance
 
 - `Instant` is a point on the UTC timeline.
 - `LocalDateTime` has no zone and is ambiguous during daylight-saving transitions.
@@ -2839,7 +2863,7 @@ String city = findUser(id)
 - Persist timestamps as `Instant` or an offset-aware database type.
 - Inject `Clock` for deterministic tests.
 
-### 9.13 Functional Composition
+#### 9.13 Functional Composition
 
 ```java
 Predicate<Employee> active = Employee::active;
@@ -2855,7 +2879,7 @@ Function<String, String> normalize = trim.andThen(String::toLowerCase);
 - Comparators support `thenComparing`, `reversed`, and null ordering.
 - Unary and binary operators model operations whose result has the same type as operands.
 
-### 9.14 Stream Reduction Laws
+#### 9.14 Stream Reduction Laws
 
 For correct parallel reduction:
 
@@ -2871,7 +2895,7 @@ List<String> result = stream.collect(
     List::addAll);
 ```
 
-### 9.15 Date/Time Edge Cases
+#### 9.15 Date/Time Edge Cases
 
 Local times can be invalid or ambiguous during daylight-saving transitions:
 
@@ -2880,7 +2904,7 @@ Local times can be invalid or ambiguous during daylight-saving transitions:
 
 Construct with a `ZoneId` and decide how ambiguity should be resolved. Time-zone database rules change, so retain the original zone when future local scheduling matters.
 
-### 9.16 Resource Streams
+#### 9.16 Resource Streams
 
 Some streams wrap resources and must be closed:
 
@@ -2892,7 +2916,7 @@ try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
 
 Collection streams do not normally need closing. A terminal operation does not automatically close an I/O-backed stream.
 
-### 9.17 Collector Composition
+#### 9.17 Collector Composition
 
 Useful downstream collectors include:
 
@@ -2910,9 +2934,9 @@ Map<Boolean, Long> activeCounts = employees.stream()
 
 Modern collectors also include `filtering`, `flatMapping`, and `teeing`. Prefer readable intermediate steps when deeply nested collectors become difficult to maintain.
 
-### 9.18 Detailed Notes for Java 8+ Subsections
+#### 9.18 Chapter Review and Common Pitfalls
 
-#### Functional interfaces and lambdas
+##### Functional interfaces and lambdas
 
 - A functional interface has one abstract method after accounting for inherited `Object` methods.
 - Lambda `this` refers to the enclosing instance; anonymous-class `this` refers to the anonymous object.
@@ -2920,14 +2944,14 @@ Modern collectors also include `filtering`, `flatMapping`, and `teeing`. Prefer 
 - Lambda objects have no specified identity; do not synchronize on or compare them by reference.
 - Serializable lambdas are fragile across code changes and should not be used as durable data.
 
-#### Method references
+##### Method references
 
 - Method references still undergo overload resolution and type inference from the target functional interface.
 - `Type::instanceMethod` can mean an unbound receiver where the first function argument becomes the receiver.
 - Bound receiver expressions are evaluated when the method reference is created.
 - Prefer the lambda form when it communicates argument mapping more clearly.
 
-#### Streams
+##### Streams
 
 - Streams describe computation, not stored data.
 - Encounter order comes from the source and operations; `HashSet` does not supply stable encounter order.
@@ -2935,21 +2959,21 @@ Modern collectors also include `filtering`, `flatMapping`, and `teeing`. Prefer 
 - Short-circuiting may stop traversal early but is not guaranteed to inspect the minimum possible elements in every parallel pipeline.
 - Use `unordered()` only when semantics allow it and parallel optimization may benefit.
 
-#### Collectors
+##### Collectors
 
 - `groupingByConcurrent` is useful only when downstream accumulation and ordering requirements permit concurrent collection.
 - `toUnmodifiableList` rejects null and guarantees an unmodifiable result.
 - `collectingAndThen` applies a finishing transformation.
 - A custom collector must not reuse mutable containers across independent accumulation paths.
 
-#### Optional
+##### Optional
 
 - `Optional` itself should never be null.
 - `map` converts a null mapping result to empty; `flatMap` requires a non-null `Optional`.
 - `or` lazily supplies an alternative `Optional`.
 - Avoid storing `Optional` in entities or serializing it unless the framework explicitly supports the intended representation.
 
-#### Date and time
+##### Date and time
 
 - `Period` is date-based; `Duration` is time-based.
 - Adding one calendar day across a daylight-saving boundary may differ from adding 24 hours.
@@ -2957,7 +2981,7 @@ Modern collectors also include `filtering`, `flatMapping`, and `teeing`. Prefer 
 - Formatters are immutable and thread-safe.
 - Locale, chronology, and zone are distinct concerns.
 
-#### Records and sealed types
+##### Records and sealed types
 
 - A record's generated accessors return component values directly; copy mutable components if needed.
 - Records cannot declare additional instance fields.
@@ -2965,26 +2989,31 @@ Modern collectors also include `filtering`, `flatMapping`, and `teeing`. Prefer 
 - Sealed hierarchies define permitted direct subtypes, which need not all be nested.
 - A `non-sealed` subtype reopens extension beneath that point.
 
-#### Parallel streams
+##### Parallel streams
 
 - Splitting quality depends on the source; array-backed data partitions better than linked structures.
 - Stateful lambdas violate stream non-interference even when protected by synchronization.
 - Parallel collection may increase memory usage.
 - Server code should be cautious about shared common-pool interference and latency variability.
 
-## 10. JVM Internals
 
-### 10.1 JVM Architecture
+## Part III: JVM and Advanced Java
+
+Runtime architecture, garbage collection, reflection, serialization, I/O, and database connectivity.
+
+### 10. JVM Internals
+
+#### 10.1 JVM Architecture
 
 Java Code (.java) -> javac -> Bytecode (.class) -> JVM -> OS -> Hardware
 
-#### JVM Components
+##### JVM Components
 
 1. ClassLoader Subsystem
 2. Runtime Memory Areas (Heap, Stack, Method Area, PC Register, Native Stack)
 3. Execution Engine (Interpreter, JIT Compiler, GC)
 
-### 10.2 Class Loading
+#### 10.2 Class Loading
 
 3 types in hierarchy - Parent Delegation Model:
 Bootstrap ClassLoader - C++ - loads java.lang.*, rt.jar - top parent - null
@@ -3006,7 +3035,7 @@ class A {
 Class.forName("A"); // triggers loading + initialization
 - Parent Delegation: Child asks parent first to load - avoids duplicate loading and security - you cannot load your own java.lang.String
 
-### 10.3 Runtime Memory Areas
+#### 10.3 Runtime Memory Areas
 
 Stack: Per thread - methods, local vars, LIFO - fast
 Heap: All objects - Shared
@@ -3025,7 +3054,7 @@ Employee e = new Employee();
 // new Employee() object in Eden (Young Gen)
 // Employee class metadata in Metaspace
 
-### 10.4 Garbage Collection
+#### 10.4 Garbage Collection
 
 - What is GC? Automatic memory cleanup - deletes unreachable objects. You cannot force GC - System.gc() is only hint.
 
@@ -3060,7 +3089,7 @@ Full GC: Young + Old + Metaspace
 -XX:+UseG1GC // use G1
 -XX:MaxGCPauseMillis=200
 
-### 10.5 `equals()` and `hashCode()` Contract
+#### 10.5 `equals()` and `hashCode()` Contract
 
 - Contract from Object class - MUST follow, else collections break.
 class Employee {
@@ -3069,7 +3098,7 @@ class Employee {
   // Default from Object class - checks == - reference equality - WRONG for content
 }
 
-#### Contract Rules
+##### Contract Rules
 
 1.  If a.equals(b) is true, then a.hashCode() == b.hashCode() MUST be true.
 2.  If a.hashCode() == b.hashCode(), a.equals(b) can be false (collision allowed) but should try to minimize.
@@ -3099,7 +3128,7 @@ public int hashCode(){
 }
 - Ideal hashCode: Use same fields, distribute well, use Objects.hash() or 31 * result + field.hashCode() - 31 is prime and fast with shift.
 
-#### Interview Questions
+##### Interview Questions
 
 1.  Why String Pool possible? Because String immutable + hashCode cached.
 2.  What is GC Root? Stack refs, static, JNI.
@@ -3107,7 +3136,7 @@ public int hashCode(){
 4.  OutOfMemory vs StackOverflow?
 5.  What happens if hashCode not overridden?
 
-### 10.6 Bytecode Execution and JIT Compilation
+#### 10.6 Bytecode Execution and JIT Compilation
 
 The interpreter starts bytecode quickly. As methods become hot, tiered compilation uses C1 and C2 compilers to produce optimized native code.
 
@@ -3121,7 +3150,7 @@ Common optimizations include:
 
 If an assumption becomes false, the JVM can deoptimize compiled code and return execution to a less optimized tier. Warmup is why short ad-hoc benchmarks are misleading.
 
-### 10.7 Object Layout and Allocation
+#### 10.7 Object Layout and Allocation
 
 An object generally contains a header, instance fields, and alignment padding. Exact layout depends on JVM options and architecture.
 
@@ -3132,7 +3161,7 @@ An object generally contains a header, instance fields, and alignment padding. E
 
 Use JOL or a profiler when exact layout matters; do not estimate from field sizes alone.
 
-### 10.8 Native Memory
+#### 10.8 Native Memory
 
 Process memory includes more than the Java heap:
 
@@ -3150,7 +3179,7 @@ java -XX:NativeMemoryTracking=summary ...
 jcmd <pid> VM.native_memory summary
 ```
 
-### 10.9 Class-Loader Identity and Leaks
+#### 10.9 Class-Loader Identity and Leaks
 
 A class is identified by both its binary name and defining class loader. The same class file loaded by different class loaders produces incompatible runtime types.
 
@@ -3162,7 +3191,7 @@ Application servers and plugin systems can leak class loaders when long-lived ob
 - JDBC drivers or callbacks not deregistered.
 - Framework caches and listeners.
 
-### 10.10 GC Terminology and Selection
+#### 10.10 GC Terminology and Selection
 
 - **Live set:** objects reachable after collection.
 - **Allocation rate:** bytes allocated per unit time.
@@ -3176,7 +3205,7 @@ Minor, major, and full-GC terminology is collector-specific; always interpret ac
 -Xlog:gc*,safepoint:file=gc.log:time,uptime,level,tags
 ```
 
-### 10.11 Common JVM Errors
+#### 10.11 Common JVM Errors
 
 - `OutOfMemoryError: Java heap space`: heap cannot satisfy allocation after GC.
 - `OutOfMemoryError: Metaspace`: class metadata limit reached, often from excessive classes or loader leaks.
@@ -3184,19 +3213,19 @@ Minor, major, and full-GC terminology is collector-specific; always interpret ac
 - `StackOverflowError`: thread stack exhausted, usually by deep or infinite recursion.
 - `LinkageError`: incompatible or duplicate class definitions, versions, or loader constraints.
 
-### 10.12 Verification, Resolution, and Initialization
+#### 10.12 Verification, Resolution, and Initialization
 
 Verification checks bytecode structure, type safety, stack usage, and control flow before execution. Resolution converts symbolic references in the constant pool into direct runtime references and may occur lazily.
 
 Initialization executes static field assignments and static blocks in textual order after parent initialization. Interfaces initialize differently: initializing an interface does not automatically initialize all parent interfaces.
 
-### 10.13 Safepoints and Stop-the-World Pauses
+#### 10.13 Safepoints and Stop-the-World Pauses
 
 At safepoints, JVM threads reach states where the runtime can safely inspect or modify shared VM structures. GC is a common reason, but deoptimization, biased-lock revocation in older JDKs, class redefinition, and some diagnostics may also require safepoints.
 
 Pause time can include time for threads to reach a safepoint plus the operation itself. Unified safepoint logging helps distinguish these costs.
 
-### 10.14 Escape Analysis
+#### 10.14 Escape Analysis
 
 The JIT may determine that an object:
 
@@ -3206,7 +3235,7 @@ The JIT may determine that an object:
 
 This information can enable scalar replacement, stack-like optimization, and lock elimination. The Java specification still models normal heap objects; these are runtime optimizations and not guaranteed.
 
-### 10.15 Code Cache
+#### 10.15 Code Cache
 
 JIT-compiled native methods reside in the code cache. If it fills, compilation may stop and application performance can degrade.
 
@@ -3217,7 +3246,7 @@ jcmd <pid> Compiler.queue
 
 Investigate unusual compiler pressure, excessive generated classes, and JVM logs before changing code-cache flags.
 
-### 10.16 CDS and Startup
+#### 10.16 CDS and Startup
 
 Class Data Sharing stores preprocessed class metadata in an archive to improve startup and memory sharing:
 
@@ -3227,7 +3256,7 @@ Class Data Sharing stores preprocessed class metadata in an archive to improve s
 
 CDS mainly targets startup and footprint; validate archive compatibility when application classes or JDK versions change.
 
-### 10.17 Container Awareness
+#### 10.17 Container Awareness
 
 Modern JVMs detect container CPU and memory limits, but deployment settings still require care:
 
@@ -3237,9 +3266,9 @@ Modern JVMs detect container CPU and memory limits, but deployment settings stil
 - Container OOM termination may occur before Java can write a heap dump.
 - Monitor process resident memory as well as heap usage.
 
-### 10.18 Detailed Notes for JVM Subsections
+#### 10.18 Chapter Review and Common Pitfalls
 
-#### Class loading
+##### Class loading
 
 - Loading creates the runtime representation; linking verifies, prepares, and resolves; initialization executes class initialization logic.
 - Parent delegation is a convention implemented by standard loaders, not an unbreakable VM rule.
@@ -3247,21 +3276,21 @@ Modern JVMs detect container CPU and memory limits, but deployment settings stil
 - `Class.forName(name, false, loader)` can load without initialization.
 - Loader leaks retain every class and static field defined by that loader.
 
-#### Runtime data areas
+##### Runtime data areas
 
 - Each thread has a PC register and JVM stack; the heap and method area are shared.
 - Stack frames contain locals, an operand stack, and method linkage data.
 - Native stacks support JNI and runtime implementation work.
 - Direct buffers and native libraries consume memory outside the Java heap.
 
-#### Execution engine
+##### Execution engine
 
 - Hotness counters and profiling data guide tiered compilation.
 - Inlining enables many later optimizations but is limited by method size and polymorphism.
 - Deoptimization preserves correctness when speculative assumptions fail.
 - On-stack replacement can compile and enter optimized code in the middle of a long-running loop.
 
-#### Garbage collection
+##### Garbage collection
 
 - Reachability, not reference counting, determines liveness.
 - Cross-generation or cross-region references require remembered metadata.
@@ -3269,7 +3298,7 @@ Modern JVMs detect container CPU and memory limits, but deployment settings stil
 - Humongous/large-object allocation can follow collector-specific paths.
 - GC cannot reclaim objects still reachable through accidental caches, listeners, or thread locals.
 
-#### Collectors
+##### Collectors
 
 - Serial favors simplicity and small heaps.
 - Parallel GC favors throughput.
@@ -3277,21 +3306,21 @@ Modern JVMs detect container CPU and memory limits, but deployment settings stil
 - ZGC and Shenandoah perform most relocation work concurrently to reduce pauses.
 - Collector choice depends on latency targets, heap size, allocation rate, CPU budget, and JDK version.
 
-#### JIT and allocation
+##### JIT and allocation
 
 - Allocation can be cheap while initialization, retention, and later collection remain costly.
 - Escape analysis is sensitive to code shape and may change between runs or JDK versions.
 - Benchmark warmup should allow relevant methods to reach stable compilation tiers.
 - Debugging flags can alter optimization and timing.
 
-#### Native memory and containers
+##### Native memory and containers
 
 - Resident set size includes committed pages across heap and native areas.
 - A heap dump covers heap objects, not all native allocations.
 - Direct-buffer limits, stack size, metaspace, and code cache contribute to container pressure.
 - Kubernetes memory requests/limits and CPU throttling influence JVM ergonomics and latency.
 
-#### Diagnostics
+##### Diagnostics
 
 - Thread dumps show stack state but not necessarily which code consumed CPU over time.
 - Heap histograms show shallow instance counts/sizes, not retained ownership.
@@ -3299,9 +3328,9 @@ Modern JVMs detect container CPU and memory limits, but deployment settings stil
 - Diagnostic commands may pause or load the process; assess production impact.
 - Preserve the exact JDK version and flags with collected evidence.
 
-## 11. Advanced Core Java
+### 11. Advanced Core Java
 
-### 11.1 Serialization and Cloning
+#### 11.1 Serialization and Cloning
 
 - Serialization: Converting object to byte stream to save to file / send over network. Deserialization reverse.
 // Must implement Serializable - marker interface - no methods
@@ -3343,7 +3372,7 @@ Employee e2 = (Employee) e1.clone(); // shallow: e1.addr and e2.addr SAME object
 }
 Use copy constructor instead of clone - better practice.
 
-### 11.2 Reflection and Annotations
+#### 11.2 Reflection and Annotations
 
 - Reflection: Inspecting class at runtime - framework uses (Spring, Hibernate).
 Class<?> clazz = Employee.class; // or Class.forName("com.stitch.Employee") or e.getClass()
@@ -3380,7 +3409,7 @@ class Service {
 MyAnnotation ann = Service.class.getAnnotation(MyAnnotation.class);
 ann.value(); // Payment
 
-### 11.3 I/O, NIO, and File Handling
+#### 11.3 I/O, NIO, and File Handling
 
 | IO (java.io) | NIO (java.nio - New IO - Java 4) |
 | --- | --- |
@@ -3413,7 +3442,7 @@ FileChannel channel = FileChannel.open(path, StandardOpenOption.READ);
 ByteBuffer buffer = ByteBuffer.allocate(1024);
 channel.read(buffer);
 
-### 11.4 JDBC
+#### 11.4 JDBC
 
 5 steps - must memorize:
 // Step 1: Load Driver (Java 8+ auto loads, optional)
@@ -3458,7 +3487,7 @@ try{
   con.commit(); 
 } catch(Exception e){ con.rollback(); }
 
-### 11.5 Serialization Safety and Versioning
+#### 11.5 Serialization Safety and Versioning
 
 - `serialVersionUID` controls compatibility checks but does not guarantee semantic compatibility.
 - Adding fields is often compatible because missing fields receive defaults; changing field types or hierarchy can break compatibility.
@@ -3466,7 +3495,7 @@ try{
 - Prefer a stable schema format for long-lived storage and inter-service communication.
 - Never deserialize untrusted native Java streams without a strict object filter.
 
-### 11.6 NIO Buffers and Channels
+#### 11.6 NIO Buffers and Channels
 
 A buffer has `capacity`, `position`, and `limit`:
 
@@ -3482,7 +3511,7 @@ buffer.clear();                  // ready for another write
 
 `clear()` does not erase bytes. `compact()` preserves unread data and moves it to the beginning. Direct buffers can improve native I/O but use native memory and are more expensive to allocate.
 
-### 11.7 File-System Correctness
+#### 11.7 File-System Correctness
 
 - Specify charsets explicitly, usually `StandardCharsets.UTF_8`.
 - Use atomic move where supported for replace-style writes.
@@ -3491,7 +3520,7 @@ buffer.clear();                  // ready for another write
 - Decide how symbolic links should be handled for security-sensitive operations.
 - Use streaming APIs for large files rather than `readAllBytes`.
 
-### 11.8 JDBC Transactions and Pooling
+#### 11.8 JDBC Transactions and Pooling
 
 - Obtain connections from a `DataSource`, normally backed by a connection pool.
 - Keep transactions short; never wait for user input or remote network calls while holding one open.
@@ -3514,7 +3543,7 @@ try (Connection connection = dataSource.getConnection()) {
 }
 ```
 
-### 11.9 Reflection and Method Handles
+#### 11.9 Reflection and Method Handles
 
 Reflection is flexible but shifts errors to runtime and can conflict with module encapsulation. Cache validated metadata when repeatedly used.
 
@@ -3525,7 +3554,7 @@ Reflection is flexible but shifts errors to runtime and can conflict with module
 
 Use ordinary calls when types are known statically.
 
-### 11.10 ServiceLoader
+#### 11.10 ServiceLoader
 
 `ServiceLoader` supports provider discovery without hard-coding implementations:
 
@@ -3540,7 +3569,7 @@ for (PaymentProvider provider : providers) {
 
 Classpath providers use `META-INF/services/<interface-name>`; named modules use `uses` and `provides`.
 
-### 11.11 Memory-Mapped Files
+#### 11.11 Memory-Mapped Files
 
 `FileChannel.map` maps a file region into memory:
 
@@ -3554,7 +3583,7 @@ try (FileChannel channel = FileChannel.open(path, StandardOpenOption.READ)) {
 
 Memory mapping can help random access and large-file workloads, but page faults, address-space use, file locking behavior, and unmapping timing are platform-sensitive. Benchmark against buffered I/O.
 
-### 11.12 Asynchronous and Non-Blocking I/O
+#### 11.12 Asynchronous and Non-Blocking I/O
 
 - `AsynchronousFileChannel` completes file operations through futures or callbacks.
 - `Selector` multiplexes many non-blocking channels on one thread.
@@ -3563,7 +3592,7 @@ Memory mapping can help random access and large-file workloads, but page faults,
 
 Frameworks such as Netty encapsulate much of this complexity. Do not build a custom event loop unless requirements justify it.
 
-### 11.13 JDBC Isolation Levels
+#### 11.13 JDBC Isolation Levels
 
 Standard JDBC levels include:
 
@@ -3574,7 +3603,7 @@ Standard JDBC levels include:
 
 Databases implement multiversioning and locking differently. Verify actual semantics, deadlock behavior, and retry requirements for the chosen database.
 
-### 11.14 JDBC Batching and Generated Keys
+#### 11.14 JDBC Batching and Generated Keys
 
 ```java
 try (PreparedStatement statement = connection.prepareStatement(
@@ -3590,7 +3619,7 @@ try (PreparedStatement statement = connection.prepareStatement(
 
 Batch size affects memory, round trips, transaction duration, and database limits. `BatchUpdateException` can expose partial update counts. Generated-key support and batching behavior vary by driver.
 
-### 11.15 Annotation Processing
+#### 11.15 Annotation Processing
 
 Annotation processors run during compilation and can validate code or generate source/resources. Examples include mapper generators and immutable-value tools.
 
@@ -3600,7 +3629,7 @@ Annotation processors run during compilation and can validate code or generate s
 - Incremental builds depend on processors accurately declaring their behavior.
 - Generated code should remain inspectable and testable.
 
-### 11.16 Dynamic Proxies
+#### 11.16 Dynamic Proxies
 
 JDK proxies implement one or more interfaces and route calls through an `InvocationHandler`:
 
@@ -3616,9 +3645,9 @@ PaymentService proxy = (PaymentService) Proxy.newProxyInstance(
 
 Frameworks use proxies for transactions, security, and interception. Self-invocation may bypass proxy behavior, and checked exceptions from reflection require careful unwrapping.
 
-### 11.17 Detailed Notes for Advanced Core Subsections
+#### 11.17 Chapter Review and Common Pitfalls
 
-#### Serialization and cloning
+##### Serialization and cloning
 
 - Java native serialization captures an object graph, following non-transient instance references.
 - `transient` prevents default field serialization but custom methods can still write the value.
@@ -3626,7 +3655,7 @@ Frameworks use proxies for transactions, security, and interception. Self-invoca
 - `readResolve` and `writeReplace` alter serialized identity and require careful security review.
 - Copy constructors and factories communicate copy depth more clearly than `Cloneable`.
 
-#### Reflection
+##### Reflection
 
 - `getMethods` includes inherited public methods; `getDeclaredMethods` returns members declared directly regardless of visibility.
 - Reflective access can trigger class initialization depending on the operation.
@@ -3634,21 +3663,21 @@ Frameworks use proxies for transactions, security, and interception. Self-invoca
 - Repeated reflective lookup should be cached only with class-loader lifecycle in mind.
 - Invocation wraps target exceptions in `InvocationTargetException`.
 
-#### Annotations
+##### Annotations
 
 - Annotation elements are limited to primitives, strings, class literals, enums, annotations, and arrays of these.
 - Defaults are resolved when read, so changing a default can affect already compiled annotated code.
 - Runtime retention increases metadata available to frameworks but does not itself enforce semantics.
 - Annotation processors cannot modify existing source syntax directly; they normally validate or generate companion code.
 
-#### Classic I/O
+##### Classic I/O
 
 - Byte streams handle binary data; readers/writers handle characters through an encoding.
 - Buffering reduces expensive system calls but requires flush/close policy.
 - `DataInputStream` and `DataOutputStream` define binary primitive formats, not self-describing schemas.
 - `ObjectInputStream` must never be treated as a safe general-purpose parser for untrusted bytes.
 
-#### NIO
+##### NIO
 
 - `Path` represents a filesystem-specific path and may be relative.
 - `toRealPath` resolves existence and symbolic links; `normalize` is purely lexical.
@@ -3656,7 +3685,7 @@ Frameworks use proxies for transactions, security, and interception. Self-invoca
 - `WatchService` events can coalesce or overflow; rescan when correctness matters.
 - Channels can support position, transfer, gathering, scattering, and memory mapping.
 
-#### JDBC
+##### JDBC
 
 - JDBC indexes parameters and result columns from 1.
 - Prefer column labels over ordinal indexes when query shape changes often.
@@ -3664,7 +3693,7 @@ Frameworks use proxies for transactions, security, and interception. Self-invoca
 - `setObject` can be driver-dependent; use specific setters for important types.
 - Map SQL null with `wasNull` after primitive getters or use suitable object getters.
 
-#### Transactions
+##### Transactions
 
 - Autocommit commits each statement and can break multi-step invariants.
 - Rollback itself can fail; retain the primary exception and attach rollback failure.
@@ -3672,18 +3701,23 @@ Frameworks use proxies for transactions, security, and interception. Self-invoca
 - Deadlock victims and serialization failures often require bounded whole-transaction retry.
 - Never return a connection to the pool with unexpected transaction state.
 
-#### Native and dynamic APIs
+##### Native and dynamic APIs
 
 - Native calls can crash the process and bypass JVM memory safety.
 - Method-handle lookup objects encode access authority; do not expose privileged lookups.
 - Dynamic proxies need deliberate handling for `equals`, `hashCode`, and `toString`.
 - Service providers should avoid expensive work during discovery; initialize explicitly.
 
-## 12. SOLID Principles and Design Patterns
+
+## Part IV: Design, Build, Test, and Platform Evolution
+
+Design principles, build systems, automated testing, modules, and newer Java language/runtime features.
+
+### 12. SOLID Principles and Design Patterns
 
 SOLID is a set of design guidelines that makes object-oriented code easier to change, test, and maintain. These are principles, not strict rules; apply them when they reduce coupling and clarify responsibilities.
 
-### 12.1 Single Responsibility Principle (SRP)
+#### 12.1 Single Responsibility Principle (SRP)
 
 A class should have one reason to change. Keep business rules, persistence, formatting, and transport logic separate.
 
@@ -3705,7 +3739,7 @@ class InvoiceRepository {
 
 Do not create a single `InvoiceManager` that calculates totals, writes files, sends email, and updates the database.
 
-### 12.2 Open/Closed Principle (OCP)
+#### 12.2 Open/Closed Principle (OCP)
 
 Software entities should be open for extension but closed for modification. Prefer adding a new implementation over repeatedly changing a large `if/else` or `switch`.
 
@@ -3727,13 +3761,13 @@ class PremiumDiscount implements DiscountPolicy {
 }
 ```
 
-### 12.3 Liskov Substitution Principle (LSP)
+#### 12.3 Liskov Substitution Principle (LSP)
 
 A subtype must be usable wherever its parent type is expected without breaking behavior. An override must preserve the parent's contract, including accepted inputs, outputs, and exceptions.
 
 Bad example: a `ReadOnlyFile` extending `File` but throwing `UnsupportedOperationException` from a required `write()` method. Better: use separate `Readable` and `Writable` interfaces.
 
-### 12.4 Interface Segregation Principle (ISP)
+#### 12.4 Interface Segregation Principle (ISP)
 
 Clients should not depend on methods they do not use. Prefer small capability-based interfaces.
 
@@ -3745,7 +3779,7 @@ interface Faxable { void fax(); }
 
 A basic printer can implement only `Printable`; it does not need fake `scan()` or `fax()` methods.
 
-### 12.5 Dependency Inversion Principle (DIP)
+#### 12.5 Dependency Inversion Principle (DIP)
 
 High-level business logic should depend on abstractions, not concrete infrastructure.
 
@@ -3765,7 +3799,7 @@ class CheckoutService {
 
 Constructor injection makes dependencies explicit and simplifies testing.
 
-### 12.6 Common Design Patterns
+#### 12.6 Common Design Patterns
 
 - **Strategy:** Select interchangeable behavior at runtime, such as payment or discount policies.
 - **Factory Method:** Centralize object creation when construction varies by type.
@@ -3790,7 +3824,7 @@ enum ApplicationRegistry {
 }
 ```
 
-### 12.7 Pattern Selection and Trade-Offs
+#### 12.7 Pattern Selection and Trade-Offs
 
 Patterns are vocabulary for recurring designs, not goals by themselves.
 
@@ -3800,7 +3834,7 @@ Patterns are vocabulary for recurring designs, not goals by themselves.
 - A pattern that adds more indirection than useful flexibility is over-engineering.
 - Document ownership, thread-safety, error behavior, and extension points, not merely the pattern name.
 
-### 12.8 Additional Useful Patterns
+#### 12.8 Additional Useful Patterns
 
 - **Command:** represent an operation as an object; useful for queues, retries, and undo.
 - **State:** move state-specific behavior out of large conditionals.
@@ -3810,7 +3844,7 @@ Patterns are vocabulary for recurring designs, not goals by themselves.
 - **Repository:** isolate domain logic from persistence queries.
 - **Unit of Work:** coordinate a set of persistence changes in one transaction.
 
-### 12.9 Domain Modeling Guidelines
+#### 12.9 Domain Modeling Guidelines
 
 - Model behavior with the data it protects instead of creating only anemic getters/setters.
 - Use value objects for concepts such as `Money`, `EmailAddress`, and `DateRange`.
@@ -3830,7 +3864,7 @@ record Money(BigDecimal amount, Currency currency) {
 }
 ```
 
-### 12.10 Refactoring Toward SOLID
+#### 12.10 Refactoring Toward SOLID
 
 1. Protect current behavior with tests.
 2. Identify the reason a class changes.
@@ -3839,14 +3873,14 @@ record Money(BigDecimal amount, Currency currency) {
 5. Move condition-specific behavior behind a small interface only when multiple implementations are real.
 6. Re-run tests and evaluate whether coupling and readability improved.
 
-### 12.11 Coupling and Cohesion
+#### 12.11 Coupling and Cohesion
 
 - **Cohesion** measures how strongly a module's responsibilities belong together.
 - **Coupling** measures how strongly modules depend on one another.
 
 Aim for high cohesion and low, explicit coupling. Instability increases when many modules depend on concrete implementation details. Stable boundaries usually expose domain concepts and hide infrastructure.
 
-### 12.12 Ports and Adapters
+#### 12.12 Ports and Adapters
 
 Hexagonal architecture separates application policy from external mechanisms:
 
@@ -3857,14 +3891,14 @@ Hexagonal architecture separates application policy from external mechanisms:
 
 The domain should not need to know which framework invokes it. This improves tests and replaceability but can be excessive for small CRUD applications.
 
-### 12.13 CQRS and Event Sourcing
+#### 12.13 CQRS and Event Sourcing
 
 - CQRS separates command models from query models when their needs differ significantly.
 - Event sourcing stores state changes as an append-only event history and rebuilds current state by replay.
 
 Benefits can include auditability and independent read optimization. Costs include eventual consistency, schema evolution, replay complexity, idempotency, ordering, and operational tooling. They should address concrete requirements, not fashion.
 
-### 12.14 Idempotency
+#### 12.14 Idempotency
 
 An idempotent operation can be repeated without changing the intended result beyond the first successful application.
 
@@ -3874,7 +3908,7 @@ PaymentResult charge(String idempotencyKey, PaymentRequest request);
 
 Store the key, request identity, status, and result atomically. Detect a reused key with different request data. Idempotency is essential when clients may retry after uncertain network failures.
 
-### 12.15 Anti-Patterns
+#### 12.15 Anti-Patterns
 
 - **God object:** owns unrelated responsibilities and excessive state.
 - **Service locator:** hides dependencies behind global lookup.
@@ -3885,9 +3919,9 @@ Store the key, request identity, status, and result atomically. Detect a reused 
 
 Refactor only with tests and a clear expected improvement.
 
-### 12.16 Detailed Notes for Design Subsections
+#### 12.16 Chapter Review and Common Pitfalls
 
-#### SOLID
+##### SOLID
 
 - SRP concerns reasons to change, not an arbitrary limit of one method per class.
 - OCP is achieved through stable abstractions at actual variation points, not an interface for every class.
@@ -3895,21 +3929,21 @@ Refactor only with tests and a clear expected improvement.
 - ISP keeps clients from depending on irrelevant operations.
 - DIP directs policy toward abstractions owned near high-level needs.
 
-#### Strategy and factory
+##### Strategy and factory
 
 - Strategy separates a family of algorithms from the client choosing them.
 - Selection logic may live in configuration, a factory, or dependency injection.
 - Factories should validate construction and hide unstable implementation names.
 - Do not use factories where a direct constructor is clearer and no variation exists.
 
-#### Builder
+##### Builder
 
 - Builders are useful for many optional values, staged construction, and immutable results.
 - Validate cross-field invariants in `build`, while validating obviously invalid individual values early.
 - Reusing a mutable builder can accidentally carry state between builds.
 - A builder is not automatically thread-safe.
 
-#### Adapter, decorator, facade, and proxy
+##### Adapter, decorator, facade, and proxy
 
 - Adapter changes an interface.
 - Decorator preserves an interface while adding behavior.
@@ -3917,35 +3951,35 @@ Refactor only with tests and a clear expected improvement.
 - Proxy controls access to another object.
 - A wrapper may combine roles, but naming and tests should clarify its contract.
 
-#### Observer and eventing
+##### Observer and eventing
 
 - Define event ordering, delivery guarantees, error isolation, and unsubscription.
 - Synchronous observers extend the publisher's latency and transaction scope.
 - Asynchronous observers introduce eventual consistency and retry concerns.
 - Listener registration is a common source of memory leaks.
 
-#### Repository and unit of work
+##### Repository and unit of work
 
 - Repositories express domain-oriented retrieval and persistence, not every possible database query.
 - Query-specific read models may bypass aggregate repositories when appropriate.
 - A unit of work tracks and commits related changes atomically.
 - Do not expose lazy persistence proxies beyond the owning session without a clear lifecycle.
 
-#### Architecture
+##### Architecture
 
 - Boundaries should follow business capability and change patterns, not diagrams alone.
 - Dependency direction can be enforced with modules, package rules, and architecture tests.
 - Distributed services add network failure, deployment, observability, and consistency costs.
 - A modular monolith often provides strong boundaries with lower operational complexity.
 
-#### Idempotency and messaging
+##### Idempotency and messaging
 
 - Consumer idempotency requires durable deduplication in the same consistency boundary as the side effect.
 - Message acknowledgement should occur only after required durable effects.
 - Ordering is usually scoped to a partition/key, not an entire system.
 - An outbox pattern can atomically record domain changes and messages in one database transaction.
 
-#### Design review
+##### Design review
 
 - State the invariant, owner, lifecycle, and failure model.
 - Identify what may vary and what must remain stable.
@@ -3953,11 +3987,11 @@ Refactor only with tests and a clear expected improvement.
 - Prefer reversible decisions when requirements are uncertain.
 - Remove abstractions that no longer pay for their complexity.
 
-## 13. Maven and Gradle
+### 13. Maven and Gradle
 
 Build tools compile source, run tests, resolve dependencies, package artifacts, and execute plugins consistently in local and CI environments.
 
-### 13.1 Standard Project Layout
+#### 13.1 Standard Project Layout
 
 ```text
 project/
@@ -3971,7 +4005,7 @@ project/
       resources/
 ```
 
-### 13.2 Maven
+#### 13.2 Maven
 
 Maven uses `pom.xml` and a lifecycle:
 
@@ -4002,7 +4036,7 @@ Dependency scopes:
 
 Use `<dependencyManagement>` to control versions shared by child modules. It declares versions but does not add dependencies by itself.
 
-### 13.3 Gradle
+#### 13.3 Gradle
 
 Gradle uses Groovy or Kotlin build scripts and a task graph.
 
@@ -4042,7 +4076,7 @@ gradlew tasks
 
 Always use the Maven Wrapper (`mvnw`) or Gradle Wrapper (`gradlew`) in a project so developers and CI use the intended tool version.
 
-### 13.4 Dependency Guidance
+#### 13.4 Dependency Guidance
 
 - Pin or centrally manage dependency and plugin versions.
 - Inspect transitive dependencies before exclusions.
@@ -4051,7 +4085,7 @@ Always use the Maven Wrapper (`mvnw`) or Gradle Wrapper (`gradlew`) in a project
 - Run vulnerability scanning in CI and update dependencies deliberately.
 - Produce reproducible builds: the same source and inputs should create equivalent output.
 
-### 13.5 Maven Project Details
+#### 13.5 Maven Project Details
 
 The effective POM combines the project POM, parent POMs, active profiles, and Maven defaults:
 
@@ -4066,7 +4100,7 @@ mvn help:active-profiles
 - Multi-module reactors build modules in dependency order.
 - A BOM imported in `dependencyManagement` aligns a family of library versions.
 
-### 13.6 Gradle Project Details
+#### 13.6 Gradle Project Details
 
 - The configuration phase creates the task graph; the execution phase runs selected tasks.
 - Avoid doing network or expensive file work during configuration.
@@ -4075,7 +4109,7 @@ mvn help:active-profiles
 - The build cache reuses outputs when task inputs match.
 - The configuration cache reuses configuration state when plugins and scripts are compatible.
 
-### 13.7 Dependency Resolution
+#### 13.7 Dependency Resolution
 
 When versions conflict, understand the build tool's selection strategy rather than adding exclusions blindly.
 
@@ -4089,7 +4123,7 @@ gradlew dependencyInsight --dependency jackson-databind
 - Maven's nearest-definition behavior and Gradle's conflict resolution differ.
 - Test the packaged artifact, not only IDE execution, to catch missing runtime dependencies.
 
-### 13.8 Build Reproducibility and CI
+#### 13.8 Build Reproducibility and CI
 
 - Use toolchains to select the compiler independently of the JVM running the build.
 - Pin plugin versions.
@@ -4099,7 +4133,7 @@ gradlew dependencyInsight --dependency jackson-databind
 - Publish checksums and software bills of materials for released artifacts.
 - Run clean builds periodically so stale output cannot hide missing generated files.
 
-### 13.9 Maven Lifecycle Customization
+#### 13.9 Maven Lifecycle Customization
 
 Plugins bind goals to lifecycle phases:
 
@@ -4119,7 +4153,7 @@ Plugins bind goals to lifecycle phases:
 - Put shared plugin versions under `pluginManagement`.
 - Profiles should model genuine environment variation, not make ordinary builds unpredictable.
 
-### 13.10 Gradle Task Modeling
+#### 13.10 Gradle Task Modeling
 
 A well-modeled task declares:
 
@@ -4129,7 +4163,7 @@ A well-modeled task declares:
 
 Correct declarations enable incremental execution and caching. Avoid reading undeclared environment state inside task actions.
 
-### 13.11 Multi-Module Design
+#### 13.11 Multi-Module Design
 
 - Split modules by independently understandable responsibility, not arbitrary technical layers.
 - Keep dependency direction acyclic.
@@ -4137,7 +4171,7 @@ Correct declarations enable incremental execution and caching. Avoid reading und
 - Publish stable interfaces separately only when versioning or reuse requires it.
 - Use composite builds or included builds when independent projects need coordinated local development.
 
-### 13.12 Dependency Hygiene
+#### 13.12 Dependency Hygiene
 
 - Declare a dependency where source directly uses it.
 - In Gradle, distinguish `api` from `implementation` to control transitive compile exposure.
@@ -4146,7 +4180,7 @@ Correct declarations enable incremental execution and caching. Avoid reading und
 - Review licenses and provenance in addition to vulnerabilities.
 - Remove dependencies that duplicate small JDK capabilities only after considering compatibility and maintenance.
 
-### 13.13 Release Artifacts
+#### 13.13 Release Artifacts
 
 A release process may produce:
 
@@ -4158,16 +4192,16 @@ A release process may produce:
 
 Verify the exact artifact by launching it in a clean environment. Tag source only after build inputs and artifact identity are known.
 
-### 13.14 Detailed Notes for Build Subsections
+#### 13.14 Chapter Review and Common Pitfalls
 
-#### Build lifecycle
+##### Build lifecycle
 
 - A clean build should derive outputs solely from declared source, configuration, dependencies, and tools.
 - Build phases/tasks should fail immediately on compiler, test, static-analysis, or packaging errors.
 - Generated code and resources need explicit inputs and outputs.
 - Local IDE builds must not be the only way to produce a release artifact.
 
-#### Maven
+##### Maven
 
 - Maven coordinates are `groupId:artifactId:packaging:classifier:version`.
 - Parent inheritance and dependency management solve different problems.
@@ -4175,7 +4209,7 @@ Verify the exact artifact by launching it in a clean environment. Tag source onl
 - Exclusions are per dependency path and can hide runtime requirements.
 - `mvn verify` is generally a stronger CI target than `package`.
 
-#### Gradle
+##### Gradle
 
 - `implementation` hides a dependency from consumers' compile classpaths; `api` exposes it.
 - Task avoidance APIs such as `register` prevent eager configuration.
@@ -4183,51 +4217,51 @@ Verify the exact artifact by launching it in a clean environment. Tag source onl
 - Dependency locking records selected versions, while verification checks artifact identity.
 - Custom tasks should use typed properties and lazy providers.
 
-#### Repositories
+##### Repositories
 
 - Repository order can affect which artifact is selected.
 - Avoid broad content access to plugin or snapshot repositories.
 - Internal mirrors can improve control and availability but need integrity and retention policies.
 - Never silently fall back to an unexpected public repository for private coordinates.
 
-#### Versioning
+##### Versioning
 
 - Semantic versioning communicates intent but does not automatically ensure compatibility.
 - Snapshot/dynamic versions make historical builds difficult to reproduce.
 - Dependency convergence prevents incompatible versions of shared libraries from entering one runtime.
 - A BOM aligns versions but does not prove those versions are compatible with application usage.
 
-#### Plugins
+##### Plugins
 
 - Build plugins execute trusted code with developer/CI permissions.
 - Pin versions and review configuration changes.
 - Keep plugin dependencies separate from application runtime dependencies.
 - Generated reports should not leak environment secrets.
 
-#### Toolchains
+##### Toolchains
 
 - Toolchains allow compilation/testing on designated JDKs independent of the launcher JDK.
 - Cross-compilation needs `--release`, not only a matching compiler.
 - Test on every supported runtime where behavior or linkage can differ.
 - Record vendor and architecture for platform-specific failures.
 
-#### Multi-module builds
+##### Multi-module builds
 
 - Avoid cyclic module dependencies.
 - A module should publish a coherent API and hide internals.
 - Shared test fixtures should be intentional dependencies, not copied source.
 - Build only affected modules when optimization is correct, but retain full clean verification before release.
 
-#### CI and releases
+##### CI and releases
 
 - CI should start from a controlled environment and preserve test reports and diagnostics.
 - Release artifacts should be immutable once published.
 - Sign and checksum artifacts where distribution requires trust verification.
 - Releasing should be automated, auditable, and repeatable without a developer workstation.
 
-## 14. Testing with JUnit and Mockito
+### 14. Testing with JUnit and Mockito
 
-### 14.1 Testing Pyramid
+#### 14.1 Testing Pyramid
 
 - **Unit tests:** Fast and isolated; test one unit of behavior.
 - **Integration tests:** Verify database, network, filesystem, framework, or multiple components together.
@@ -4235,7 +4269,7 @@ Verify the exact artifact by launching it in a clean environment. Tag source onl
 
 Good tests follow Arrange-Act-Assert and describe behavior rather than implementation.
 
-### 14.2 JUnit 5
+#### 14.2 JUnit 5
 
 ```java
 class CalculatorTest {
@@ -4284,7 +4318,7 @@ Test lifecycle:
 - `@Nested`: organize related scenarios.
 - `@Disabled`: temporarily skip a test; include a reason.
 
-### 14.3 Mockito
+#### 14.3 Mockito
 
 Mock external collaborators, not simple value objects or the class under test.
 
@@ -4318,7 +4352,7 @@ Key methods:
 
 Avoid over-mocking, verifying every private detail, sleeping in tests, shared mutable fixtures, and tests that depend on execution order.
 
-### 14.4 Test Quality
+#### 14.4 Test Quality
 
 - Test normal cases, boundaries, invalid input, and failure paths.
 - Keep tests deterministic: control clocks, randomness, threads, and external services.
@@ -4327,7 +4361,7 @@ Avoid over-mocking, verifying every private detail, sleeping in tests, shared mu
 - Prefer realistic integration tests for SQL queries and serialization contracts.
 - Treat coverage as a signal, not the goal; assertions must verify meaningful behavior.
 
-### 14.5 Test Doubles
+#### 14.5 Test Doubles
 
 - **Dummy:** passed but never used.
 - **Stub:** returns prepared data.
@@ -4337,7 +4371,7 @@ Avoid over-mocking, verifying every private detail, sleeping in tests, shared mu
 
 Prefer state-based assertions when observable output is enough. Interaction verification is valuable at true boundaries, but excessive verification tightly couples tests to implementation.
 
-### 14.6 Test Data and Fixtures
+#### 14.6 Test Data and Fixtures
 
 - Use builders or object mothers for readable valid defaults.
 - Override only values relevant to the scenario.
@@ -4352,7 +4386,7 @@ Order order = OrderBuilder.anOrder()
     .build();
 ```
 
-### 14.7 Integration Testing
+#### 14.7 Integration Testing
 
 Integration tests should exercise real boundaries where compatibility matters:
 
@@ -4364,7 +4398,7 @@ Integration tests should exercise real boundaries where compatibility matters:
 
 Use isolated databases or containers with deterministic setup and cleanup. Do not replace every integration boundary with mocks and then assume integration works.
 
-### 14.8 Asynchronous and Concurrent Tests
+#### 14.8 Asynchronous and Concurrent Tests
 
 - Prefer latches, futures, and await utilities over `Thread.sleep`.
 - Set an upper timeout so failures terminate.
@@ -4372,7 +4406,7 @@ Use isolated databases or containers with deterministic setup and cleanup. Do no
 - Repeat stress scenarios when testing race-prone code.
 - A test that passes once does not prove absence of a data race; design using happens-before rules.
 
-### 14.9 Mutation, Property, and Contract Testing
+#### 14.9 Mutation, Property, and Contract Testing
 
 - Mutation testing changes operators or branches to check whether tests detect behavior changes.
 - Property-based testing generates many inputs and verifies invariants.
@@ -4381,7 +4415,7 @@ Use isolated databases or containers with deterministic setup and cleanup. Do no
 
 Use these techniques to supplement clear example tests, not replace them.
 
-### 14.10 Test Naming and Structure
+#### 14.10 Test Naming and Structure
 
 Names should communicate scenario and expected behavior:
 
@@ -4392,7 +4426,7 @@ void rejectsTransferWhenBalanceIsInsufficient() {}
 
 One test may contain multiple assertions about one behavior. Avoid forcing one assertion per test when it fragments the scenario, but use `assertAll` when seeing all mismatches together helps.
 
-### 14.11 Boundary-Value Analysis
+#### 14.11 Boundary-Value Analysis
 
 For a range, test:
 
@@ -4405,7 +4439,7 @@ For a range, test:
 
 Equivalence partitioning reduces redundant cases by selecting representatives from inputs expected to behave alike.
 
-### 14.12 Database Test Transactions
+#### 14.12 Database Test Transactions
 
 Rolling each test back is convenient but can hide:
 
@@ -4416,7 +4450,7 @@ Rolling each test back is convenient but can hide:
 
 Use rollback tests for speed where appropriate, plus explicit commit-based integration tests for transaction semantics.
 
-### 14.13 Mockito Strictness
+#### 14.13 Mockito Strictness
 
 Strict stubbing detects unused setup and argument mismatch. Prefer:
 
@@ -4427,7 +4461,7 @@ Strict stubbing detects unused setup and argument mismatch. Prefer:
 
 Do not mix raw values and matchers in the same invocation unless the raw values use `eq`.
 
-### 14.14 Flaky-Test Diagnosis
+#### 14.14 Flaky-Test Diagnosis
 
 Common causes:
 
@@ -4441,27 +4475,27 @@ Common causes:
 
 Quarantine may temporarily protect the build, but assign ownership and fix or remove the test promptly. Re-running until green conceals reliability problems.
 
-### 14.15 Testing Exceptions and Logs
+#### 14.15 Testing Exceptions and Logs
 
 Assert exception type, stable message elements, and structured fields rather than full stack traces. Test logs only when logging is contractual, such as audit events; otherwise assert the behavior that caused the log.
 
-### 14.16 Detailed Notes for Testing Subsections
+#### 14.16 Chapter Review and Common Pitfalls
 
-#### Test scope
+##### Test scope
 
 - A unit is a behavioral boundary, not necessarily one class.
 - Integration tests verify collaboration with real infrastructure or framework behavior.
 - End-to-end tests provide confidence in deployment wiring but give slower, less localized feedback.
 - Contract and component tests can cover useful middle layers.
 
-#### JUnit lifecycle
+##### JUnit lifecycle
 
 - JUnit creates a new test instance per method by default.
 - Per-class lifecycle allows non-static `@BeforeAll` but introduces shared mutable-state risk.
 - Extension ordering and inheritance can affect setup behavior.
 - Test discovery relies on the configured engine and build plugin.
 
-#### Assertions
+##### Assertions
 
 - Put expected before actual for conventional failure messages.
 - Supply assertion-message lambdas for expensive diagnostic construction.
@@ -4469,14 +4503,14 @@ Assert exception type, stable message elements, and structured fields rather tha
 - Assert collections with order-sensitive or order-insensitive semantics intentionally.
 - Avoid assertions that merely repeat the implementation.
 
-#### Parameterized and dynamic tests
+##### Parameterized and dynamic tests
 
 - Parameterized tests share one behavior over data cases.
 - Give argument sets readable names.
 - Method sources can provide complex objects and boundary cases.
 - Dynamic tests are generated at runtime but have different lifecycle behavior from ordinary test methods.
 
-#### Mockito
+##### Mockito
 
 - Stubbing should model collaborator contracts, including relevant failures.
 - `verifyNoMoreInteractions` can make harmless implementation changes brittle; use only when extra calls are behaviorally wrong.
@@ -4484,28 +4518,28 @@ Assert exception type, stable message elements, and structured fields rather tha
 - Deep stubs hide design problems and should be exceptional.
 - Do not mock value types, collections, or code whose real implementation is simpler.
 
-#### Time and randomness
+##### Time and randomness
 
 - Inject `Clock`, ID generators, and random sources.
 - Test daylight-saving boundaries when local scheduling matters.
 - Avoid freezing global system time through invasive static hooks when a normal dependency works.
 - Property tests should persist minimal failing examples and seeds.
 
-#### Concurrency tests
+##### Concurrency tests
 
 - Coordinate starting points with barriers/latches to increase race exposure.
 - Assert both safety properties and eventual completion.
 - Use timeouts as upper bounds, not sleep as scheduling.
 - Run stress tests separately from fast deterministic unit suites.
 
-#### Integration tests
+##### Integration tests
 
 - Schema migrations should run the same way as production.
 - Clean data through isolated schemas, transactions, or disposable environments.
 - Stub only systems outside the integration boundary.
 - Verify failure modes such as unavailable services, constraint violations, and timeout behavior.
 
-#### Test maintainability
+##### Test maintainability
 
 - A failing test should explain what behavior regressed.
 - Keep setup close to the relevant scenario.
@@ -4513,7 +4547,7 @@ Assert exception type, stable message elements, and structured fields rather tha
 - Review test-code quality with production-code standards.
 - Track suite duration and flaky rates as engineering metrics.
 
-## 15. Java Platform Module System
+### 15. Java Platform Module System
 
 JPMS was introduced in Java 9. A module explicitly declares what it requires and which packages it exposes.
 
@@ -4548,7 +4582,7 @@ Important directives:
 
 The classpath is permissive and unnamed; the module path provides stronger encapsulation and reliable dependency declarations. A package should belong to only one named module; split packages cause problems.
 
-### 15.1 Named, Automatic, and Unnamed Modules
+#### 15.1 Named, Automatic, and Unnamed Modules
 
 - A **named module** contains `module-info.class`.
 - An **automatic module** is a non-modular JAR placed on the module path; its name comes from `Automatic-Module-Name` or the JAR file.
@@ -4556,7 +4590,7 @@ The classpath is permissive and unnamed; the module path provides stronger encap
 
 Automatic modules ease migration but expose all packages and have less reliable naming unless the manifest defines it.
 
-### 15.2 Strong Encapsulation
+#### 15.2 Strong Encapsulation
 
 `exports` allows normal compiled access to public types. `opens` allows deep reflection. They solve different problems:
 
@@ -4569,7 +4603,7 @@ module com.example.orders {
 
 Qualified exports or opens grant access only to listed modules. Avoid opening every package merely to silence reflective-access failures.
 
-### 15.3 Compilation and Execution
+#### 15.3 Compilation and Execution
 
 ```text
 javac -d out --module-source-path src -m com.example.app
@@ -4586,7 +4620,7 @@ jlink --module-path out --add-modules com.example.app --output runtime
 
 `jlink` creates a custom runtime image containing selected modules and dependencies. It is useful for controlled deployments but must be rebuilt for security updates.
 
-### 15.4 Migration Strategy
+#### 15.4 Migration Strategy
 
 1. Remove dependencies on JDK internals.
 2. Give published JARs stable automatic module names.
@@ -4595,7 +4629,7 @@ jlink --module-path out --add-modules com.example.app --output runtime
 5. Open only packages that frameworks need for reflection.
 6. Test both modular packaging and runtime launch commands.
 
-### 15.5 Services Across Modules
+#### 15.5 Services Across Modules
 
 The service-provider API decouples consumers from implementations:
 
@@ -4613,7 +4647,7 @@ module com.example.card {
 
 Providers need an accessible provider constructor or provider method according to service-loading rules. Handle absent, duplicate, or misconfigured providers explicitly.
 
-### 15.6 Reflection and Modules
+#### 15.6 Reflection and Modules
 
 Named modules strongly encapsulate non-exported packages. Reflective frameworks may require:
 
@@ -4623,13 +4657,13 @@ Named modules strongly encapsulate non-exported packages. Reflective frameworks 
 
 `--add-opens` and `--add-exports` are deployment escape hatches, not ideal permanent library contracts.
 
-### 15.7 Module Layers
+#### 15.7 Module Layers
 
 A `ModuleLayer` can load additional module configurations at runtime, useful for plugin systems. Each layer can use distinct class loaders and service providers.
 
 This flexibility adds class-identity, lifecycle, and unloading complexity. Define strict plugin APIs and prevent plugins from depending on application internals.
 
-### 15.8 Modular JARs and Multi-Release JARs
+#### 15.8 Modular JARs and Multi-Release JARs
 
 - A modular JAR contains `module-info.class`.
 - A multi-release JAR can provide version-specific classes under `META-INF/versions/<n>`.
@@ -4638,75 +4672,75 @@ This flexibility adds class-identity, lifecycle, and unloading complexity. Defin
 
 Test every supported runtime because only that runtime selects its relevant entries.
 
-### 15.9 JPMS Limitations and Decisions
+#### 15.9 JPMS Limitations and Decisions
 
 JPMS provides reliable configuration and strong encapsulation, but it is not a security sandbox. It does not replace process isolation, authorization, or OS permissions.
 
 Libraries should consider module compatibility even when applications remain on the classpath. Applications should adopt modules when encapsulation, custom runtime images, or explicit dependency graphs justify migration cost.
 
-### 15.10 Detailed Notes for Module Subsections
+#### 15.10 Chapter Review and Common Pitfalls
 
-#### Descriptors
+##### Descriptors
 
 - `module-info.java` compiles to `module-info.class` at the JAR root.
 - A module name should be globally stable and normally follow reverse-domain naming.
 - Modules contain packages; the same package cannot be split across named modules in one configuration.
 - The descriptor is part of the module's public compatibility surface.
 
-#### Readability and accessibility
+##### Readability and accessibility
 
 - Readability determines whether one module can refer to another.
 - Accessibility additionally requires the package to be exported and the member to be public.
 - `requires static` is mandatory at compile time but optional at runtime.
 - `requires transitive` exposes a dependency through the requiring module's API graph.
 
-#### Exports and opens
+##### Exports and opens
 
 - `exports` supports normal access to public members.
 - `opens` supports deep reflection into package members.
 - `open module` opens all packages and weakens encapsulation broadly.
 - Qualified exports/opens reduce exposure to selected friend modules but increase coupling.
 
-#### Services
+##### Services
 
 - Service APIs should be stable, small, and independent of provider implementation.
 - Provider discovery is lazy, and instantiation failures can occur during iteration.
 - Providers can be reloaded, but lifecycle and duplicate handling remain application responsibilities.
 - Module layers allow different provider sets in plugin scenarios.
 
-#### Automatic modules
+##### Automatic modules
 
 - A filename-derived automatic module name can change when artifact naming changes.
 - Libraries can publish `Automatic-Module-Name` before becoming fully modular.
 - Automatic modules read all named modules and export all packages, easing migration but reducing encapsulation.
 - Two automatic modules with derived-name collisions cannot coexist.
 
-#### Migration
+##### Migration
 
 - `jdeps --jdk-internals` identifies dependencies on unsupported JDK internals.
 - Split packages often require package relocation or module restructuring.
 - Reflection failures should be fixed with targeted openness rather than broad command-line access.
 - Test libraries on both classpath and module path when supporting both deployment styles.
 
-#### Runtime images
+##### Runtime images
 
 - `jlink` resolves modules into a platform-specific runtime image.
 - Images can exclude unused modules, man pages, headers, and debug information.
 - An image is not portable across operating systems or architectures.
 - Rebuild images when the JDK receives security updates.
 
-#### Compatibility
+##### Compatibility
 
 - Removing an exported package or required module can break consumers.
 - Adding a `uses` declaration is usually internal; changing provided services can alter discovery.
 - Module boundaries do not prevent reflection into explicitly opened packages.
 - JPMS strengthens encapsulation but does not enforce semantic versioning.
 
-## 16. Modern Java Features
+### 16. Modern Java Features
 
 Use the project's configured Java version before adopting a feature. Long-term-support releases commonly used in production include Java 8, 11, 17, 21, and 25.
 
-### 16.1 `var` for Local Variables (Java 10)
+#### 16.1 `var` for Local Variables (Java 10)
 
 ```java
 var names = new ArrayList<String>(); // inferred as ArrayList<String>
@@ -4715,11 +4749,11 @@ var total = calculateTotal();        // inferred from return type
 
 `var` is not dynamic typing. The compiler still assigns one static type. It works only for local variables with an initializer, enhanced-for variables, and lambda parameters. Avoid it when the inferred type is unclear.
 
-### 16.2 Helpful NullPointerExceptions (Java 14)
+#### 16.2 Helpful NullPointerExceptions (Java 14)
 
 The JVM can identify which part of a chained expression was null. This improves diagnostics but does not replace input validation or null-safe design.
 
-### 16.3 Records (Final in Java 16)
+#### 16.3 Records (Final in Java 16)
 
 Records model transparent, shallowly immutable data:
 
@@ -4742,7 +4776,7 @@ record Team(List<String> members) {
 }
 ```
 
-### 16.4 Sealed Types (Final in Java 17)
+#### 16.4 Sealed Types (Final in Java 17)
 
 ```java
 sealed interface Result permits Success, Failure {}
@@ -4752,7 +4786,7 @@ record Failure(String message) implements Result {}
 
 Permitted implementations must be `final`, `sealed`, or `non-sealed`. Sealed hierarchies work well with exhaustive pattern matching.
 
-### 16.5 Pattern Matching for `switch` (Final in Java 21)
+#### 16.5 Pattern Matching for `switch` (Final in Java 21)
 
 ```java
 static String describe(Object value) {
@@ -4768,7 +4802,7 @@ static String describe(Object value) {
 
 Case order matters when one pattern dominates another. Exhaustive switches over enums and sealed hierarchies reduce missing-case bugs.
 
-### 16.6 Virtual Threads (Final in Java 21)
+#### 16.6 Virtual Threads (Final in Java 21)
 
 Virtual threads are lightweight JVM-managed threads suited to high-throughput tasks that spend much of their time blocked on I/O.
 
@@ -4788,7 +4822,7 @@ Guidance:
 - Avoid long blocking operations while holding `synchronized` monitors, especially on older JDK 21 implementations where pinning can reduce scalability.
 - Measure before and after migration.
 
-### 16.7 Sequenced Collections (Java 21)
+#### 16.7 Sequenced Collections (Java 21)
 
 `SequencedCollection`, `SequencedSet`, and `SequencedMap` provide a uniform API for ordered collections:
 
@@ -4800,7 +4834,7 @@ String first = names.getFirst();
 SequencedCollection<String> reversed = names.reversed();
 ```
 
-### 16.8 Switch Expressions and Text Blocks
+#### 16.8 Switch Expressions and Text Blocks
 
 ```java
 String label = switch (status) {
@@ -4819,7 +4853,7 @@ String json = """
 
 Switch expressions must produce a value for every possible path. Use `yield` from a multi-statement case block.
 
-### 16.9 Feature Lifecycle and Compatibility
+#### 16.9 Feature Lifecycle and Compatibility
 
 Java features may be permanent, preview, incubating, or experimental:
 
@@ -4835,7 +4869,7 @@ javac --release 17 Main.java
 
 `--release` constrains language features, bytecode level, and documented JDK APIs together. Setting only `-source` and `-target` does not prevent accidental use of newer library APIs.
 
-### 16.10 Pattern Matching Design
+#### 16.10 Pattern Matching Design
 
 Patterns improve data-oriented branching but should not replace polymorphism automatically.
 
@@ -4844,7 +4878,7 @@ Patterns improve data-oriented branching but should not replace polymorphism aut
 - Guarded cases should appear before broader cases.
 - Exhaustive sealed-type switches make new subtype additions visible as compile errors.
 
-### 16.11 Virtual Threads vs Reactive Programming
+#### 16.11 Virtual Threads vs Reactive Programming
 
 Virtual threads simplify high-concurrency blocking code and stack traces. Reactive APIs remain useful when:
 
@@ -4854,7 +4888,7 @@ Virtual threads simplify high-concurrency blocking code and stack traces. Reacti
 
 Do not mix models casually. Blocking inside an event-loop thread can stall many requests, while wrapping every trivial call in a virtual thread adds complexity without benefit.
 
-### 16.12 New Collection and Stream Conveniences
+#### 16.12 New Collection and Stream Conveniences
 
 Modern JDKs include useful additions such as:
 
@@ -4866,7 +4900,7 @@ Modern JDKs include useful additions such as:
 
 Check the exact minimum JDK version before adopting an API in a shared library.
 
-### 16.13 Record Patterns
+#### 16.13 Record Patterns
 
 Record patterns destructure record values and can nest:
 
@@ -4884,7 +4918,7 @@ static int startX(Object value) {
 
 They work well with sealed algebraic data models. Keep patterns readable; deeply nested destructuring can obscure intent.
 
-### 16.14 Unnamed Variables and Patterns
+#### 16.14 Unnamed Variables and Patterns
 
 Modern Java permits `_` in selected declarations where a value is intentionally unused:
 
@@ -4898,7 +4932,7 @@ try {
 
 This documents intentional non-use and prevents accidental access. Confirm the project's Java version and preview/final status before use.
 
-### 16.15 Foreign Function and Memory API
+#### 16.15 Foreign Function and Memory API
 
 The Foreign Function and Memory API provides supported access to native libraries and off-heap memory without much of JNI's boilerplate.
 
@@ -4911,13 +4945,13 @@ Core concepts include:
 
 Native interaction remains unsafe at the system boundary: signatures, ownership, thread rules, and library compatibility must be exact.
 
-### 16.16 Scoped Values
+#### 16.16 Scoped Values
 
 Scoped values provide immutable context inherited through a bounded dynamic scope and are designed as a safer alternative to many `ThreadLocal` use cases, especially with virtual threads.
 
 They are useful for request metadata such as trace identity, not for mutable global state. Check whether the feature is preview or final in the exact target JDK and compile accordingly.
 
-### 16.17 API Evolution Awareness
+#### 16.17 API Evolution Awareness
 
 When using modern APIs:
 
@@ -4928,16 +4962,16 @@ When using modern APIs:
 - Use multi-release JARs only when one artifact truly needs optimized per-JDK implementations.
 - Document fallback behavior for older supported runtimes.
 
-### 16.18 Detailed Notes for Modern Java Subsections
+#### 16.18 Chapter Review and Common Pitfalls
 
-#### `var`
+##### `var`
 
 - `var` infers the static type of an initializer; it does not create a union, dynamic, or structural type.
 - It cannot initialize from bare null, omit an initializer, or declare fields/method parameters.
 - Use it when the initializer makes the type obvious or the explicit generic type is distracting.
 - Avoid it when interface abstraction is important or the initializer hides the meaningful type.
 
-#### Switch expressions and patterns
+##### Switch expressions and patterns
 
 - Arrow cases do not fall through.
 - Colon-style groups remain available and require `yield` when a block returns a value.
@@ -4945,7 +4979,7 @@ When using modern APIs:
 - Exhaustiveness can be affected when separately compiled sealed hierarchies evolve.
 - A `case null` is explicit; otherwise switching on null normally throws `NullPointerException`.
 
-#### Records
+##### Records
 
 - The canonical constructor has parameters corresponding to every component.
 - A compact constructor implicitly assigns validated/rebound parameters after its body.
@@ -4953,14 +4987,14 @@ When using modern APIs:
 - Arrays as components use reference equality unless custom methods override generated behavior.
 - Records are best for transparent data, not types whose representation must remain hidden.
 
-#### Sealed types
+##### Sealed types
 
 - Permitted subtypes must be accessible in the same module, or same package in the unnamed module.
 - Sealing documents and enforces a closed extension boundary.
 - Framework proxying/subclassing may conflict with final or sealed models.
 - A sealed interface can model alternatives without forcing shared implementation state.
 
-#### Virtual threads
+##### Virtual threads
 
 - Virtual-thread scheduling is managed by the JDK over a smaller set of carrier threads.
 - Blocking JDK operations generally unmount the virtual thread when possible.
@@ -4968,37 +5002,42 @@ When using modern APIs:
 - Use thread dumps and JFR events designed for large virtual-thread populations.
 - Preserve request deadlines and resource limits despite cheap thread creation.
 
-#### Sequenced collections
+##### Sequenced collections
 
 - Sequenced APIs unify first, last, and reversed views across ordered collection types.
 - A reversed view is generally backed by the original collection.
 - Mutation support follows the underlying collection.
 - Encounter order remains a semantic choice; do not impose it where a set/map intentionally has none.
 
-#### Foreign memory
+##### Foreign memory
 
 - An arena defines lifetime and thread-access rules for its segments.
 - Bounds and temporal checks improve safety over raw native pointers but cannot validate external native code.
 - Downcalls must match ABI layouts and calling conventions.
 - Native resources should be scoped as narrowly as possible.
 
-#### Preview features
+##### Preview features
 
 - Source using preview features must compile with the matching release and `--enable-preview`.
 - Runtime execution also requires `--enable-preview`.
 - Class files using preview features are intentionally tied to that feature release.
 - Do not publish stable libraries whose public contracts depend on preview APIs without a clear compatibility policy.
 
-#### Migration
+##### Migration
 
 - Upgrade libraries, build plugins, agents, and observability tools before changing production JDKs.
 - Run tests with illegal-access, locale, time-zone, TLS, and GC differences in mind.
 - Compare performance after warmup under equivalent resource limits.
 - Review removed/deprecated APIs and changed defaults in release notes.
 
-## 17. Production Java Best Practices
 
-### 17.1 API and Object Design
+## Part V: Production, Security, and Operations
+
+Reliability, secure coding, observability, performance engineering, troubleshooting, and revision guidance.
+
+### 17. Production Java Best Practices
+
+#### 17.1 API and Object Design
 
 - Validate constructor and method inputs at boundaries.
 - Prefer immutable objects for values shared across threads.
@@ -5009,7 +5048,7 @@ When using modern APIs:
 - Avoid exposing mutable internal collections; return `List.copyOf(...)` or an unmodifiable view as appropriate.
 - Program to interfaces when multiple implementations or test doubles are expected.
 
-### 17.2 Resource Management
+#### 17.2 Resource Management
 
 Use try-with-resources for every `AutoCloseable`:
 
@@ -5022,7 +5061,7 @@ try (InputStream input = Files.newInputStream(path);
 
 Resources close in reverse declaration order. If both the body and `close()` fail, the close error becomes a suppressed exception accessible through `getSuppressed()`.
 
-### 17.3 Exception Design
+#### 17.3 Exception Design
 
 - Catch exceptions only where you can recover, add useful context, or translate them at an abstraction boundary.
 - Preserve the cause: `throw new OrderException("Cannot load order " + id, cause);`
@@ -5040,7 +5079,7 @@ try {
 }
 ```
 
-### 17.4 Money, Time, and Equality
+#### 17.4 Money, Time, and Equality
 
 - Use `BigDecimal` for decimal money calculations, not `double`.
 - Construct decimals from strings: `new BigDecimal("0.10")`, not `new BigDecimal(0.10)`.
@@ -5049,7 +5088,7 @@ try {
 - Use `LocalDate` for date-only values such as birthdays.
 - Keep fields used by `equals()` and `hashCode()` stable while an object is a `HashMap` key or `HashSet` member.
 
-### 17.5 Logging
+#### 17.5 Logging
 
 - Use a logging facade and parameterized messages: `log.info("Created order {}", orderId);`
 - Choose levels consistently: `ERROR`, `WARN`, `INFO`, `DEBUG`, `TRACE`.
@@ -5057,7 +5096,7 @@ try {
 - Do not log passwords, tokens, session IDs, full payment data, or sensitive personal information.
 - Avoid expensive string construction when debug logging is disabled.
 
-### 17.6 Code Quality
+#### 17.6 Code Quality
 
 - Keep methods focused and names intention-revealing.
 - Remove dead code instead of commenting it out; version control keeps history.
@@ -5065,7 +5104,7 @@ try {
 - Treat unchecked warnings as issues to understand, not noise to suppress broadly.
 - Benchmark performance-sensitive alternatives instead of relying on intuition.
 
-### 17.7 Configuration Management
+#### 17.7 Configuration Management
 
 - Define configuration precedence explicitly.
 - Validate required configuration at startup and fail with actionable messages.
@@ -5074,7 +5113,7 @@ try {
 - Record non-sensitive effective configuration for diagnostics.
 - Avoid runtime mutation unless the application has a designed reload mechanism.
 
-### 17.8 HTTP and Remote Calls
+#### 17.8 HTTP and Remote Calls
 
 - Set connect, request, and read timeouts.
 - Propagate deadlines rather than resetting a full timeout at each hop.
@@ -5084,7 +5123,7 @@ try {
 - Validate response status, content type, and size before deserialization.
 - Add circuit breaking only with clear fallback and recovery semantics.
 
-### 17.9 Serialization and API Evolution
+#### 17.9 Serialization and API Evolution
 
 - Treat wire formats as public contracts.
 - Add fields compatibly and define behavior for unknown or missing fields.
@@ -5093,7 +5132,7 @@ try {
 - Use explicit date/time, number, enum, and null representations.
 - Test backward and forward compatibility with stored examples.
 
-### 17.10 Database Practices
+#### 17.10 Database Practices
 
 - Enforce critical invariants with database constraints as well as application validation.
 - Index according to measured query plans.
@@ -5102,7 +5141,7 @@ try {
 - Use optimistic locking when concurrent updates must not silently overwrite each other.
 - Design migrations to coexist with old and new application versions during rolling deployment.
 
-### 17.11 Graceful Lifecycle
+#### 17.11 Graceful Lifecycle
 
 On shutdown:
 
@@ -5116,7 +5155,7 @@ On shutdown:
 
 Shutdown hooks are best-effort and must finish quickly; abrupt process or host failure can bypass them.
 
-### 17.12 Resilience Patterns
+#### 17.12 Resilience Patterns
 
 - **Timeout:** bounds waiting time.
 - **Retry:** repeats selected transient operations.
@@ -5126,7 +5165,7 @@ Shutdown hooks are best-effort and must finish quickly; abrupt process or host f
 
 These patterns interact. For example, retries multiply downstream load and must fit inside the overall deadline. Monitor attempts separately from logical requests.
 
-### 17.13 Caching
+#### 17.13 Caching
 
 A cache design must define:
 
@@ -5140,7 +5179,7 @@ A cache design must define:
 
 Prevent cache stampedes with request coalescing, jittered expiry, or controlled refresh. Never use an unbounded map as a production cache.
 
-### 17.14 Pagination
+#### 17.14 Pagination
 
 Offset pagination is simple but can become slow and unstable as data changes. Keyset/cursor pagination uses the last ordered key:
 
@@ -5154,7 +5193,7 @@ LIMIT ?
 
 Ordering must be deterministic and include a unique tie-breaker. Treat cursors as opaque API values and validate them.
 
-### 17.15 Deployment Compatibility
+#### 17.15 Deployment Compatibility
 
 Rolling deployments temporarily run multiple versions:
 
@@ -5166,7 +5205,7 @@ Rolling deployments temporarily run multiple versions:
 
 Backward compatibility is an operational requirement, not only an API concern.
 
-### 17.16 Health Checks
+#### 17.16 Health Checks
 
 - **Liveness:** whether the process should be restarted.
 - **Readiness:** whether it can currently receive traffic.
@@ -5174,7 +5213,7 @@ Backward compatibility is an operational requirement, not only an API concern.
 
 Do not make liveness depend on every downstream service, or a remote outage can trigger restart loops. Readiness checks should be fast, bounded, and tied to actual ability to serve.
 
-### 17.17 Data Ownership and Privacy
+#### 17.17 Data Ownership and Privacy
 
 - Collect only data required for a defined purpose.
 - Define retention and deletion behavior.
@@ -5183,23 +5222,23 @@ Do not make liveness depend on every downstream service, or a remote outage can 
 - Restrict access and record appropriate audits.
 - Avoid copying production personal data into development and test environments.
 
-### 17.18 Detailed Notes for Production Subsections
+#### 17.18 Chapter Review and Common Pitfalls
 
-#### API design
+##### API design
 
 - Define nullability, ownership, thread safety, error behavior, complexity, and versioning expectations.
 - Prefer domain-specific parameter objects over long groups of primitive arguments.
 - Make invalid states unrepresentable where practical.
 - Keep public surfaces small because every exposed type and behavior becomes a compatibility obligation.
 
-#### Resource management
+##### Resource management
 
 - Ownership should be singular and documented: the creator, receiver, or container closes the resource.
 - Set bounds on pools, queues, buffers, and caches.
 - A leaked file descriptor or connection can fail the process before heap memory is exhausted.
 - Shutdown paths need deadlines and must tolerate already-closed resources.
 
-#### Configuration
+##### Configuration
 
 - Parse configuration once into immutable typed values.
 - Distinguish missing, blank, malformed, and forbidden values.
@@ -5207,7 +5246,7 @@ Do not make liveness depend on every downstream service, or a remote outage can 
 - Secrets should be redacted in effective-configuration output and error messages.
 - Dynamic reload requires atomic snapshots and explicit behavior for invalid updates.
 
-#### Remote calls
+##### Remote calls
 
 - Connect timeout, response timeout, and total deadline represent different boundaries.
 - Connection pools require acquisition timeouts and stale-connection handling.
@@ -5215,7 +5254,7 @@ Do not make liveness depend on every downstream service, or a remote outage can 
 - Idempotency keys must be scoped to the intended operation and retained long enough for retry windows.
 - Propagate correlation and trace context without trusting incoming identity claims.
 
-#### Database access
+##### Database access
 
 - Pool size should reflect database concurrency capacity and application transaction duration.
 - Always bind values; identifiers require allowlisting because placeholders normally bind data, not SQL syntax.
@@ -5223,7 +5262,7 @@ Do not make liveness depend on every downstream service, or a remote outage can 
 - Optimistic locking detects lost updates through a version field or equivalent predicate.
 - Migration rollback may be impossible after destructive data changes; design forward recovery.
 
-#### Logging
+##### Logging
 
 - Structured logging preserves fields for search and aggregation.
 - High-cardinality values belong in logs/traces, not metric labels.
@@ -5231,7 +5270,7 @@ Do not make liveness depend on every downstream service, or a remote outage can 
 - Log at the layer with sufficient context and responsibility for handling.
 - Audit logs need stronger integrity, retention, and access controls than diagnostic logs.
 
-#### Caching
+##### Caching
 
 - Decide whether cache failure should fail open, fail closed, or bypass.
 - Negative caching can protect a source but may delay visibility of newly created data.
@@ -5239,7 +5278,7 @@ Do not make liveness depend on every downstream service, or a remote outage can 
 - Cache invalidation should be tied to authoritative state changes where possible.
 - Measure hit rate, load latency, eviction, and entry weight.
 
-#### Deployment and lifecycle
+##### Deployment and lifecycle
 
 - Readiness should turn false before draining starts.
 - Background work needs ownership during rolling replacement.
@@ -5247,7 +5286,7 @@ Do not make liveness depend on every downstream service, or a remote outage can 
 - Startup should not accept traffic until mandatory initialization completes.
 - Crash recovery must not rely on shutdown hooks having run.
 
-#### Reliability
+##### Reliability
 
 - Define retryable error classes explicitly.
 - Use jitter to prevent synchronized retry storms.
@@ -5255,7 +5294,7 @@ Do not make liveness depend on every downstream service, or a remote outage can 
 - Bulkheads should align with dependencies or workload classes that can fail independently.
 - Test overload and recovery, not only steady successful load.
 
-#### Operations
+##### Operations
 
 - Runbooks should state symptoms, dashboards, safe mitigations, escalation, and recovery checks.
 - Alerts need an owner and actionable response.
@@ -5263,9 +5302,9 @@ Do not make liveness depend on every downstream service, or a remote outage can 
 - Backups are incomplete until restoration is tested.
 - Post-incident actions should address contributing system conditions, not only individual mistakes.
 
-## 18. Security Essentials
+### 18. Security Essentials
 
-### 18.1 Input and Output
+#### 18.1 Input and Output
 
 - Validate input by type, length, range, format, and business rules.
 - Prefer allowlists over blocklists.
@@ -5273,7 +5312,7 @@ Do not make liveness depend on every downstream service, or a remote outage can 
 - Do not build SQL with string concatenation. Use `PreparedStatement`.
 - Avoid executing OS commands with untrusted input. If unavoidable, pass fixed arguments without invoking a shell.
 
-### 18.2 Secrets and Cryptography
+#### 18.2 Secrets and Cryptography
 
 - Keep secrets outside source control in a secret manager or protected environment configuration.
 - Never invent cryptographic algorithms.
@@ -5289,13 +5328,13 @@ random.nextBytes(token);
 String encoded = Base64.getUrlEncoder().withoutPadding().encodeToString(token);
 ```
 
-### 18.3 Deserialization and Reflection
+#### 18.3 Deserialization and Reflection
 
 Native Java deserialization of untrusted bytes is dangerous because gadget chains can execute code. Prefer constrained formats such as JSON with explicit target types. If legacy serialization is unavoidable, use JDK object input filters and a strict allowlist.
 
 Reflection can bypass normal access controls and type checks. Restrict reflected classes and members; do not derive class names or method names directly from untrusted input.
 
-### 18.4 Files and Paths
+#### 18.4 Files and Paths
 
 Prevent path traversal by resolving against an expected root and verifying the normalized result:
 
@@ -5309,7 +5348,7 @@ if (!target.startsWith(root)) {
 
 Also limit upload size, verify content rather than trusting extensions, generate server-side file names, and apply least-privilege file permissions.
 
-### 18.5 Dependency and Runtime Security
+#### 18.5 Dependency and Runtime Security
 
 - Use supported JDK releases and apply security updates.
 - Scan direct and transitive dependencies.
@@ -5318,7 +5357,7 @@ Also limit upload size, verify content rather than trusting extensions, generate
 - Use TLS certificate validation; never install a trust-all manager in production.
 - Set connection, read, request, and transaction timeouts.
 
-### 18.6 Authentication and Authorization
+#### 18.6 Authentication and Authorization
 
 - Authentication establishes identity; authorization decides permitted actions.
 - Check authorization on every protected server-side operation.
@@ -5328,7 +5367,7 @@ Also limit upload size, verify content rather than trusting extensions, generate
 - Rotate signing and encryption keys through a controlled process.
 - Validate token issuer, audience, signature, expiry, and allowed algorithms.
 
-### 18.7 Denial-of-Service Defenses
+#### 18.7 Denial-of-Service Defenses
 
 Set limits for:
 
@@ -5342,7 +5381,7 @@ Set limits for:
 
 Resource exhaustion is possible even when input is syntactically valid.
 
-### 18.8 XML, JSON, and Template Safety
+#### 18.8 XML, JSON, and Template Safety
 
 - Disable external XML entities and DTD processing unless explicitly required and safely configured.
 - Bind JSON to expected types; avoid unrestricted polymorphic type loading.
@@ -5350,7 +5389,7 @@ Resource exhaustion is possible even when input is syntactically valid.
 - Escape untrusted data according to the output context.
 - Do not evaluate user-controlled template expressions or scripts.
 
-### 18.9 Logging and Audit Security
+#### 18.9 Logging and Audit Security
 
 - Sanitize carriage returns and line feeds when untrusted values enter line-oriented logs.
 - Mask secrets and minimize personal data.
@@ -5358,7 +5397,7 @@ Resource exhaustion is possible even when input is syntactically valid.
 - Record security-relevant events with actor, action, target, outcome, and correlation ID.
 - Avoid revealing account existence or internal implementation details in user-facing errors.
 
-### 18.10 Security Review Checklist
+#### 18.10 Security Review Checklist
 
 1. Identify assets, trust boundaries, entry points, and attacker capabilities.
 2. Trace untrusted data to SQL, files, commands, templates, logs, and deserializers.
@@ -5368,7 +5407,7 @@ Resource exhaustion is possible even when input is syntactically valid.
 6. Test with realistic malicious inputs.
 7. Ensure monitoring can detect abuse without exposing sensitive data.
 
-### 18.11 Threat Modeling with STRIDE
+#### 18.11 Threat Modeling with STRIDE
 
 STRIDE prompts review of:
 
@@ -5381,7 +5420,7 @@ STRIDE prompts review of:
 
 Apply these questions to each trust boundary and data flow, then prioritize mitigations by likelihood and impact.
 
-### 18.12 SSRF Protection
+#### 18.12 SSRF Protection
 
 Server-side request forgery occurs when attackers influence server-initiated destinations.
 
@@ -5394,7 +5433,7 @@ Server-side request forgery occurs when attackers influence server-initiated des
 
 Simple string prefix checks are insufficient URL validation.
 
-### 18.13 Session and Cookie Security
+#### 18.13 Session and Cookie Security
 
 - Generate session identifiers with cryptographic randomness.
 - Regenerate sessions after authentication or privilege changes.
@@ -5405,7 +5444,7 @@ Simple string prefix checks are insufficient URL validation.
 
 Do not store sensitive authorization state solely in client-modifiable cookies.
 
-### 18.14 Key and Certificate Management
+#### 18.14 Key and Certificate Management
 
 - Separate encryption keys by purpose and environment.
 - Define rotation and revocation procedures.
@@ -5416,7 +5455,7 @@ Do not store sensitive authorization state solely in client-modifiable cookies.
 
 Algorithm choice is only one part of cryptographic security; lifecycle and access control are equally important.
 
-### 18.15 Supply-Chain Security
+#### 18.15 Supply-Chain Security
 
 - Pin trusted repositories and verify artifacts.
 - Protect CI credentials and release signing keys.
@@ -5426,7 +5465,7 @@ Algorithm choice is only one part of cryptographic security; lifecycle and acces
 - Rebuild and redeploy after base-image or JDK security updates.
 - Review source provenance for newly introduced dependencies.
 
-### 18.16 Security Testing
+#### 18.16 Security Testing
 
 Combine:
 
@@ -5439,23 +5478,23 @@ Combine:
 
 No single scanner proves an application secure.
 
-### 18.17 Detailed Notes for Security Subsections
+#### 18.17 Chapter Review and Common Pitfalls
 
-#### Validation
+##### Validation
 
 - Validate at the trust boundary and again where domain invariants require it.
 - Canonicalize only when the destination semantics are understood.
 - Length limits should apply before expensive parsing or normalization.
 - Validation does not replace context-specific output encoding.
 
-#### SQL and command injection
+##### SQL and command injection
 
 - Prepared statements protect data parameters but not dynamically concatenated table names or sort directions.
 - Allowlist dynamic identifiers and map user choices to fixed server-side tokens.
 - `ProcessBuilder` avoids shell parsing when given an argument list, but invoked programs may interpret arguments dangerously.
 - Apply least-privilege database and OS accounts to reduce impact.
 
-#### Authentication
+##### Authentication
 
 - Use established identity protocols and libraries.
 - Multi-factor authentication reduces risk from stolen passwords.
@@ -5463,7 +5502,7 @@ No single scanner proves an application secure.
 - Credential recovery is an authentication path and needs equivalent protection.
 - Re-authenticate for high-risk actions when appropriate.
 
-#### Authorization
+##### Authorization
 
 - Enforce object-level access, not only endpoint roles.
 - Central policy can improve consistency, but decisions still need complete resource context.
@@ -5471,7 +5510,7 @@ No single scanner proves an application secure.
 - Cache authorization only with correct invalidation and policy versioning.
 - Administrative access should be narrowly scoped and audited.
 
-#### Cryptography
+##### Cryptography
 
 - Encryption without authentication permits undetected modification.
 - Nonces/IVs must follow algorithm requirements and often must never repeat under one key.
@@ -5479,7 +5518,7 @@ No single scanner proves an application secure.
 - Compare secrets with constant-time APIs where timing exposure matters.
 - Separate key encryption, data encryption, signing, and password-hashing purposes.
 
-#### Web security
+##### Web security
 
 - Content Security Policy reduces XSS impact but does not replace encoding.
 - CORS controls browser access, not server-to-server authorization.
@@ -5487,7 +5526,7 @@ No single scanner proves an application secure.
 - Redirect destinations should be allowlisted to prevent open redirects.
 - Security headers should be tested with actual application flows.
 
-#### Parsing and deserialization
+##### Parsing and deserialization
 
 - Limit bytes before decompression and objects after parsing.
 - Reject unexpected fields where strict contracts and security require it.
@@ -5495,7 +5534,7 @@ No single scanner proves an application secure.
 - Archive extraction must prevent path traversal, excessive expansion, and special-file creation.
 - XML parsers require explicit secure configuration.
 
-#### SSRF and files
+##### SSRF and files
 
 - Validate every redirect target, not only the first URL.
 - DNS resolution can change between validation and connection; network-level egress control is stronger.
@@ -5503,7 +5542,7 @@ No single scanner proves an application secure.
 - Create upload files with restrictive permissions and unpredictable server-generated names.
 - Scan or isolate content according to how it will later be processed.
 
-#### Supply chain
+##### Supply chain
 
 - Locking a version does not prove its integrity; use verification/checksums/signatures.
 - Typosquatting and dependency confusion exploit naming and repository precedence.
@@ -5511,7 +5550,7 @@ No single scanner proves an application secure.
 - Monitor end-of-life libraries and JDKs.
 - Keep a rapid rebuild/redeployment path for urgent security fixes.
 
-#### Detection and response
+##### Detection and response
 
 - Security events need synchronized time, actor identity, target, decision, and correlation.
 - Rate-limit alerts to avoid flooding while preserving incident visibility.
@@ -5519,9 +5558,9 @@ No single scanner proves an application secure.
 - Rotate potentially exposed credentials before declaring recovery.
 - Validate mitigations against the original attack path.
 
-## 19. Performance, Monitoring, and Troubleshooting
+### 19. Performance, Monitoring, and Troubleshooting
 
-### 19.1 Measure First
+#### 19.1 Measure First
 
 Optimize only after measuring a representative workload. Wall-clock timing around a loop is unreliable for microbenchmarks because the JVM warms up, compiles hot code, and may eliminate unused work. Use JMH for microbenchmarks.
 
@@ -5532,7 +5571,7 @@ Important measures:
 - Error rate: failed operations divided by total operations.
 - Saturation: CPU, memory, thread, connection-pool, and queue utilization.
 
-### 19.2 JVM Tools
+#### 19.2 JVM Tools
 
 - `jcmd <pid> VM.flags`: show JVM flags.
 - `jcmd <pid> GC.heap_info`: summarize heap configuration.
@@ -5545,16 +5584,16 @@ Important measures:
 
 Prefer `jcmd` on modern JDKs when it provides the needed operation.
 
-### 19.3 Common Failure Patterns
+#### 19.3 Common Failure Patterns
 
-#### High CPU
+##### High CPU
 
 1. Capture multiple thread dumps several seconds apart.
 2. Find threads repeatedly in `RUNNABLE`.
 3. Inspect hot stack traces.
 4. Confirm with JFR or a profiler.
 
-#### Memory leak or rising heap
+##### Memory leak or rising heap
 
 1. Check whether usage returns to a stable level after GC.
 2. Inspect object histograms over time.
@@ -5562,15 +5601,15 @@ Prefer `jcmd` on modern JDKs when it provides the needed operation.
 4. Analyze retained size and GC-root paths.
 5. Fix the retaining reference, cache policy, listener, `ThreadLocal`, or unbounded collection.
 
-#### Deadlock
+##### Deadlock
 
 Thread dumps identify Java monitor deadlocks and show which threads own and wait for locks. Enforce a consistent lock order and reduce nested locking.
 
-#### Slow requests
+##### Slow requests
 
 Check downstream latency, timeouts, pool saturation, lock contention, GC pauses, database query plans, and excessive allocation. Average latency alone can hide severe tail latency.
 
-### 19.4 GC Guidance
+#### 19.4 GC Guidance
 
 - Set memory limits appropriate to the container or host.
 - Avoid choosing a collector or tuning dozens of flags before collecting evidence.
@@ -5579,7 +5618,7 @@ Check downstream latency, timeouts, pool saturation, lock contention, GC pauses,
 - Allocation rate and live-set size often matter more than the number of objects created.
 - A larger heap can reduce collection frequency but may increase memory footprint and some pause costs.
 
-### 19.5 Thread-Dump States
+#### 19.5 Thread-Dump States
 
 - `RUNNABLE`: executing or ready to execute; may also be inside native I/O.
 - `BLOCKED`: waiting to enter a synchronized monitor.
@@ -5589,7 +5628,7 @@ Check downstream latency, timeouts, pool saturation, lock contention, GC pauses,
 
 One thread dump is a snapshot; compare several to distinguish persistent contention from temporary activity.
 
-### 19.6 Observability
+#### 19.6 Observability
 
 Use complementary signals:
 
@@ -5600,7 +5639,7 @@ Use complementary signals:
 
 Prefer low-cardinality metric labels. User IDs, request IDs, and raw URLs can create unbounded time series and excessive monitoring cost.
 
-### 19.7 Service-Level Indicators
+#### 19.7 Service-Level Indicators
 
 Common SLIs include availability, successful request rate, latency percentiles, freshness, and correctness. Define them from the user's perspective.
 
@@ -5608,7 +5647,7 @@ Common SLIs include availability, successful request rate, latency percentiles, 
 - An error budget is the allowed unreliability.
 - Alerts should indicate actionable user impact or imminent exhaustion, not every internal fluctuation.
 
-### 19.8 Benchmarking with JMH
+#### 19.8 Benchmarking with JMH
 
 ```java
 @State(Scope.Thread)
@@ -5631,7 +5670,7 @@ public class LookupBenchmark {
 
 JMH handles warmup, measurement iterations, forking, and result consumption. Still ensure the benchmark represents the production data shape and operation.
 
-### 19.9 Capacity and Load Testing
+#### 19.9 Capacity and Load Testing
 
 - Test expected load, peak load, sudden spikes, and sustained soak conditions.
 - Include realistic payloads, database sizes, cache hit rates, and downstream latency.
@@ -5639,11 +5678,11 @@ JMH handles warmup, measurement iterations, forking, and result consumption. Sti
 - Find the saturation point and define safe operating headroom.
 - Verify recovery after overload; a system that remains degraded has not passed.
 
-### 19.10 Diagnostic Data Safety
+#### 19.10 Diagnostic Data Safety
 
 Heap dumps, thread dumps, JFR recordings, and logs may contain credentials, personal data, and request contents. Restrict access, encrypt storage and transfer, define retention, and remove artifacts after diagnosis.
 
-### 19.11 Allocation Profiling
+#### 19.11 Allocation Profiling
 
 High allocation can increase GC frequency even without a leak. Profile:
 
@@ -5654,7 +5693,7 @@ High allocation can increase GC frequency even without a leak. Profile:
 
 Optimize only meaningful contributors. Short-lived allocation is often cheap, and object pooling can increase retention and complexity.
 
-### 19.12 Lock Profiling
+#### 19.12 Lock Profiling
 
 Contention symptoms include blocked threads, low CPU despite queued work, and long tail latency.
 
@@ -5668,7 +5707,7 @@ Investigate:
 
 Possible fixes include reducing lock scope, partitioning state, immutable snapshots, concurrent collections, or redesigning ownership.
 
-### 19.13 Database Performance
+#### 19.13 Database Performance
 
 - Measure query latency and rows examined/returned.
 - Inspect execution plans.
@@ -5679,13 +5718,13 @@ Possible fixes include reducing lock scope, partitioning state, immutable snapsh
 
 More application threads cannot compensate for a saturated database.
 
-### 19.14 Coordinated Omission
+#### 19.14 Coordinated Omission
 
 Some load generators wait for one response before sending the next request, under-reporting latency while the system is stalled. A realistic test should preserve intended arrival rate or otherwise account for coordinated omission.
 
 Report full latency distributions and request failures; dropping slow samples makes results misleading.
 
-### 19.15 Troubleshooting Method
+#### 19.15 Troubleshooting Method
 
 1. State the user-visible symptom and time range.
 2. Confirm scope, affected versions, and recent changes.
@@ -5697,7 +5736,7 @@ Report full latency distributions and request failures; dropping slow samples ma
 8. Verify recovery with the original indicators.
 9. Document root cause and preventive actions.
 
-### 19.16 Performance Change Validation
+#### 19.16 Performance Change Validation
 
 Compare before and after under equivalent conditions:
 
@@ -5710,9 +5749,9 @@ Compare before and after under equivalent conditions:
 
 A local microbenchmark improvement may worsen end-to-end performance.
 
-### 19.17 Detailed Notes for Performance Subsections
+#### 19.17 Chapter Review and Common Pitfalls
 
-#### Measurement
+##### Measurement
 
 - Define whether the goal is throughput, latency, footprint, startup, cost, or a trade-off.
 - Measure from the user boundary and component boundaries.
@@ -5720,7 +5759,7 @@ A local microbenchmark improvement may worsen end-to-end performance.
 - Separate service time from queueing time.
 - Correlation does not prove causation; change one controlled factor where possible.
 
-#### CPU profiling
+##### CPU profiling
 
 - Sampling profilers have lower distortion than instrumentation for many production investigations.
 - Wall-clock profiles expose blocking and waiting; CPU profiles show on-CPU work.
@@ -5728,7 +5767,7 @@ A local microbenchmark improvement may worsen end-to-end performance.
 - Compare multiple intervals to distinguish transient spikes from steady hotspots.
 - Optimize hot call paths, not methods that are merely individually slow but rarely called.
 
-#### Memory
+##### Memory
 
 - Shallow size measures one object; retained size estimates what becomes collectible with it.
 - Dominator trees help identify ownership of retained graphs.
@@ -5736,7 +5775,7 @@ A local microbenchmark improvement may worsen end-to-end performance.
 - Allocation pressure and retention need different fixes.
 - Capture heap evidence before restarting when operationally safe.
 
-#### Garbage collection
+##### Garbage collection
 
 - Analyze pause distribution, allocation rate, promotion, concurrent-cycle progress, and live-set trend together.
 - Frequent full collections are symptoms; identify why memory cannot be reclaimed or allocated.
@@ -5744,7 +5783,7 @@ A local microbenchmark improvement may worsen end-to-end performance.
 - Container CPU throttling can lengthen concurrent GC phases.
 - Tune after establishing workload, goals, and baseline logs.
 
-#### Threads and locks
+##### Threads and locks
 
 - Many threads increase stack/native memory and scheduling overhead.
 - Queue length reveals contention or downstream saturation before CPU reaches 100%.
@@ -5752,7 +5791,7 @@ A local microbenchmark improvement may worsen end-to-end performance.
 - Lock contention can come from logging, class loading, pools, and library internals, not only application synchronized blocks.
 - Virtual-thread counts require different interpretation from platform-thread counts.
 
-#### I/O and database
+##### I/O and database
 
 - Track pool acquisition, DNS, connect, TLS, server processing, and body transfer separately.
 - A slow database query may be waiting on locks rather than executing a bad plan.
@@ -5760,7 +5799,7 @@ A local microbenchmark improvement may worsen end-to-end performance.
 - Batch size trades round trips against memory and lock duration.
 - Backpressure prevents fast producers from overwhelming slow consumers.
 
-#### JFR and diagnostics
+##### JFR and diagnostics
 
 - Choose event settings appropriate to continuous monitoring or incident detail.
 - Add custom JFR events for high-value domain operations when standard events lack context.
@@ -5768,7 +5807,7 @@ A local microbenchmark improvement may worsen end-to-end performance.
 - Heap dumps can briefly pause large processes and require storage roughly related to live heap.
 - Practice diagnostic collection before an incident.
 
-#### Load testing
+##### Load testing
 
 - Warm caches and JIT separately from cold-start tests.
 - Model think time, arrival rate, connection reuse, and payload diversity.
@@ -5776,7 +5815,7 @@ A local microbenchmark improvement may worsen end-to-end performance.
 - Observe the generator itself for CPU/network saturation.
 - Verify correctness under load; high throughput with lost or duplicated work is failure.
 
-#### Capacity
+##### Capacity
 
 - Capacity planning should include growth, failover, maintenance, and noisy-neighbor headroom.
 - Little's Law relates average concurrency, throughput, and average time in a stable system.
@@ -5784,7 +5823,7 @@ A local microbenchmark improvement may worsen end-to-end performance.
 - Autoscaling reacts after measured signals and must account for startup time.
 - Scale tests should verify both expansion and safe contraction.
 
-#### Optimization
+##### Optimization
 
 - Prefer algorithmic and architectural improvements before micro-optimizations.
 - Reduce unnecessary work, data movement, synchronization, and remote calls.
@@ -5792,7 +5831,7 @@ A local microbenchmark improvement may worsen end-to-end performance.
 - Record benchmark methodology and expected gains.
 - Re-measure after deployment because production workload can differ from tests.
 
-## 20. Quick Revision Checklist
+### 20. Quick Revision Checklist
 
 Before an interview or code review, be able to explain:
 
@@ -5817,7 +5856,7 @@ Before an interview or code review, be able to explain:
 19. Logging, metrics, thread dumps, heap dumps, JFR, and evidence-based performance tuning.
 20. The Java version required by each language or library feature used in a project.
 
-### 20.1 Suggested Learning Order
+#### 20.1 Suggested Learning Order
 
 1. Syntax, types, control flow, methods, arrays, and strings.
 2. Classes, interfaces, inheritance, composition, and exceptions.
@@ -5828,7 +5867,7 @@ Before an interview or code review, be able to explain:
 7. JVM memory, class loading, GC, profiling, and diagnostics.
 8. Design principles, security, modules, and production operations.
 
-### 20.2 Coding Exercises
+#### 20.2 Coding Exercises
 
 Practice implementing:
 
@@ -5843,7 +5882,7 @@ Practice implementing:
 - A file parser that handles malformed input and large files safely.
 - A thread-safe cache with a documented eviction policy.
 
-### 20.3 Code Review Questions
+#### 20.3 Code Review Questions
 
 - Is ownership of mutable state clear?
 - Are nullability and error contracts explicit?
@@ -5856,7 +5895,7 @@ Practice implementing:
 - Are tests checking behavior and failure paths?
 - Does the code depend on a newer JDK than the build declares?
 
-### 20.4 Scenario-Based Interview Practice
+#### 20.4 Scenario-Based Interview Practice
 
 Be ready to reason through:
 
@@ -5871,7 +5910,7 @@ Be ready to reason through:
 - A class found during compilation but missing at runtime.
 - A service that is fast on average but has unacceptable p99 latency.
 
-### 20.5 Final Revision Method
+#### 20.5 Final Revision Method
 
 For each topic, verify that you can:
 
@@ -5881,7 +5920,7 @@ For each topic, verify that you can:
 4. Describe when not to use it.
 5. Connect it to production behavior, testing, or diagnostics.
 
-### 20.6 Topic Self-Assessment Matrix
+#### 20.6 Topic Self-Assessment Matrix
 
 Rate each topic from 0 to 3:
 
@@ -5892,7 +5931,7 @@ Rate each topic from 0 to 3:
 
 Prioritize topics rated 0 or 1, then revisit them through code rather than passive rereading.
 
-### 20.7 Thirty-Minute Revision Plan
+#### 20.7 Thirty-Minute Revision Plan
 
 1. Five minutes: types, strings, equality, and exceptions.
 2. Five minutes: collections, generics, and complexity.
@@ -5901,7 +5940,7 @@ Prioritize topics rated 0 or 1, then revisit them through code rather than passi
 5. Five minutes: concurrency and the Java Memory Model.
 6. Five minutes: JVM, GC, testing, security, and diagnostics.
 
-### 20.8 Two-Hour Practical Revision Plan
+#### 20.8 Two-Hour Practical Revision Plan
 
 1. Implement a small domain model with immutable values.
 2. Add collection and stream transformations.
@@ -5911,7 +5950,7 @@ Prioritize topics rated 0 or 1, then revisit them through code rather than passi
 6. Run a profiler or JFR recording.
 7. Review resource, error, and security boundaries.
 
-### 20.9 Interview Answer Framework
+#### 20.9 Interview Answer Framework
 
 For conceptual questions:
 
@@ -5929,7 +5968,7 @@ For debugging questions:
 4. Propose a safe mitigation.
 5. Verify and prevent recurrence.
 
-### 20.10 Final Project Checklist
+#### 20.10 Final Project Checklist
 
 - Build succeeds from a clean checkout with the wrapper.
 - Compiler and JDK versions are explicit.
@@ -5942,23 +5981,23 @@ For debugging questions:
 - Metrics, logs, and traces support diagnosis.
 - Operational documentation explains launch, configuration, health, backup, and recovery.
 
-### 20.11 Detailed Notes for Revision Subsections
+#### 20.11 Chapter Review and Common Pitfalls
 
-#### Learning strategy
+##### Learning strategy
 
 - Alternate reading with implementation, debugging, and explanation.
 - Use spaced repetition for contracts, version facts, and common failure modes.
 - Rebuild examples from memory rather than only rereading completed code.
 - Connect each language feature to a production scenario.
 
-#### Coding practice
+##### Coding practice
 
 - Start with correctness and tests, then discuss complexity and alternatives.
 - State assumptions such as null policy, input size, ordering, and concurrency.
 - Use descriptive names and standard library APIs.
 - After solving, test empty, singleton, duplicate, maximum, invalid, and concurrent cases as relevant.
 
-#### Interview communication
+##### Interview communication
 
 - Clarify requirements before choosing data structures or architecture.
 - Think aloud in a structured way without narrating every keystroke.
@@ -5966,7 +6005,7 @@ For debugging questions:
 - Identify trade-offs rather than presenting one choice as universally best.
 - Correct mistakes directly when discovered.
 
-#### System scenarios
+##### System scenarios
 
 - Define consistency, availability, latency, and scale requirements.
 - Trace data ownership and failure boundaries.
@@ -5974,7 +6013,7 @@ For debugging questions:
 - Distinguish what must be synchronous from what may be eventual.
 - Describe overload behavior explicitly.
 
-#### Code review
+##### Code review
 
 - Separate correctness blockers from optional style preferences.
 - Give evidence and an actionable recommendation.
@@ -5982,14 +6021,14 @@ For debugging questions:
 - Check compatibility, migration, and rollback.
 - Avoid expanding scope into unrelated refactoring.
 
-#### Self-assessment
+##### Self-assessment
 
 - Require a runnable example for “can implement.”
 - Require evidence collection and root-cause reasoning for “can diagnose.”
 - Reassess after a delay to distinguish recognition from recall.
 - Track weak categories, not only total study time.
 
-#### Final readiness
+##### Final readiness
 
 - Be able to navigate official JDK API documentation and release notes.
 - Know the target project's JDK and build commands.
