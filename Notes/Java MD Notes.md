@@ -58,7 +58,7 @@
 
 - A reference variable holds either `null` or a reference to an object; it is not a directly usable memory address.
   ```java
-  String name = "Stitch";
+  String name = "ABC";
   int[] scores = new int[5];
   ```
 - `==` compares primitive values or reference identity. `.equals()` compares logical value only when the class implements it that way.
@@ -161,13 +161,6 @@
         break outer; // exits both loops
       }
     }
-  }
-  ```
-
-- **Short-circuit boolean operators:** `&&` skips its right operand when the left side is false; `||` skips it when the left side is true. This is useful for guarding operations such as dereferencing a possibly null value. `&` and `|` evaluate both operands when used with booleans.
-  ```java
-  if (text != null && !text.isEmpty()) {
-    System.out.println(text);
   }
   ```
 
@@ -361,33 +354,7 @@ int readable = 1_000_000;
 - A compile-time constant is a primitive or `String` `final` variable initialized with a constant expression.
 - Compile-time constants may be inlined into client bytecode. Changing a public constant may therefore require recompiling clients.
 
-## 1.11 Expressions and Promotion Rules
-
-Binary numeric promotion converts operands before arithmetic:
-
-1. If either operand is `double`, both become `double`.
-2. Otherwise, if either is `float`, both become `float`.
-3. Otherwise, if either is `long`, both become `long`.
-4. Otherwise, both become `int`.
-
-```java
-byte left = 10;
-byte right = 20;
-// byte sum = left + right; // error: result is int
-byte sum = (byte) (left + right);
-```
-
-Compound assignment includes an implicit narrowing conversion:
-
-```java
-short value = 1;
-value += 2;        // compiles
-// value = value + 2; // does not compile without a cast
-```
-
-Evaluate operands before applying operators. `&&` and `||` short-circuit; `&` and `|` always evaluate both boolean operands.
-
-## 1.12 Command-Line Arguments and Environment
+## 1.11 Command-Line Arguments and Environment
 
 ```java
 public static void main(String[] args) {
@@ -403,7 +370,7 @@ public static void main(String[] args) {
 - Set a system property with `-Dapp.mode=production`.
 - Environment and system properties are global process state; wrap access behind typed configuration for testability.
 
-## 1.13 Packages, JARs, and Manifests
+## 1.12 Packages, JARs, and Manifests
 
 A JAR is a ZIP archive containing classes, resources, and metadata.
 
@@ -416,7 +383,7 @@ java -jar app.jar
 
 # 2. Object-Oriented Programming
 
-Object-oriented programming organizes code around objects that combine state and behavior. The core ideas are encapsulation, abstraction, inheritance, and polymorphism. Use them to model clear responsibilities and contracts; a class is not automatically better just because it has more getters, setters, or inheritance.
+Object-oriented programming organizes code around objects that combine state and behavior. The core ideas are encapsulation, abstraction, inheritance, and polymorphism.
 
 ## 2.1 Classes, Objects, and Constructors
 
@@ -424,7 +391,7 @@ Object-oriented programming organizes code around objects that combine state and
   ```java
   class Employee {
     private final String name;
-    static String company = "Stitch";
+    static String company = "ABC";
 
     Employee(String name) {
       this.name = java.util.Objects.requireNonNull(name);
@@ -576,12 +543,14 @@ Controls visibility:
 | protected | YES | YES | YES, through subclass access rules | NO |
 | public | YES | YES | YES | YES |
 
+```java
 public class A {
   private int a = 1; // only inside A
   int b = 2; // default - package only
   protected int c = 3; // package + child outside pkg
   public int d = 4; // anywhere
 }
+```
 
 ## 2.7 Composition, Association, and Aggregation
 
@@ -716,8 +685,6 @@ This is not a ban on getters. The goal is to avoid moving domain rules into unre
 
 # 3. Keywords and Essentials
 
-This section summarizes language features that recur across Java code. The keyword's effect depends on where it is used: for example, `static` changes member ownership, while `final` prevents reassignment or overriding but does not automatically make an object immutable.
-
 ## 3.1 `this` Keyword
 
 `this` refers to the current object in an instance context. It is commonly used to distinguish a field from a parameter, call another instance member, pass the current object, or delegate to another constructor.
@@ -806,7 +773,7 @@ Static fields and methods belong to the class rather than an individual instance
 ```java
 class Employee {
   private final String name;        // each instance has its own name
-  static String company = "Stitch"; // shared by instances of this class
+  static String company = "ABC"; // shared by instances of this class
 
   Employee(String name) {
     this.name = name;
@@ -939,13 +906,41 @@ Correctly constructed `final` fields also have safe-publication guarantees, prov
 
 An out-of-package subclass cannot use an arbitrary parent instance to access the parent's protected member. Prefer protected methods over protected mutable fields.
 
-## 3.13 Annotation Basics
+## 3.13 Annotation
 
-Annotations can target declarations or type uses and can have different retention:
+Annotations are metadata attached to declarations or type-use positions. They do not directly change program flow; they are interpreted by the compiler, annotation processors, frameworks, or reflection-based code.
+
+Common built-in annotations include:
+
+- `@Override`: requires the method to override a superclass method.
+- `@Deprecated`: marks API as obsolete; the compiler warns on use.
+- `@SuppressWarnings`: suppresses specific compiler warnings.
+- `@FunctionalInterface`: ensures an interface has exactly one abstract method.
+
+Annotations can be applied to different targets. Use `@Target` to restrict where an annotation may appear.
+
+```java
+import java.lang.annotation.*;
+
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface JsonSerializable {
+  String value() default "";
+}
+```
+
+- `ElementType.TYPE`: class, interface, enum, annotation type.
+- `ElementType.METHOD`: method declarations.
+- `ElementType.FIELD`: field declarations.
+- `ElementType.PARAMETER`: method parameters.
+- `ElementType.TYPE_USE`: type positions such as generic arguments and casts.
+
+Retention controls whether the annotation survives through compilation and is available at runtime:
 
 - `SOURCE`: discarded by the compiler.
 - `CLASS`: stored in class files but not necessarily visible at runtime.
-- `RUNTIME`: available through reflection.
+- `RUNTIME`: available via reflection.
 
 ```java
 @Target(ElementType.TYPE_USE)
@@ -955,7 +950,47 @@ Annotations can target declarations or type uses and can have different retentio
 List<@NonEmpty String> names;
 ```
 
-Annotations contain metadata, not executable behavior. A compiler, annotation processor, framework, or application code must interpret them.
+Type-use annotations can attach metadata to a type within a larger declaration. For example, `@NonEmpty` here says the element type of the list is non-empty, but Java itself does not enforce that rule unless other code does.
+
+Annotation elements are declared as methods, and they can have default values:
+
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@interface RequiresPermission {
+  String[] value();
+  boolean log() default true;
+}
+```
+
+An annotation with a single element is often written as `@Name("value")` or `@Name(value = "value")`.
+
+Repeatable annotations are supported with `@Repeatable` and a container annotation:
+
+```java
+@Repeatable(Tags.class)
+@interface Tag {
+  String value();
+}
+
+@interface Tags {
+  Tag[] value();
+}
+
+@Tag("core")
+@Tag("api")
+class Service {}
+```
+
+Reflection can inspect runtime-retained annotations:
+
+```java
+for (var annotation : Service.class.getAnnotations()) {
+  System.out.println(annotation.annotationType().getName());
+}
+```
+
+Use annotations for declarative metadata, not for core business logic. They are best suited to validation rules, mapping, documentation, code generation, and framework integration, where a tool or library understands and acts on them.
 
 ## 3.14 Initialization-on-Demand Holder
 
