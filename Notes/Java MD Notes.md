@@ -2279,7 +2279,8 @@ CompletableFuture<String> greeting = name
 - **Deadlock** occurs when tasks wait forever for resources held by one another. The classic Coffman conditions are mutual exclusion, hold-and-wait, no preemption, and circular wait. Prevent common lock deadlocks by acquiring locks in a consistent global order, reducing nested locking, or redesigning shared ownership.
 - Liveness failures also include **starvation** (a task cannot obtain needed progress/resources) and **livelock** (tasks remain active but make no useful progress). Timeouts may improve responsiveness but do not guarantee correctness or eliminate all deadlocks.
 - Use immutable state, thread confinement, synchronized/locked access, atomic operations, or concurrent collections according to the invariant being protected. `ThreadLocal` isolates a value per thread, but pooled threads are reused; remove request-specific values in `finally` to avoid retaining or leaking data across tasks.
-- Capture a thread dump (for example with `jcmd` or `jstack`) to diagnose blocked threads and deadlocks. Logging, timeouts, and monitoring help identify stalls but are not substitutes for correct synchronization.
+- Capture repeated thread dumps (for example with `jcmd <pid> Thread.print -l`) a few seconds apart to distinguish persistent waits from transient states. Inspect deadlock reports, long-lived `BLOCKED` threads, common lock owners, and workers stalled in the same downstream call. `RUNNABLE` does not prove that a thread is consuming CPU; correlate with thread CPU time or a profile.
+- Treat dumps as evidence to correlate with request latency, executor metrics, and dependency health, not as a diagnosis by themselves. Dumps and recordings may include request data or paths; restrict access and retention.
 
 ### Common questions
 
@@ -2320,11 +2321,12 @@ Do not allow `this` to escape from a constructor by registering listeners, start
 
 ## 8.8 Executor Sizing and Backpressure
 
-- CPU-bound pools are commonly near the number of available processors.
-- I/O-bound workloads may use more threads, but downstream capacity remains the real limit.
-- An unbounded work queue can turn overload into memory exhaustion and extreme latency.
-- Use bounded queues and an explicit rejection policy.
-- Separate workloads with different latency or blocking characteristics when they would otherwise starve each other.
+- CPU-bound pools are commonly near the number of processors available to the process, but measure under the actual CPU quota. More workers than usable cores often add context switching rather than throughput.
+- I/O-bound workloads may use more concurrent tasks, but size concurrency against downstream limits (connection pools, service quotas, and acceptable in-flight work), not a generic threads-per-core formula.
+- An unbounded queue converts overload into growing memory use and queueing latency. Bound both queued and in-flight work; define what happens at saturation and make rejection visible to callers or metrics.
+- `CallerRunsPolicy` can provide backpressure by making the submitting thread execute work, but can unexpectedly run request work on event loops or latency-sensitive threads. Choose rejection behavior for the submission context; fail-fast or shed low-priority work when caller execution is unsafe.
+- Separate workloads with different latency or blocking characteristics when they would otherwise starve each other. Track active workers, queue depth, rejected tasks, queue-wait time, and task duration; a persistently growing queue usually signals overload or a blocked dependency, not simply an undersized pool.
+- Apply deadlines end-to-end, not only to the initial submission. A timed wait that leaves underlying work running may continue consuming threads and downstream capacity.
 
 ```java
 ExecutorService executor = new ThreadPoolExecutor(
@@ -3135,7 +3137,7 @@ Class.forName("Example"); // initializes by default
   value = null; // the object may now be eligible for collection
   ```
 - Eligibility does not mean collection happens immediately or at all before process exit. Avoid relying on finalizers or collection timing for program behavior.
-- Collectors use implementation-specific algorithms to reclaim unreachable objects. Some phases pause application threads; others perform work concurrently. A pause's duration and frequency depend on the collector, heap, allocation rate, object graph, and workload.
+- Collectors use implementation-specific algorithms to reclaim unreachable objects. Some phases pause application threads; others perform work concurrently. A pause's duration and frequency depend on the collector, heap, allocation rate, object graph, and workload. Concurrent collectors still consume CPU and memory bandwidth and can affect application throughput and tail latency.
 - Generational collection is common but not universal. Promotion rules, region layouts, and collection triggers vary by collector and JDK; tuning numbers are not language guarantees.
 - A full-GC event is collector-specific and does not mean every memory area is reclaimed or that every application thread pauses for the same duration.
 
@@ -3152,7 +3154,9 @@ Class.forName("Example"); // initializes by default
 -XX:+UseG1GC // use G1
 -XX:MaxGCPauseMillis=200 // a tuning goal, not a pause-time guarantee
 
-Use GC logs, JFR, and workload measurements before tuning. Heap sizing must leave room for Metaspace, thread stacks, direct buffers, and other native memory.
+Use GC logs, JFR, and workload measurements before tuning. Heap sizing must leave room for Metaspace, thread stacks, direct buffers, and other native memory. Compare allocation rate, post-collection live-set trend, pause distribution, throughput, and process/container memory under a representative load. A high allocation rate can cause frequent collection even when the live set is small; a steadily rising live set suggests retained objects and warrants heap analysis.
+
+Do not tune to a single pause or treat `MaxGCPauseMillis` as a hard real-time guarantee. Change one setting at a time and compare latency percentiles and throughput; larger heaps can reduce collection frequency but increase footprint and may lengthen some collection work. Heap dumps can be large, pause the application, and contain sensitive data, so plan capture, storage, and access.
 
 ## 10.5 `equals()` and `hashCode()` Contract
 
@@ -3223,7 +3227,7 @@ Records automatically derive `equals()` and `hashCode()` from their components, 
 
 ## 10.6 Bytecode Execution and JIT Compilation
 
-The interpreter starts bytecode quickly. As methods become hot, tiered compilation uses C1 and C2 compilers to produce optimized native code.
+The interpreter starts bytecode quickly. As methods become hot, tiered compilation gathers runtime profile information and uses compiler tiers (commonly C1 and C2 in HotSpot) to produce optimized native code. Compilation policy and tier details are implementation-specific.
 
 Common optimizations include:
 
@@ -3233,7 +3237,9 @@ Common optimizations include:
 - Loop optimizations.
 - Devirtualization when runtime types are predictable.
 
-If an assumption becomes false, the JVM can deoptimize compiled code and return execution to a less optimized tier. Warmup is why short ad-hoc benchmarks are misleading.
+If an assumption becomes false, the JVM can deoptimize compiled code and return execution to a less optimized tier; later recompilation may optimize for the new behavior. This means performance can change with workload shape and type distributions, not only with source changes.
+
+Warmup, compilation, and steady-state behavior are why timing a loop with `System.nanoTime()` is not a reliable microbenchmark. Use JMH with warmup, measurement iterations, multiple forks, realistic inputs, and consumed results to reduce dead-code elimination and profile contamination. Measure end-to-end throughput and tail latency with a representative load test as well: a microbenchmark does not predict the performance of a service, and results are specific to the JDK, hardware, flags, and workload.
 
 ## 10.7 Object Layout and Allocation
 
@@ -3290,6 +3296,14 @@ Minor, major, and full-GC terminology is collector-specific; always interpret ac
 -Xlog:gc*,safepoint:file=gc.log:time,uptime,level,tags
 ```
 
+For production-like diagnosis, begin with the symptom and a baseline rather than changing collector flags. JFR recordings can correlate sampled CPU stacks, allocation, GC activity, thread parking, and monitor contention in one time window; event availability and overhead depend on JDK and recording settings. For example, on supported JDKs:
+
+```text
+jcmd <pid> JFR.start name=incident settings=profile duration=2m filename=incident.jfr
+```
+
+Inspect the recording with Java Mission Control. Use CPU samples to investigate CPU saturation, wall-clock/blocking evidence when latency is high but CPU is low, allocation events and live-set trends for GC pressure, and process metrics plus Native Memory Tracking for off-heap growth. A CPU profile alone misses time spent waiting, while a heap histogram or dump is only a point-in-time view. Correlate profiles with the same workload window and compare throughput, latency percentiles, allocation, pauses, and process memory before and after a change.
+
 ## 10.11 Common JVM Errors
 
 - `OutOfMemoryError: Java heap space`: heap cannot satisfy allocation after GC.
@@ -3308,7 +3322,7 @@ Initialization executes static field assignments and static blocks in textual or
 
 At safepoints, JVM threads reach states where the runtime can safely inspect or modify shared VM structures. GC is a common reason, but deoptimization, biased-lock revocation in older JDKs, class redefinition, and some diagnostics may also require safepoints.
 
-Pause time can include time for threads to reach a safepoint plus the operation itself. Unified safepoint logging helps distinguish these costs.
+Pause time can include time for threads to reach a safepoint plus the operation itself. Unified safepoint logging helps distinguish these costs. A long observed pause is not automatically GC work: inspect both safepoint synchronization time and VM-operation time, and correlate with GC logs and application latency. Long-running native or tight-loop code can delay reaching a safepoint, so investigate threads that are slow to rendezvous rather than attributing the entire delay to the collector.
 
 ## 10.14 Escape Analysis
 
@@ -3350,6 +3364,9 @@ Modern JVMs detect container CPU and memory limits, but deployment settings stil
 - Percentage-based heap flags can adapt across environments.
 - Container OOM termination may occur before Java can write a heap dump.
 - Monitor process resident memory as well as heap usage.
+- Validate ergonomics against the actual cgroup/container limits and JVM vendor/version; a configured heap percentage is not a process-memory limit and does not include native allocations.
+- When memory approaches the limit, correlate heap, Metaspace, direct-buffer usage, thread count/stack reservation, code cache, and native-library growth. Native Memory Tracking can help explain HotSpot-managed native areas when enabled at startup (`-XX:NativeMemoryTracking=summary`) and queried with `jcmd <pid> VM.native_memory summary`; it does not account for every third-party native allocation.
+- Under CPU throttling, increasing worker or GC thread counts may increase contention without increasing usable CPU. Check throttling and effective CPU availability alongside JVM metrics.
 
 # 11. Advanced Core Java
 
