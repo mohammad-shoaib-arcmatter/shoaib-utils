@@ -12,5 +12,5 @@
     "types": ["node"],
     "typeRoots": ["./frontend/node_modules/@types", "./node_modules/@types"]
   },
-  "include": ["main.ts", "preload.ts", "database.ts", "shared/types.ts"]
+  "include": ["main.ts"]
 }

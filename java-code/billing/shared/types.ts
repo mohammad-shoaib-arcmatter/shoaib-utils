@@ -47,14 +47,3 @@ export interface NewInvoice {
   total: number
   gst_total: number
 }
-
-export interface BillingApi {
-  getProducts(): Promise<Product[]>
-  addProduct(product: NewProduct): Promise<unknown>
-  deleteProduct(id: number): Promise<unknown>
-  getCustomers(): Promise<Customer[]>
-  addCustomer(customer: Customer): Promise<unknown>
-  searchCustomers(query: string): Promise<Customer[]>
-  createInvoice(invoice: NewInvoice): Promise<unknown>
-  getInvoices(): Promise<Invoice[]>
-}
