@@ -120,13 +120,29 @@ def docx_to_markdown(
 	return markdown
 
 
+def _convert_directory(directory: Path) -> None:
+	"""Convert DOCX files under a directory when their Markdown file is absent."""
+	for docx_path in directory.rglob("*"):
+		if not docx_path.is_file() or docx_path.suffix.lower() != ".docx":
+			continue
+		markdown_path = docx_path.with_suffix(".md")
+		if not markdown_path.exists():
+			docx_to_markdown(docx_path, markdown_path)
+
+
 def main() -> None:
 	parser = argparse.ArgumentParser(description="Convert DOCX to Markdown.")
-	parser.add_argument("docx", help="Input .docx file")
-	parser.add_argument("markdown", nargs="?", help="Output .md file")
+	parser.add_argument("docx", help="Input .docx file or directory to scan recursively")
+	parser.add_argument("markdown", nargs="?", help="Output .md file (single-file mode only)")
 	args = parser.parse_args()
-	output = args.markdown or str(Path(args.docx).with_suffix(".md"))
-	docx_to_markdown(args.docx, output)
+	input_path = Path(args.docx)
+	if input_path.is_dir():
+		if args.markdown:
+			parser.error("an output .md file cannot be specified when input is a directory")
+		_convert_directory(input_path)
+	else:
+		output = args.markdown or str(input_path.with_suffix(".md"))
+		docx_to_markdown(input_path, output)
 
 
 if __name__ == "__main__":
